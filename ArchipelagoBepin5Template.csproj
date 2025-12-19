@@ -1,0 +1,66 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <AssemblyName>EasyDeliveryAP</AssemblyName>
+        <Description>Archipelago mod for Easy Delivery Co</Description>
+        <Version>0.0.1</Version>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <LangVersion>latest</LangVersion>
+        <!-- you may need this for getting the multiclient dll to output for .net 6 and netstandard 2.0 -->
+        <!--         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>                    -->
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <RootNamespace>EasyDeliveryAP</RootNamespace>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <OutputPath>/home/aeromaze/.local/share/Steam/steamapps/common/Easy Delivery Co/\BepInEx\plugins\$(AssemblyName)</OutputPath>
+        <DefineConstants>DEBUG;TRACE</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+        <DebugType>none</DebugType>
+        <Optimize>true</Optimize>
+        <OutputPath>bin\Release\$(AssemblyName)</OutputPath>
+        <DefineConstants>TRACE</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+    </PropertyGroup>
+
+    <Target Name="ZipMod" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+        <ZipDirectory SourceDirectory="bin\Release\$(AssemblyName)" DestinationFile="bin\Release\$(AssemblyName)-$(Version).zip" Overwrite="true" />
+    </Target>
+
+    <ItemGroup>
+        <PackageReference Include="Archipelago.MultiClient.Net" Version="6.7.0" />
+        <PackageReference Include="Archipelago.MultiClient.Net.Analyzers" Version="1.3.0">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
+        <PackageReference Include="BepInEx.Core" Version="5.*" />
+        <PackageReference Include="UnityEngine.Modules" Version="2021.3.33" IncludeAssets="compile" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
+        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Reference Include="Assembly-CSharp">
+          <HintPath>/home/aeromaze/Documents/Modding/EasyDelivery/src/Assembly-CSharp.dll</HintPath>
+        </Reference>
+        <Reference Include="EasyDeliveryAPI">
+          <HintPath>/home/aeromaze/Documents/Modding/EasyDelivery/src/EasyDeliveryAPI.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2" PrivateAssets="all" />
+        <Reference Include="../src/Assembly-CSharp.dll" Publicize="true" />
+    </ItemGroup>
+
+</Project>
