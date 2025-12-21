@@ -56,7 +56,7 @@ public class DeathLinkHandler
     {
         deathLinks.Enqueue(deathLink);
 
-        Plugin.BepinLogger.LogDebug(deathLink.Cause.IsNullOrWhiteSpace()
+        EasyDeliveryAP.BepinLogger.LogDebug(deathLink.Cause.IsNullOrWhiteSpace()
             ? $"Received Death Link from: {deathLink.Source}"
             : deathLink.Cause);
         
@@ -77,11 +77,11 @@ public class DeathLinkHandler
             var cause = deathLink.Cause.IsNullOrWhiteSpace() ? GetDeathLinkCause(deathLink) : deathLink.Cause;
 
             //TODO kill the player
-            Plugin.BepinLogger.LogMessage(cause);
+            EasyDeliveryAP.BepinLogger.LogMessage(cause);
         }
         catch (Exception e)
         {
-            Plugin.BepinLogger.LogError(e);
+            EasyDeliveryAP.BepinLogger.LogError(e);
         }
     }
 
@@ -104,7 +104,7 @@ public class DeathLinkHandler
         {
             if (!deathLinkEnabled) return;
 
-            Plugin.BepinLogger.LogMessage("sharing your death...");
+            EasyDeliveryAP.BepinLogger.LogMessage("sharing your death...");
 
             // add the cause here
             var linkToSend = new DeathLink(slotName, $"{slotName} could not find shelter in time");
@@ -113,7 +113,7 @@ public class DeathLinkHandler
         }
         catch (Exception e)
         {
-            Plugin.BepinLogger.LogError(e);
+            EasyDeliveryAP.BepinLogger.LogError(e);
         }
     }
 }

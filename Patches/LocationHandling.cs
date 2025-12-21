@@ -8,7 +8,7 @@ namespace EasyDeliveryAP;
 [HarmonyPatch]
 public class LocationHandling
 {
-    private static readonly ArchipelagoClient archipelago = Plugin.ArchipelagoClient;
+    private static readonly ArchipelagoClient archipelago = EasyDeliveryAP.ArchipelagoClient;
 
     public static string jobStartTown;
     public static string jobStartShop;
@@ -34,8 +34,13 @@ public class LocationHandling
         string delivery = $"{jobStartTown} to {__instance.selectedJob.to.town.name} Delivery";
         if (Locations.GetDeliveries().TryGetValue(delivery, out int locationId))
         {
-            ArchipelagoConsole.LogMessage($"Sending Location: {delivery}\nId: {locationId}");
+            // ArchipelagoConsole.LogMessage($"Sending Location: {delivery}\nId: {locationId}");
             archipelago.SendLocation(locationId);
+        }
+        // ArchipelagoConsole.LogMessage($"payload_checks: {ArchipelagoClient.payload_checks}");
+        if (ArchipelagoClient.payload_checks == "1" && Locations.PayloadDeliveries.TryGetValue(__instance.selectedJob.payloadPrefab.name, out int payloadId))
+        {
+            archipelago.SendLocation(payloadId);
         }
         // jobPayload = __instance.selectedJob.payloadPrefab.name;
         // APGUI.Inform(jobPayload);
@@ -44,13 +49,13 @@ public class LocationHandling
     [HarmonyPatch(typeof(UpgradeCheckout), "InstallUpgrade")]
     private static void Prefix(UpgradeCheckout __instance)
     {
-        ArchipelagoConsole.LogMessage($"Installing Upgrade: {__instance.item.name}");
+        // ArchipelagoConsole.LogMessage($"Installing Upgrade: {__instance.item.name}");
     }
 
     [HarmonyPatch(typeof(EndingManager), "SetEnding")]
     private static void Postfix(EndingManager.Ending __0,EndingManager __instance)
     {
-        ArchipelagoConsole.LogMessage($"Ending: {__instance.currentEnding}");
+        // ArchipelagoConsole.LogMessage($"Ending: {__instance.currentEnding}");
         archipelago.SendCompletion();
     }
 }

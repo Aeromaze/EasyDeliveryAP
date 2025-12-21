@@ -1,11 +1,12 @@
 using System.Collections.Generic;
+using System.Linq;
 using HarmonyLib;
 
 namespace EasyDeliveryAP;
 
 public class Locations
 {
-    public static Dictionary<string, int> Town = new Dictionary<string, int>()
+    public static readonly Dictionary<string, int> Town = new()
     {
         {"Upton", 11},
         {"Weston", 12},
@@ -32,4 +33,25 @@ public class Locations
 
         return deliveries;
     }
+
+    public static readonly Dictionary<string, int> PayloadDeliveries = new()
+    {
+        {"PAYLOAD Big Box", 1},
+        {"PAYLOAD BigBoxStack", 2},
+        {"PAYLOAD BoxBunch", 3},
+        {"PAYLOAD BoxStack", 4},
+        {"PAYLOAD Crate", 5},
+        {"PAYLOAD CrateOfDrinks", 6},
+        {"PAYLOAD CrateStack", 7},
+        {"PAYLOAD LotsOfCratesOfDrinks", 8},
+        {"PAYLOAD PizzaStack", 9},
+        {"PAYLOAD PizzaStackMega", 10},
+        {"PAYLOAD PlantPot", 11},
+        {"PAYLOAD PlantPotBunch", 12},
+        {"PAYLOAD PlantPotStack", 13},
+        {"PAYLOAD PlantPotWide", 14},
+        {"PAYLOAD Sack", 15},
+        {"PAYLOAD SackStack", 16},
+        {"Drink", 17},
+    };
 }

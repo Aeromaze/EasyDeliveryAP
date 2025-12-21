@@ -68,12 +68,16 @@ public class Items
     public static ItemData RestoreDisc = new("Restore Disc", 16);
     public static ItemData HandheldRadio = new("Handheld Radio", 17);
 
+    // Misc
+    public static ItemData Money = new("Money");
+
     public static Dictionary<int, ItemData> APIdToItem = new()
     {
         {1, GPS},
         {2, Tires},
         {3, Bumper},
         {4, Chains},
+        {10, Money},
         {100, EnergyDrink},
         {101, EmptyCan},
         {102, Lantern},

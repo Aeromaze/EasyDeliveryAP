@@ -5,15 +5,21 @@ using EasyDeliveryAP.Utils;
 using UnityEngine;
 using HarmonyLib;
 using System;
+using EasyDeliveryAPI;
 
 namespace EasyDeliveryAP;
 
+struct APSaveFile
+{
+    public int handledIndex;
+}
+
 [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
-public class Plugin : BaseUnityPlugin
+public class EasyDeliveryAP : BaseUnityPlugin
 {
     public const string PluginGUID = "com.aeromaze.easyDeliveryAP";
     public const string PluginName = "EasyDeliveryAP";
-    public const string PluginVersion = "0.0.1";
+    public const string PluginVersion = "0.0.2";
 
     public const string ModDisplayInfo = $"{PluginName} v{PluginVersion}";
     private const string APDisplayInfo = $"Archipelago v{ArchipelagoClient.APVersion}";
@@ -21,10 +27,13 @@ public class Plugin : BaseUnityPlugin
     public static ArchipelagoClient ArchipelagoClient;
 
     public static bool deathLink = false;
+    internal static ModdedSaveSystem<APSaveFile> save = new("Archipelago");
 
     // Debug vars
     public bool debug = false;
     string itemId = "";
+    string obj = "";
+    // GameObject obj2;
 
     private void Awake()
     {
@@ -128,9 +137,33 @@ public class Plugin : BaseUnityPlugin
                 Items.Chains.Enabled = !Items.Chains.Enabled;
                 ItemHandling.pendingUpgrade = true;
             }
-            if (GUI.Button(new Rect(16, 270, 100, 20), "Deathlink"))
+            GUI.Label(new Rect(16, 290, 150, 20), "GameObject: ");
+            obj = GUI.TextField(new Rect(150, 290, 150, 20), obj);
+            if (GUI.Button(new Rect(16, 310, 100, 20), "Deactivate Object"))
             {
-                ArchipelagoClient.DeathLinkHandler.ToggleDeathLink();
+                // obj2 = GameObject.Find(obj);
+                // ArchipelagoConsole.LogMessage($"{obj2.GetInstanceID()}");
+                OtherPatches.transform[obj].gameObject.SetActive(false);
+
+            }
+            if (GUI.Button(new Rect(120, 310, 100, 20), "Activate Object"))
+            {
+                OtherPatches.transform[obj].gameObject.SetActive(true);
+            }
+            if (GUI.Button(new Rect(16, 333, 100, 20), "Print Objects"))
+            {
+                foreach (Transform gameObject in GameObject.Find("UpgradeBasedProgression").GetComponentsInChildren<Transform>(true))
+                {
+                    ArchipelagoConsole.LogMessage($"{gameObject.name}");
+                }
+            }
+            if (GUI.Button(new Rect(16, 353, 100, 20), "Disconnect"))
+            {
+                ArchipelagoClient.Disconnect();
+            }
+            if (GUI.Button(new Rect(16, 373, 100, 20), "HandledIndex"))
+            {
+                ArchipelagoConsole.LogMessage($"{save.data.handledIndex}");
             }
         }
     }

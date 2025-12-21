@@ -61,6 +61,8 @@ public class Testing
     private static void Prefix(ref float __0)
     {
         ArchipelagoConsole.LogMessage($"Money Recieved: {__0}");
+
+        //GameObject.Find("BranchBlockages").SetActive(false);
         //__0 *= 2;
     }
 

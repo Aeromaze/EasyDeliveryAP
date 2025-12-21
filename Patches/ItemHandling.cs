@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using EasyDeliveryAP.Archipelago;
 using EasyDeliveryAP.Utils;
 using HarmonyLib;
 
@@ -24,7 +25,7 @@ public class ItemHandling
     public static bool pendingItems;
     public static List<int> pendingItemIds = [];
 
-    // Debug variables
+    // Debug values
     public static bool pendingItem;
     public static bool pendingRemoval;
     public static int pendingItemId;
@@ -41,6 +42,7 @@ public class ItemHandling
             }
             pendingItemIds = [];
             pendingItems = false;
+            EasyDeliveryAP.save.data.handledIndex = ArchipelagoClient.ServerData.Index;
         }
 
         // Debug methods
@@ -58,14 +60,29 @@ public class ItemHandling
         }
     }
 
+    // debug values
     public static bool pendingUpgrade;
 
     [HarmonyPatch(typeof(TruckUpgrades), "LateUpdate")]
     private static void Prefix(TruckUpgrades __instance)
     {
-        __instance.hasGPS = Items.GPS.Enabled;
+        if (TestData.optionStartMap)
+        {
+            __instance.hasGPS = Items.GPS.Enabled;
+        }
+
+        if (TestData.optionUpgrades == "give")
+        {
+            __instance.hasGPS = Items.GPS.Enabled;
+            __instance.hasTires = Items.Tires.Enabled;
+            __instance.hasBumper = Items.Bumper.Enabled;
+            __instance.hasChains = Items.Chains.Enabled;
+        }
+
+        // debug
         if (pendingUpgrade)
         {
+            __instance.hasGPS = Items.GPS.Enabled;
             __instance.hasTires = Items.Tires.Enabled;
             __instance.hasBumper = Items.Bumper.Enabled;
             __instance.hasChains = Items.Chains.Enabled;

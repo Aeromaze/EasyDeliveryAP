@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Archipelago.MultiClient.Net;
@@ -22,6 +23,11 @@ public class ArchipelagoClient
     public static bool Authenticated;
     private bool attemptingConnection;
 
+    // data storage
+    public static string payload_checks;
+
+    private static Dictionary<long, ScoutedItemInfo> scoutedItemInfo = [];
+
     public static ArchipelagoData ServerData = new();
     public DeathLinkHandler DeathLinkHandler;
     private ArchipelagoSession session;
@@ -41,7 +47,7 @@ public class ArchipelagoClient
         }
         catch (Exception e)
         {
-            Plugin.BepinLogger.LogError(e);
+            EasyDeliveryAP.BepinLogger.LogError(e);
         }
 
         TryConnect();
@@ -79,7 +85,7 @@ public class ArchipelagoClient
         }
         catch (Exception e)
         {
-            Plugin.BepinLogger.LogError(e);
+            EasyDeliveryAP.BepinLogger.LogError(e);
             HandleConnectResult(new LoginFailure(e.ToString()));
             attemptingConnection = false;
         }
@@ -103,6 +109,10 @@ public class ArchipelagoClient
             session.Locations.CompleteLocationChecksAsync(ServerData.CheckedLocations.ToArray());
             outText = $"Successfully connected to {ServerData.Uri} as {ServerData.SlotName}!";
 
+            scoutedItemInfo = session.Locations.ScoutLocationsAsync([.. session.Locations.AllLocations]).Result;
+            ServerData.slotData.TryGetValue("payload_checks", out object Payload_checks);
+            payload_checks = Payload_checks.ToString();
+
             ArchipelagoConsole.LogMessage(outText);
         }
         else
@@ -111,7 +121,7 @@ public class ArchipelagoClient
             outText = $"Failed to connect to {ServerData.Uri} as {ServerData.SlotName}.";
             outText = failure.Errors.Aggregate(outText, (current, error) => current + $"\n    {error}");
 
-            Plugin.BepinLogger.LogError(outText);
+            EasyDeliveryAP.BepinLogger.LogError(outText);
 
             Authenticated = false;
             Disconnect();
@@ -126,10 +136,17 @@ public class ArchipelagoClient
     /// </summary>
     public void Disconnect()
     {
-        Plugin.BepinLogger.LogDebug("disconnecting from server...");
+        EasyDeliveryAP.BepinLogger.LogDebug("disconnecting from server...");
         session?.Socket.DisconnectAsync();
         session = null;
         Authenticated = false;
+
+        ServerData.Index = 0;
+        ItemHandling.pendingItemIds = [];
+        foreach (ItemData itemData in Items.APIdToItem.Values)
+        {
+            itemData.Received = 0;
+        }
     }
 
     public void SendMessage(string message)
@@ -144,11 +161,14 @@ public class ArchipelagoClient
             ArchipelagoConsole.LogMessage("Not connected. Can't send location.");
             return;
         }
-
-        // ArchipelagoConsole.LogMessage($"Sending location: {location}");
-        session.Locations.CompleteLocationChecks(location);
-        var item = session.Locations.ScoutLocationsAsync(location).Result[location];
-        APGUI.Notification($"Sending {item.ItemDisplayName} to {item.Player}");
+        if (!session.Locations.AllLocationsChecked.Contains(location))
+        {
+            var item = scoutedItemInfo[location];
+            ArchipelagoConsole.LogMessage($"Sending location: {item.LocationDisplayName} (Id: {location})");
+            session.Locations.CompleteLocationChecks(location);
+            APGUI.Notification($"Sending {item.ItemDisplayName} to {item.Player}");
+            ServerData.CheckedLocations.Add(location);
+        }
     }
 
     public void SendCompletion()
@@ -171,34 +191,39 @@ public class ArchipelagoClient
         ServerData.Index++;
 
         // Code to handle items
+        if (Items.APIdToItem.ContainsKey((int)receivedItem.ItemId))
+        {
+            Items.APIdToItem[(int)receivedItem.ItemId].Received += 1;
+        }
+
+        if (EasyDeliveryAP.save.data.handledIndex >= ServerData.Index)
+        {
+            // ArchipelagoConsole.LogMessage($"{EasyDeliveryAP.save.data.handledIndex} {ServerData.Index}");
+            return;
+        }
 
         switch (receivedItem.ItemId)
         {
             case 1:
                 //Items.GPS.Enabled = true;
-                Items.GPS.Received += 1;
                 APGUI.Notification("Received Map");
                 break;
             case 2:
                 //Items.Tires.Enabled = true;
-                Items.Tires.Received += 1;
                 APGUI.Notification("Received Snow Tires");
                 break;
             case 3:
                 //Items.Bumper.Enabled = true;
-                Items.Bumper.Received += 1;
                 APGUI.Notification("Received Bumper Bar");
                 break;
             case 4:
                 //Items.Chains.Enabled = true;
-                Items.Chains.Received += 1;
                 APGUI.Notification("Received Ice Chains");
                 break;
             case 10:
-                ItemHandling.pendingMoney = 33;
+                ItemHandling.pendingMoney += 33;
                 break;
             case >= 100 and <= 117: // Inventory items
-                Items.APIdToItem[(int)receivedItem.ItemId].Received += 1;
                 ItemHandling.pendingItemIds.Add((int)receivedItem.ItemId - 100);
                 ItemHandling.pendingItems = true;
                 APGUI.Notification($"Received {Items.APIdToItem[(int)receivedItem.ItemId].Name}");
@@ -216,8 +241,9 @@ public class ArchipelagoClient
     /// <param name="message">message received from the server</param>
     private void OnSessionErrorReceived(Exception e, string message)
     {
-        Plugin.BepinLogger.LogError(e);
+        EasyDeliveryAP.BepinLogger.LogError(e);
         ArchipelagoConsole.LogMessage(message);
+        Disconnect();
     }
 
     /// <summary>
@@ -226,7 +252,7 @@ public class ArchipelagoClient
     /// <param name="reason"></param>
     private void OnSessionSocketClosed(string reason)
     {
-        Plugin.BepinLogger.LogError($"Connection to Archipelago lost: {reason}");
+        EasyDeliveryAP.BepinLogger.LogError($"Connection to Archipelago lost: {reason}");
         Disconnect();
     }
 }
