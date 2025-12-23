@@ -30,7 +30,7 @@ public class ArchipelagoClient
 
     public static ArchipelagoData ServerData = new();
     public DeathLinkHandler DeathLinkHandler;
-    private ArchipelagoSession session;
+    public ArchipelagoSession session;
 
     /// <summary>
     /// call to connect to an Archipelago session. Connection info should already be set up on ServerData

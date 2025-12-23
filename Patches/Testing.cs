@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Numerics;
 using EasyDeliveryAP.Archipelago;
 using EasyDeliveryAP.Utils;
@@ -14,6 +15,8 @@ namespace EasyDeliveryAP;
 // [HarmonyPatch]
 public class Testing
 {
+    private static readonly ArchipelagoClient archipelago = EasyDeliveryAP.ArchipelagoClient;
+
     [HarmonyPatch(typeof(sGoals), "CompleteGoal")]
     private static void Prefix(sGoals.Goal __0, sGoals __instance)
     {
@@ -48,13 +51,15 @@ public class Testing
 
         foreach (sMapNode node in __instance.navigation.allDestinationNodes)
         {
-            ArchipelagoConsole.LogMessage($"Dest Node: {node.name}"); // local destinations
+            //ArchipelagoConsole.LogMessage($"Dest Node: {node.name}"); // local destinations
         }
 
         foreach (TunnelNode node in __instance.tunnelNodes)
         {
-            ArchipelagoConsole.LogMessage($"Intercity Node: {node.distances}");
+            // ArchipelagoConsole.LogMessage($"Intercity Node: {node.distances}");
         }
+        for (int i = __instance.jobs.Count - 1; i >=0; i--)
+        ArchipelagoConsole.LogMessage($"{__instance.jobs[i].to.name}");
     }
 
     [HarmonyPatch(typeof(sHUD), "ReceivePayment")]
@@ -328,6 +333,8 @@ public class Testing
         }
         lastscreen = screen.scene.name;
     }
+
+    
 }
 /* Classes to check later
     PurchasableItem

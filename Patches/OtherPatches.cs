@@ -65,8 +65,11 @@ public class OtherPatches
 
     public static GameObject upgradedBasedProgression;
     public static GameObject shopInteriors;
-    public static Dictionary<string, Transform> transform = [];
+    public static GameObject nodes;
+    public static Dictionary<string, Transform> progression = [];
     public static Dictionary<string, Transform> storeInteriors = [];
+    public static Dictionary<string, Transform> Nodes = [];
+
 
     // A good place to get neccessary gameobjects on scene change
     
@@ -77,21 +80,39 @@ public class OtherPatches
         {
             shopInteriors = GameObject.Find("StoreInteriors");
             storeInteriors = [];
-            foreach (Transform tform in shopInteriors.GetComponentsInChildren<Transform>(true))
+            foreach (Transform transform in shopInteriors.GetComponentsInChildren<Transform>(true))
             {
-                storeInteriors.TryAdd(tform.name, tform);
+                storeInteriors.TryAdd(transform.name, transform);
             }
             
         }
-        if (currentScene == 1)
+        else if (currentScene == 1)
         {
             shopInteriors = GameObject.Find("Store Interiors");
             storeInteriors = [];
-            foreach (Transform tform in shopInteriors.GetComponentsInChildren<Transform>(true))
+            foreach (Transform transform in shopInteriors.GetComponentsInChildren<Transform>(true))
             {
-                storeInteriors.TryAdd(tform.name, tform);
+                storeInteriors.TryAdd(transform.name, transform);
             }
             
+        }
+
+        if (currentScene == 1 || currentScene == 4 || currentScene == 5)
+        {
+            nodes = GameObject.Find("NavigationNodes");
+            Nodes = [];
+            foreach (Transform transform in nodes.GetComponentsInChildren<Transform>(true))
+            {
+                Nodes.TryAdd(transform.name, transform);
+            }
+        }
+
+        if (currentScene == 1)
+        {
+            foreach (string node in Nodes.Keys)
+            {
+                
+            }
         }
 
         /*
@@ -222,5 +243,69 @@ public class OtherPatches
             EasyDeliveryAP.save.data.handledIndex = 0;
         }
         lastscreen = screen.scene.name;
+    }
+
+    [HarmonyPatch(typeof(jobBoard), "DrawJobList")]
+    private static void Postfix(jobBoard __instance)
+    {
+        if (!ArchipelagoClient.Authenticated) return;
+        var checkedLocations = archipelago.session.Locations.AllLocationsChecked;
+
+        List<jobBoard.Job> jobs = __instance.jobs;
+        for (int i = jobs.Count - 1; i >=0; i--)
+        {
+            jobBoard.Job job = jobs[i];
+            int checks = 0;
+            if (job.isIntercity)
+            {
+                string location;
+                if (job.to.name == "Mountain Town")
+                {
+                    Locations.MountainTownIndex.TryGetValue(job.destinationIndex, out NodeData node);
+                    location = node.Town;
+                }
+                else if (job.to.name == "Snowy Peaks")
+                {
+                    Locations.SnowyPeaksIndex.TryGetValue(job.destinationIndex, out NodeData node);
+                    location = node.Town;
+                }
+                else if (job.to.name == "Fishing Town")
+                {
+                    Locations.FishingTownIndex.TryGetValue(job.destinationIndex, out NodeData node);
+                    location = node.Town;
+                }
+                else
+                {
+                    location = "";
+                }
+
+                if (Locations.Deliveries.TryGetValue($"{job.from.town.name} to {location} Delivery", out int deliveryId))                
+                {
+                    if (!checkedLocations.Contains(deliveryId))
+                    checks += 1;
+                }
+                //else ArchipelagoConsole.LogMessage($"{job.from.town.name} to {location} Delivery");
+                
+            }
+            else
+            {
+                if (Locations.Deliveries.TryGetValue($"{job.from.town.name} to {job.to.town.name} Delivery", out int deliveryId))
+                {
+                    if (!checkedLocations.Contains(deliveryId))
+                    checks += 1;
+                }
+                //else ArchipelagoConsole.LogMessage($"{job.from.town.name} to {job.to.town.name} Delivery");
+
+            }
+            if (Locations.PayloadDeliveries.TryGetValue(job.payloadPrefab.name, out int payload))
+            {
+                if (!checkedLocations.Contains(payload) && ArchipelagoClient.payload_checks == "1")
+                checks += 1;
+            }
+            //else ArchipelagoConsole.LogMessage($"{job.payloadPrefab.name} is not registered");
+
+            if (checks != 0)
+            __instance.R.fput(checks.ToString(), 128f, (24 + (6f + (i * 4)) * 8));
+        }
     }
 }

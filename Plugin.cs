@@ -19,7 +19,7 @@ public class EasyDeliveryAP : BaseUnityPlugin
 {
     public const string PluginGUID = "com.aeromaze.easyDeliveryAP";
     public const string PluginName = "EasyDeliveryAP";
-    public const string PluginVersion = "0.0.2";
+    public const string PluginVersion = "0.0.3";
 
     public const string ModDisplayInfo = $"{PluginName} v{PluginVersion}";
     private const string APDisplayInfo = $"Archipelago v{ArchipelagoClient.APVersion}";
@@ -30,7 +30,7 @@ public class EasyDeliveryAP : BaseUnityPlugin
     internal static ModdedSaveSystem<APSaveFile> save = new("Archipelago");
 
     // Debug vars
-    public bool debug = false;
+    public static bool debug = false;
     string itemId = "";
     string obj = "";
     // GameObject obj2;
@@ -143,12 +143,12 @@ public class EasyDeliveryAP : BaseUnityPlugin
             {
                 // obj2 = GameObject.Find(obj);
                 // ArchipelagoConsole.LogMessage($"{obj2.GetInstanceID()}");
-                OtherPatches.transform[obj].gameObject.SetActive(false);
+                OtherPatches.progression[obj].gameObject.SetActive(false);
 
             }
             if (GUI.Button(new Rect(120, 310, 100, 20), "Activate Object"))
             {
-                OtherPatches.transform[obj].gameObject.SetActive(true);
+                OtherPatches.progression[obj].gameObject.SetActive(true);
             }
             if (GUI.Button(new Rect(16, 333, 100, 20), "Print Objects"))
             {

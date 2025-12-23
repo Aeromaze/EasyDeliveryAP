@@ -20,10 +20,17 @@ public class LocationHandling
     {
         ArchipelagoConsole.LogMessage($"Starting delivery from: {__instance.selectedJob.shop.name} in {__instance.selectedJob.from.town.name} - {__instance.cityName} (Dest index: {__instance.selectedJob.destinationIndex})");
         // ArchipelagoConsole.LogMessage($"Tunnel amount: {__instance.tunnelNodes.Length} GPS: {__instance.GPSEnabled}");
-        
         jobStartTown = __instance.selectedJob.from.town.name;
         jobStartShop = __instance.selectedJob.shop.name;
         jobDestinationIndex = __instance.selectedJob.destinationIndex;
+        if (EasyDeliveryAP.debug)
+        {
+            ArchipelagoConsole.LogMessage($"Destination node: {__instance.selectedJob.to.name} Bool: {__instance.selectedJob.to.destination}");
+            foreach (var item in __instance.selectedJob.to.connections)
+            {
+                ArchipelagoConsole.LogMessage($"Connections: {item.name} Bool: {item.destination}");
+            }
+        }
     }
 
     [HarmonyPatch(typeof(jobBoard), "CompleteJob")]
@@ -32,7 +39,7 @@ public class LocationHandling
         ArchipelagoConsole.LogMessage($"Completed delivering {__instance.selectedJob.payloadPrefab.name} to: {__instance.selectedJob.to.town.name} - {__instance.cityName} (Dest index: {jobDestinationIndex})");
 
         string delivery = $"{jobStartTown} to {__instance.selectedJob.to.town.name} Delivery";
-        if (Locations.GetDeliveries().TryGetValue(delivery, out int locationId))
+        if (Locations.Deliveries.TryGetValue(delivery, out int locationId))
         {
             // ArchipelagoConsole.LogMessage($"Sending Location: {delivery}\nId: {locationId}");
             archipelago.SendLocation(locationId);
