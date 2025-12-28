@@ -69,6 +69,7 @@ public class OtherPatches
     public static Dictionary<string, Transform> progression = [];
     public static Dictionary<string, Transform> storeInteriors = [];
     public static Dictionary<string, Transform> Nodes = [];
+    public static Dictionary<string, sMapNode> MapNodes = [];
 
 
     // A good place to get neccessary gameobjects on scene change
@@ -103,16 +104,29 @@ public class OtherPatches
             Nodes = [];
             foreach (Transform transform in nodes.GetComponentsInChildren<Transform>(true))
             {
+                // if (transform.name != "Bar")
                 Nodes.TryAdd(transform.name, transform);
+            }
+            MapNodes = [];
+            foreach (sMapNode mapNode in nodes.GetComponentsInChildren<sMapNode>(true))
+            {
+                MapNodes.TryAdd(mapNode.name, mapNode);
             }
         }
 
-        if (currentScene == 1)
+        if (currentScene == 1 && EasyDeliveryAP.debug)
         {
-            foreach (string node in Nodes.Keys)
+            foreach (string node in MapNodes.Keys)
             {
-                
+                //ArchipelagoConsole.LogMessage($"{node} - D: {MapNodes[node].destination} - E: {MapNodes[node].enabled}");
+                if (Locations.MountainTownNode.TryGetValue(MapNodes[node].name, out NodeData nodeData))
+                    if (nodeData.Town == "Upton")
+                    {
+                        // MapNodes[node].destination = false;
+                    }
+                ArchipelagoConsole.LogMessage($"{node} - D: {MapNodes[node].destination} - E: {MapNodes[node].enabled}");
             }
+            //Nodes["Upton"].gameObject.SetActive(false);
         }
 
         /*
@@ -245,6 +259,7 @@ public class OtherPatches
         lastscreen = screen.scene.name;
     }
 
+    // Show how many checks a delivery would send
     [HarmonyPatch(typeof(jobBoard), "DrawJobList")]
     private static void Postfix(jobBoard __instance)
     {
@@ -283,6 +298,8 @@ public class OtherPatches
                 {
                     if (!checkedLocations.Contains(deliveryId))
                     checks += 1;
+                    if (!checkedLocations.Contains(deliveryId + 10000))
+                    checks += 1;
                 }
                 //else ArchipelagoConsole.LogMessage($"{job.from.town.name} to {location} Delivery");
                 
@@ -292,6 +309,8 @@ public class OtherPatches
                 if (Locations.Deliveries.TryGetValue($"{job.from.town.name} to {job.to.town.name} Delivery", out int deliveryId))
                 {
                     if (!checkedLocations.Contains(deliveryId))
+                    checks += 1;
+                    if (!checkedLocations.Contains(deliveryId + 10000))
                     checks += 1;
                 }
                 //else ArchipelagoConsole.LogMessage($"{job.from.town.name} to {job.to.town.name} Delivery");

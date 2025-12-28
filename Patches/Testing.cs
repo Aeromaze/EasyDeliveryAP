@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using EasyDeliveryAP.Archipelago;
 using EasyDeliveryAP.Utils;
@@ -36,13 +37,19 @@ public class Testing
     }
 
     [HarmonyPatch(typeof(jobBoard), "GenerateJobBetter")]
-    private static void Prefix(int __0, jobBoard __instance)
+    private static void Prefix(int __0, ref jobBoard __instance)
     {
         ArchipelagoConsole.LogMessage("Towns:");
+        // OtherPatches.Nodes["Upton"].gameObject.SetActive(false);
+        // OtherPatches.Nodes["Weston"].gameObject.SetActive(false);
+        //Transform[] navTowns = [];
         foreach (Transform town in __instance.navigation.towns)
         {
             ArchipelagoConsole.LogMessage($"  {town.name}"); // valid start points?
+            //if (town.name != "Upton")
+            //navTowns.AddItem(town);
         }
+        //__instance.navigation.towns = navTowns;
         
         foreach (ShopInfo shop in __instance.navigation.shopNodes)
         {
@@ -59,7 +66,15 @@ public class Testing
             // ArchipelagoConsole.LogMessage($"Intercity Node: {node.distances}");
         }
         for (int i = __instance.jobs.Count - 1; i >=0; i--)
-        ArchipelagoConsole.LogMessage($"{__instance.jobs[i].to.name}");
+            ArchipelagoConsole.LogMessage($"{__instance.jobs[i].to.name}");
+    }
+
+    [HarmonyPatch(typeof(jobBoard), "GenerateJobBetter")]
+    private static void Postfix(ref jobBoard.Job __result)
+    {
+        //if (__result.from.town.name == "Upton")
+        //__result = null;
+        ArchipelagoConsole.LogMessage($"");
     }
 
     [HarmonyPatch(typeof(sHUD), "ReceivePayment")]
@@ -337,6 +352,9 @@ public class Testing
     
 }
 /* Classes to check later
+    OnboardManager
+
+
     PurchasableItem
     PurchaseUpgrade
 

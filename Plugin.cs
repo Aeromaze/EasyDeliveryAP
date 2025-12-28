@@ -12,6 +12,10 @@ namespace EasyDeliveryAP;
 struct APSaveFile
 {
     public int handledIndex;
+    public string APSeed;
+    public string slotName;
+    public string uri;
+    public string modVersion;
 }
 
 [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
@@ -19,7 +23,7 @@ public class EasyDeliveryAP : BaseUnityPlugin
 {
     public const string PluginGUID = "com.aeromaze.easyDeliveryAP";
     public const string PluginName = "EasyDeliveryAP";
-    public const string PluginVersion = "0.0.3";
+    public const string PluginVersion = "0.0.4";
 
     public const string ModDisplayInfo = $"{PluginName} v{PluginVersion}";
     private const string APDisplayInfo = $"Archipelago v{ArchipelagoClient.APVersion}";
@@ -33,6 +37,9 @@ public class EasyDeliveryAP : BaseUnityPlugin
     public static bool debug = false;
     string itemId = "";
     string obj = "";
+    bool upton = true;
+    bool weston = true;
+    bool easton = true;
     // GameObject obj2;
 
     private void Awake()
@@ -164,6 +171,21 @@ public class EasyDeliveryAP : BaseUnityPlugin
             if (GUI.Button(new Rect(16, 373, 100, 20), "HandledIndex"))
             {
                 ArchipelagoConsole.LogMessage($"{save.data.handledIndex}");
+            }
+            if (GUI.Button(new Rect(16, 393, 100, 20), "Upton") && OtherPatches.currentScene == 1)
+            {
+                OtherPatches.Nodes["Upton"].gameObject.SetActive(upton);
+                upton = !upton;
+            }
+            if (GUI.Button(new Rect(16, 413, 100, 20), "Weston") && OtherPatches.currentScene == 1)
+            {
+                OtherPatches.Nodes["Weston"].gameObject.SetActive(weston);
+                weston = !weston;
+            }
+            if (GUI.Button(new Rect(16, 433, 100, 20), "Easton") && OtherPatches.currentScene == 1)
+            {
+                OtherPatches.Nodes["Easton"].gameObject.SetActive(easton);
+                easton = !easton;
             }
         }
     }

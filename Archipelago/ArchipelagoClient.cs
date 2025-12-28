@@ -25,6 +25,7 @@ public class ArchipelagoClient
 
     // data storage
     public static string payload_checks;
+    public static string perfect_deliveries;
 
     private static Dictionary<long, ScoutedItemInfo> scoutedItemInfo = [];
 
@@ -112,6 +113,8 @@ public class ArchipelagoClient
             scoutedItemInfo = session.Locations.ScoutLocationsAsync([.. session.Locations.AllLocations]).Result;
             ServerData.slotData.TryGetValue("payload_checks", out object Payload_checks);
             payload_checks = Payload_checks.ToString();
+            ServerData.slotData.TryGetValue("perfect_deliveries", out object Perfect_deliveries);
+            perfect_deliveries = Perfect_deliveries.ToString();
 
             ArchipelagoConsole.LogMessage(outText);
         }

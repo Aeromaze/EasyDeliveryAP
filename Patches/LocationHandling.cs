@@ -41,8 +41,12 @@ public class LocationHandling
         string delivery = $"{jobStartTown} to {__instance.selectedJob.to.town.name} Delivery";
         if (Locations.Deliveries.TryGetValue(delivery, out int locationId))
         {
-            // ArchipelagoConsole.LogMessage($"Sending Location: {delivery}\nId: {locationId}");
-            archipelago.SendLocation(locationId);
+            if (EasyDeliveryAP.debug)
+                ArchipelagoConsole.LogMessage($"Option: {ArchipelagoClient.perfect_deliveries}");
+            if (ArchipelagoClient.perfect_deliveries == "0" || ArchipelagoClient.perfect_deliveries == "1")
+                archipelago.SendLocation(locationId);
+            if ((ArchipelagoClient.perfect_deliveries == "1" || ArchipelagoClient.perfect_deliveries == "2") && __instance.recoveries <= 0)
+                archipelago.SendLocation(10000 + locationId);
         }
         // ArchipelagoConsole.LogMessage($"payload_checks: {ArchipelagoClient.payload_checks}");
         if (ArchipelagoClient.payload_checks == "1" && Locations.PayloadDeliveries.TryGetValue(__instance.selectedJob.payloadPrefab.name, out int payloadId))
