@@ -57,6 +57,22 @@ public class Locations
         {"Drink", 17},
     };
 
+    public static readonly Dictionary<string, int> BlindBags = new()
+    {
+        {"1Blind Bag", 20},
+        {"1Blind Bag (1)", 21},
+        {"1Blind Bag (2)", 22},
+        {"1Blind Bag (3)", 23},
+        {"5Blind Bag", 24},
+        {"5Blind Bag (1)", 25},
+        {"5Blind Bag (2)", 26},
+        {"5Blind Bag (3)", 27},
+        {"4Blind Bag", 28},
+        {"4Blind Bag (1)", 29},
+        {"4Blind Bag (2)", 30},
+        {"4Blind Bag (3)", 31},
+    };
+
     // Mountain Town nodes
     public class MountainTown
     {
@@ -124,7 +140,7 @@ public class Locations
         public static NodeData Node101 = new("Node (101)", "Clifton", 3);
         public static NodeData Nodedock2 = new("Node (dock2)", "Smalton", 4);
         public static NodeData Node11 = new("Node (11)", "Damton", 5);
-        public static NodeData Nodedock31 = new("Node (dock3) (1)", "Smalton", 6);
+        public static NodeData Nodedock31 = new("Node (dock3) (1)", "Damton", 6);
         public static NodeData Node58 = new("Node (58)", "Damton", 7);
         public static NodeData Node91 = new("Node (91)", "Clifton", 8);
         public static NodeData Node54 = new("Node (54)", "Damton", 9);
@@ -137,7 +153,7 @@ public class Locations
         public static NodeData Node55 = new("Node (55)", "Damton", 16);
         public static NodeData Node112 = new("Node (112)", "Damton", 17);
         public static NodeData Node12 = new("Node (12)", "Damton", 18);
-        public static NodeData Nodedock3 = new("Node (dock3)", "Smalton", 19);
+        public static NodeData Nodedock3 = new("Node (dock3)", "Damton", 19);
         public static NodeData Nodedock1 = new("Node(dock)(1)", "Smalton", 20);
         public static NodeData Node14 = new("Node (14)", "Smalton", 21);
         public static NodeData Nodedock21 = new("Node (dock2) (1)", "Smalton", 22);

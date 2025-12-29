@@ -202,6 +202,7 @@ public class OtherPatches
         return true;
     }
 
+    // DeathLink handling
     private static bool dead;
     public static bool dying;
 
@@ -232,6 +233,7 @@ public class OtherPatches
         archipelago.Disconnect();
     }
 
+    // Make sure Snow Tires can be bought
     [HarmonyPatch(typeof(sTeleporter), "Teleport")]
     private static void Prefix()
     {
@@ -296,9 +298,9 @@ public class OtherPatches
 
                 if (Locations.Deliveries.TryGetValue($"{job.from.town.name} to {location} Delivery", out int deliveryId))                
                 {
-                    if (!checkedLocations.Contains(deliveryId))
+                    if (!checkedLocations.Contains(deliveryId) && (ArchipelagoClient.perfect_deliveries == "0" || ArchipelagoClient.perfect_deliveries == "1"))
                     checks += 1;
-                    if (!checkedLocations.Contains(deliveryId + 10000))
+                    if (!checkedLocations.Contains(deliveryId + 10000) && (ArchipelagoClient.perfect_deliveries == "1" || ArchipelagoClient.perfect_deliveries == "2"))
                     checks += 1;
                 }
                 //else ArchipelagoConsole.LogMessage($"{job.from.town.name} to {location} Delivery");
@@ -308,9 +310,9 @@ public class OtherPatches
             {
                 if (Locations.Deliveries.TryGetValue($"{job.from.town.name} to {job.to.town.name} Delivery", out int deliveryId))
                 {
-                    if (!checkedLocations.Contains(deliveryId))
+                    if (!checkedLocations.Contains(deliveryId) && (ArchipelagoClient.perfect_deliveries == "0" || ArchipelagoClient.perfect_deliveries == "1"))
                     checks += 1;
-                    if (!checkedLocations.Contains(deliveryId + 10000))
+                    if (!checkedLocations.Contains(deliveryId + 10000) && (ArchipelagoClient.perfect_deliveries == "1" || ArchipelagoClient.perfect_deliveries == "2"))
                     checks += 1;
                 }
                 //else ArchipelagoConsole.LogMessage($"{job.from.town.name} to {job.to.town.name} Delivery");

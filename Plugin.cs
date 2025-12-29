@@ -12,10 +12,10 @@ namespace EasyDeliveryAP;
 struct APSaveFile
 {
     public int handledIndex;
-    public string APSeed;
-    public string slotName;
-    public string uri;
-    public string modVersion;
+    // public string APSeed;
+    // public string slotName;
+    // public string uri;
+    // public string modVersion;
 }
 
 [BepInPlugin(PluginGUID, PluginName, PluginVersion)]

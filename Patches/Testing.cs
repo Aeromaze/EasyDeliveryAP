@@ -136,7 +136,7 @@ public class Testing
         ArchipelagoConsole.LogMessage($"Trashing item id: {__0}");
     }
 
-    // Might help with fixing goals
+    // Might help with fixing goals, or not
     [HarmonyPatch(typeof(GiveGoal), "Start")]
     private static void Prefix(GiveGoal __instance)
     {
@@ -335,6 +335,7 @@ public class Testing
         ArchipelagoConsole.LogMessage($"ToggleMapNode: {__instance.nodeToToggle.name}");
     }
 
+    // change currentscene check to use this?
     private static GameObject screen;
     private static string lastscreen = "";
 
@@ -349,30 +350,15 @@ public class Testing
         lastscreen = screen.scene.name;
     }
 
-    
+    [HarmonyPatch(typeof(SnowcatManager), "EnableSnowcat")]
+    private static void Prefix(SnowcatManager __instance)
+    {
+        ArchipelagoConsole.LogMessage($"Snowcat: {__instance}");
+    }
+
+    [HarmonyPatch(typeof(SnowcatManager), "ClosestIndex")]
+    private static void Postfix(int __result, SnowcatManager __instance)
+    {
+        ArchipelagoConsole.LogMessage($"SnowcatBobbleIndex: {__result}");
+    }
 }
-/* Classes to check later
-    OnboardManager
-
-
-    PurchasableItem
-    PurchaseUpgrade
-
-
-    InventoryTutorial
-    JobsCompleteGoal
-    Lighter
-    MailDisplay
-    MailManager
-
-    TunnelNode
-    VendingMachine
-    ToggleMapNode
-    ThrowableItem
-    sTeleporter
-    sRadioPlayer
-    SnowcatManager
-    sFileReader
-    setSnowIntensity
-    RoadSign    SignSanity :thinking:
-*/

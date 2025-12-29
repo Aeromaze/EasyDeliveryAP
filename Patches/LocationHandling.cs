@@ -69,4 +69,38 @@ public class LocationHandling
         // ArchipelagoConsole.LogMessage($"Ending: {__instance.currentEnding}");
         archipelago.SendCompletion();
     }
+
+    [HarmonyPatch(typeof(GenericItemCheckout), "MakePayment")]
+    private static void Prefix(float __0, GenericItemCheckout __instance)
+    {
+        if (EasyDeliveryAP.debug)
+            ArchipelagoConsole.LogMessage($"Buying {__instance.item.name} for {__0}$");
+        if (Locations.BlindBags.TryGetValue($"{OtherPatches.currentScene}{__instance.item.name}", out int blindBag) && ArchipelagoClient.blind_bags == "1")
+        {
+            // ArchipelagoConsole.LogMessage($"Sending Blind Bag: {blindBag}");
+            archipelago.SendLocation(blindBag);
+        }
+    }
+
+    // Snowcat checks
+    private static bool snowcat = false;
+
+    [HarmonyPatch(typeof(SnowcatManager), "EnableSnowcat")]
+    private static void Prefix()
+    {
+        snowcat = true;
+    }
+
+    [HarmonyPatch(typeof(SnowcatManager), "EnableSnowcat")]
+    private static void Postfix()
+    {
+        snowcat = false;
+    }
+
+    [HarmonyPatch(typeof(SnowcatManager), "ClosestIndex")]
+    private static void Postfix(int __result)
+    {
+        ArchipelagoConsole.LogMessage($"SnowcatBobbleIndex: {__result}");
+        if (snowcat) archipelago.SendLocation(__result + 40);
+    }
 }

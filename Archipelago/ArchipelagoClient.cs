@@ -26,6 +26,7 @@ public class ArchipelagoClient
     // data storage
     public static string payload_checks;
     public static string perfect_deliveries;
+    public static string blind_bags;
 
     private static Dictionary<long, ScoutedItemInfo> scoutedItemInfo = [];
 
@@ -115,6 +116,8 @@ public class ArchipelagoClient
             payload_checks = Payload_checks.ToString();
             ServerData.slotData.TryGetValue("perfect_deliveries", out object Perfect_deliveries);
             perfect_deliveries = Perfect_deliveries.ToString();
+            ServerData.slotData.TryGetValue("blind_bags", out object Blind_bags);
+            blind_bags = Blind_bags.ToString();
 
             ArchipelagoConsole.LogMessage(outText);
         }
@@ -164,7 +167,7 @@ public class ArchipelagoClient
             ArchipelagoConsole.LogMessage("Not connected. Can't send location.");
             return;
         }
-        if (!session.Locations.AllLocationsChecked.Contains(location))
+        if (session.Locations.AllMissingLocations.Contains(location))
         {
             var item = scoutedItemInfo[location];
             ArchipelagoConsole.LogMessage($"Sending location: {item.LocationDisplayName} (Id: {location})");
