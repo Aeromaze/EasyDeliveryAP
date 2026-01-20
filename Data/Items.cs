@@ -68,8 +68,14 @@ public class Items
     public static ItemData RestoreDisc = new("Restore Disc", 16);
     public static ItemData HandheldRadio = new("Handheld Radio", 17);
 
+    // Tunnels
+    public static ItemData TunnelSP = new("Snowy Peaks Tunnel");
+    public static ItemData TunnelFT = new("Fishing Town Tunnel");
+    public static ItemData TunnelFactory = new("Factory Tunnel");
+
     // Misc
     public static ItemData Money = new("Money");
+    public static ItemData RadioTower = new("Radio Tower");
 
     public static Dictionary<int, ItemData> APIdToItem = new()
     {
@@ -78,6 +84,10 @@ public class Items
         {3, Bumper},
         {4, Chains},
         {10, Money},
+        {11, TunnelSP},
+        {12, TunnelFT},
+        {13, TunnelFactory},
+        {20, RadioTower},
         {100, EnergyDrink},
         {101, EmptyCan},
         {102, Lantern},

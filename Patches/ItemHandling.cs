@@ -25,6 +25,8 @@ public class ItemHandling
     public static bool pendingItems;
     public static List<int> pendingItemIds = [];
 
+    public static List<int> radio;
+
     // Debug values
     public static bool pendingItem;
     public static bool pendingRemoval;
@@ -44,6 +46,8 @@ public class ItemHandling
             pendingItems = false;
             EasyDeliveryAP.save.data.handledIndex = ArchipelagoClient.ServerData.Index;
         }
+        
+        radio = __instance.inventory;
 
         // Debug methods
         if (pendingItem)
@@ -71,7 +75,7 @@ public class ItemHandling
             __instance.hasGPS = Items.GPS.Enabled;
         }
 
-        if (TestData.optionUpgrades == "give")
+        if (APData.car_upgrades == "1")
         {
             __instance.hasGPS = Items.GPS.Enabled;
             __instance.hasTires = Items.Tires.Enabled;

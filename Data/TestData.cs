@@ -2,7 +2,6 @@ namespace EasyDeliveryAP;
 
 public class TestData
 {
-    public static string optionUpgrades = "buy";
-    public static string optionGate = "radio";
+    // Default on until an option to start without map is added
     public static bool optionStartMap = true;
 }

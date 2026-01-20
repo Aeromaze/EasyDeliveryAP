@@ -74,7 +74,7 @@ public class Testing
     {
         //if (__result.from.town.name == "Upton")
         //__result = null;
-        ArchipelagoConsole.LogMessage($"");
+        // ArchipelagoConsole.LogMessage($"");
     }
 
     [HarmonyPatch(typeof(sHUD), "ReceivePayment")]
@@ -333,32 +333,5 @@ public class Testing
     private static void Prefix(ToggleMapNode __instance)
     {
         ArchipelagoConsole.LogMessage($"ToggleMapNode: {__instance.nodeToToggle.name}");
-    }
-
-    // change currentscene check to use this?
-    private static GameObject screen;
-    private static string lastscreen = "";
-
-    [HarmonyPatch(typeof(MenuScreenTransition), "Update")]
-    private static void Postfix(MenuScreenTransition __instance)
-    {
-        screen = __instance.screen;
-        if (screen.scene.name != lastscreen)
-        {
-            ArchipelagoConsole.LogMessage($"Menu Screen: {__instance.screen.scene.name}");
-        }
-        lastscreen = screen.scene.name;
-    }
-
-    [HarmonyPatch(typeof(SnowcatManager), "EnableSnowcat")]
-    private static void Prefix(SnowcatManager __instance)
-    {
-        ArchipelagoConsole.LogMessage($"Snowcat: {__instance}");
-    }
-
-    [HarmonyPatch(typeof(SnowcatManager), "ClosestIndex")]
-    private static void Postfix(int __result, SnowcatManager __instance)
-    {
-        ArchipelagoConsole.LogMessage($"SnowcatBobbleIndex: {__result}");
     }
 }

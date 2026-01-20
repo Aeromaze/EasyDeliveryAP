@@ -60,7 +60,7 @@ public class DeathLinkHandler
             ? $"Received Death Link from: {deathLink.Source}"
             : deathLink.Cause);
         
-        OtherPatches.dying = true;
+        DeathLinkPatches.dying = true;
     }
 
     /// <summary>

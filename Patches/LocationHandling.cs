@@ -41,15 +41,13 @@ public class LocationHandling
         string delivery = $"{jobStartTown} to {__instance.selectedJob.to.town.name} Delivery";
         if (Locations.Deliveries.TryGetValue(delivery, out int locationId))
         {
-            if (EasyDeliveryAP.debug)
-                ArchipelagoConsole.LogMessage($"Option: {ArchipelagoClient.perfect_deliveries}");
-            if (ArchipelagoClient.perfect_deliveries == "0" || ArchipelagoClient.perfect_deliveries == "1")
+            if (APData.perfect_deliveries == "0" || APData.perfect_deliveries == "1")
                 archipelago.SendLocation(locationId);
-            if ((ArchipelagoClient.perfect_deliveries == "1" || ArchipelagoClient.perfect_deliveries == "2") && __instance.recoveries <= 0)
+            if ((APData.perfect_deliveries == "1" || APData.perfect_deliveries == "2") && __instance.recoveries <= 0)
                 archipelago.SendLocation(10000 + locationId);
         }
         // ArchipelagoConsole.LogMessage($"payload_checks: {ArchipelagoClient.payload_checks}");
-        if (ArchipelagoClient.payload_checks == "1" && Locations.PayloadDeliveries.TryGetValue(__instance.selectedJob.payloadPrefab.name, out int payloadId))
+        if (APData.payload_checks == "1" && Locations.PayloadDeliveries.TryGetValue(__instance.selectedJob.payloadPrefab.name, out int payloadId))
         {
             archipelago.SendLocation(payloadId);
         }
@@ -75,7 +73,7 @@ public class LocationHandling
     {
         if (EasyDeliveryAP.debug)
             ArchipelagoConsole.LogMessage($"Buying {__instance.item.name} for {__0}$");
-        if (Locations.BlindBags.TryGetValue($"{OtherPatches.currentScene}{__instance.item.name}", out int blindBag) && ArchipelagoClient.blind_bags == "1")
+        if (Locations.BlindBags.TryGetValue($"{OtherPatches.currentScene}{__instance.item.name}", out int blindBag) && APData.blind_bags == "1")
         {
             // ArchipelagoConsole.LogMessage($"Sending Blind Bag: {blindBag}");
             archipelago.SendLocation(blindBag);

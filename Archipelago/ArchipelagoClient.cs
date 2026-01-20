@@ -23,11 +23,6 @@ public class ArchipelagoClient
     public static bool Authenticated;
     private bool attemptingConnection;
 
-    // data storage
-    public static string payload_checks;
-    public static string perfect_deliveries;
-    public static string blind_bags;
-
     private static Dictionary<long, ScoutedItemInfo> scoutedItemInfo = [];
 
     public static ArchipelagoData ServerData = new();
@@ -112,12 +107,7 @@ public class ArchipelagoClient
             outText = $"Successfully connected to {ServerData.Uri} as {ServerData.SlotName}!";
 
             scoutedItemInfo = session.Locations.ScoutLocationsAsync([.. session.Locations.AllLocations]).Result;
-            ServerData.slotData.TryGetValue("payload_checks", out object Payload_checks);
-            payload_checks = Payload_checks.ToString();
-            ServerData.slotData.TryGetValue("perfect_deliveries", out object Perfect_deliveries);
-            perfect_deliveries = Perfect_deliveries.ToString();
-            ServerData.slotData.TryGetValue("blind_bags", out object Blind_bags);
-            blind_bags = Blind_bags.ToString();
+            APData.SetSlotSettings(ServerData.slotData);
 
             ArchipelagoConsole.LogMessage(outText);
         }
@@ -215,15 +205,15 @@ public class ArchipelagoClient
                 APGUI.Notification("Received Map");
                 break;
             case 2:
-                //Items.Tires.Enabled = true;
+                if (APData.car_upgrades == "1") Items.Tires.Enabled = true;
                 APGUI.Notification("Received Snow Tires");
                 break;
             case 3:
-                //Items.Bumper.Enabled = true;
+                if (APData.car_upgrades == "1") Items.Bumper.Enabled = true;
                 APGUI.Notification("Received Bumper Bar");
                 break;
             case 4:
-                //Items.Chains.Enabled = true;
+                if (APData.car_upgrades == "1") Items.Chains.Enabled = true;
                 APGUI.Notification("Received Ice Chains");
                 break;
             case 10:
@@ -232,6 +222,9 @@ public class ArchipelagoClient
             case >= 100 and <= 117: // Inventory items
                 ItemHandling.pendingItemIds.Add((int)receivedItem.ItemId - 100);
                 ItemHandling.pendingItems = true;
+                APGUI.Notification($"Received {Items.APIdToItem[(int)receivedItem.ItemId].Name}");
+                break;
+            case 20 or 11 or 12 or 13:
                 APGUI.Notification($"Received {Items.APIdToItem[(int)receivedItem.ItemId].Name}");
                 break;
             default:

@@ -9,21 +9,12 @@ using EasyDeliveryAPI;
 
 namespace EasyDeliveryAP;
 
-struct APSaveFile
-{
-    public int handledIndex;
-    // public string APSeed;
-    // public string slotName;
-    // public string uri;
-    // public string modVersion;
-}
-
 [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
 public class EasyDeliveryAP : BaseUnityPlugin
 {
     public const string PluginGUID = "com.aeromaze.easyDeliveryAP";
     public const string PluginName = "EasyDeliveryAP";
-    public const string PluginVersion = "0.0.4";
+    public const string PluginVersion = "0.1.0";
 
     public const string ModDisplayInfo = $"{PluginName} v{PluginVersion}";
     private const string APDisplayInfo = $"Archipelago v{ArchipelagoClient.APVersion}";
@@ -51,10 +42,9 @@ public class EasyDeliveryAP : BaseUnityPlugin
 
         new Harmony(PluginGUID).PatchAll();
 
-        ArchipelagoConsole.LogMessage($"{ModDisplayInfo} loaded!");
-        //ItemHandling.pendingUpgrade = true;
-        Items.GPS.Enabled = true;
+        Logger.LogMessage($"{ModDisplayInfo} loaded!");
 
+        Items.GPS.Enabled = true;
     }
 
     private void OnGUI()
