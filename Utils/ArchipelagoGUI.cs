@@ -10,7 +10,7 @@ public class APGUI
     public static Vector2 icon2 = new(16f, 0f);
     public static Vector2 icon3 = new(32f, 0f); // Top left sun
     public static Vector2 mailIcon = new(160f, 0f); // Unopened Mail
-    public static Vector2 mailIcon2 = new(160f, 16f); // Tea buff icon
+    public static Vector2 teaIcon = new(160f, 16f); // Tea buff icon
     public static Vector2 icon5 = new(144f, 32f);
     public static Vector2 icon6 = new(128f, 32f);
 
@@ -19,7 +19,7 @@ public class APGUI
         if ((bool)hud)
         {
             hud.audioSource.PlayOneShot(hud.notificationSFX, 1f);
-            new sHUD.NotificationParticles(hud, text, 5, mailIcon2);
+            new sHUD.NotificationParticles(hud, text, 5, mailIcon);
         }
     }
 
