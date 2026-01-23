@@ -125,6 +125,8 @@ public class ArchipelagoClient
 
         ArchipelagoConsole.LogMessage(outText);
         attemptingConnection = false;
+        
+        TrackerText.UpdateTracker();
     }
 
     /// <summary>
@@ -143,6 +145,8 @@ public class ArchipelagoClient
         {
             itemData.Received = 0;
         }
+        
+        TrackerText.UpdateTracker();
     }
 
     public void SendMessage(string message)
@@ -165,6 +169,7 @@ public class ArchipelagoClient
             APGUI.Notification($"Sending {item.ItemDisplayName} to {item.Player}");
             ServerData.CheckedLocations.Add(location);
         }
+        TrackerText.UpdateTracker();
     }
 
     public void SendCompletion()
@@ -231,6 +236,8 @@ public class ArchipelagoClient
                 ArchipelagoConsole.LogMessage($"Received unhandled item: {receivedItem.ItemName} Id: {receivedItem.ItemId}");
                 break;
         }
+
+        TrackerText.UpdateTracker();
     }
 
     /// <summary>

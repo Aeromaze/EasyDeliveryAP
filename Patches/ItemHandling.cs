@@ -78,9 +78,9 @@ public class ItemHandling
         if (APData.car_upgrades == "1")
         {
             __instance.hasGPS = Items.GPS.Enabled;
-            __instance.hasTires = Items.Tires.Enabled;
-            __instance.hasBumper = Items.Bumper.Enabled;
-            __instance.hasChains = Items.Chains.Enabled;
+            __instance.hasTires = Items.Tires.Received > 0;
+            __instance.hasBumper = Items.Bumper.Received > 0;
+            __instance.hasChains = Items.Chains.Received > 0;
         }
 
         // debug

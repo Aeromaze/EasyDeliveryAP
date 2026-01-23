@@ -7,7 +7,7 @@ namespace EasyDeliveryAP.Archipelago;
 
 public class DeathLinkHandler
 {
-    private static bool deathLinkEnabled;
+    public static bool deathLinkEnabled;
     private string slotName;
     private readonly DeathLinkService service;
     private readonly Queue<DeathLink> deathLinks = new();

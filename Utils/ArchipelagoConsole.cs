@@ -49,7 +49,7 @@ public static class ArchipelagoConsole
 
     public static void OnGUI()
     {
-        if (logLines.Count == 0) return;
+        if (logLines.Count == 0 || !EasyDeliveryAP.configConsole.Value) return;
 
         if (!Hidden || Time.time - lastUpdateTime < HideTimeout)
         {

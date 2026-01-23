@@ -6,6 +6,8 @@ using UnityEngine;
 using HarmonyLib;
 using System;
 using EasyDeliveryAPI;
+using BepInEx.Configuration;
+using Archipelago.MultiClient.Net.BounceFeatures.DeathLink;
 
 namespace EasyDeliveryAP;
 
@@ -24,8 +26,14 @@ public class EasyDeliveryAP : BaseUnityPlugin
     public static bool deathLink = false;
     internal static ModdedSaveSystem<APSaveFile> save = new("Archipelago");
 
+    public static ConfigEntry<bool> configConsole;
+    public static ConfigEntry<bool> configDeathLink;
+    public static ConfigEntry<bool> configDebug;
+
+    public static DesktopDotExe.File TrackerFile;
+
     // Debug vars
-    public static bool debug = false;
+    public static bool debug = true;
     string itemId = "";
     string obj = "";
     bool upton = true;
@@ -42,9 +50,49 @@ public class EasyDeliveryAP : BaseUnityPlugin
 
         new Harmony(PluginGUID).PatchAll();
 
+        configDeathLink = Config.Bind("General",
+                                    "DeathLink",
+                                    false,
+                                    "Turn on DeathLink");
+
+        configConsole = Config.Bind("General",
+                                    "ShowConsole",
+                                    false,
+                                    "Show the ingame console");
+        
+        if (debug)
+        {
+            configDebug = Config.Bind("Debug",
+                                        "EnableDebug",
+                                        true,
+                                        "Enable debug buttons");
+        }
+
+        EasyAPI.AddConfig("Archipelago", Config);
+
+        EasyAPI.AddListener<ScreenProgram>("Archipelago");
+        TrackerFile = EasyAPI.InstantiateFile();
+        TrackerFile.name = "Tracker";
+        TrackerFile.data = "WIP";
+        TrackerFile.type = DesktopDotExe.FileType.txt;
+        TrackerFile.icon = 3;
+        TrackerFile.iconHover = 4;
+        EasyAPI.AddFile(EasyAPI.DesktopLocation.Main, TrackerFile);
+        //EasyAPI.AddProgram(new TrackerDotExe());
+
         Logger.LogMessage($"{ModDisplayInfo} loaded!");
 
         Items.GPS.Enabled = true;
+    }
+
+    private void Update()
+    {
+        if (DeathLinkHandler.deathLinkEnabled != configDeathLink.Value && ArchipelagoClient.Authenticated)
+        {
+            ArchipelagoClient.DeathLinkHandler.ToggleDeathLink();
+        }
+
+        debug = configDebug?.Value ?? debug;
     }
 
     private void OnGUI()
@@ -63,11 +111,13 @@ public class EasyDeliveryAP : BaseUnityPlugin
             statusMessage = " Status: Connected";
             GUI.Label(new Rect(16, 50, 300, 20), APDisplayInfo + statusMessage);
             
+            /*
             if (GUI.Button(new Rect(16, 90, 150, 20), deathLink ? "Disable DeathLink" : "Enable DeathLink"))
             {
                 ArchipelagoClient.DeathLinkHandler.ToggleDeathLink();
                 deathLink = !deathLink;
             }
+            */
         }
         else
         {
@@ -158,9 +208,9 @@ public class EasyDeliveryAP : BaseUnityPlugin
             {
                 ArchipelagoClient.Disconnect();
             }
-            if (GUI.Button(new Rect(16, 373, 100, 20), "HandledIndex"))
+            if (GUI.Button(new Rect(16, 373, 100, 20), "TrackerText"))
             {
-                ArchipelagoConsole.LogMessage($"{save.data.handledIndex}");
+                TrackerText.UpdateTracker();
             }
             if (GUI.Button(new Rect(16, 393, 100, 20), "Upton") && OtherPatches.currentScene == 1)
             {
