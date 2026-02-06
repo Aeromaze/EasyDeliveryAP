@@ -26,14 +26,18 @@ public class EasyDeliveryAP : BaseUnityPlugin
     public static bool deathLink = false;
     internal static ModdedSaveSystem<APSaveFile> save = new("Archipelago");
 
+    // Configs
     public static ConfigEntry<bool> configConsole;
     public static ConfigEntry<bool> configDeathLink;
+    public static ConfigEntry<bool> configAutoConnect;
     public static ConfigEntry<bool> configDebug;
 
+
     public static DesktopDotExe.File TrackerFile;
+    public static Vector2 trackerPosition;
 
     // Debug vars
-    public static bool debug = true;
+    public static bool debug = false;
     string itemId = "";
     string obj = "";
     bool upton = true;
@@ -59,6 +63,11 @@ public class EasyDeliveryAP : BaseUnityPlugin
                                     "ShowConsole",
                                     false,
                                     "Show the ingame console");
+
+        configAutoConnect = Config.Bind("General",
+                                    "AutoConnect",
+                                    true,
+                                    "Automatically connect to the previous connection when opening a save");
         
         if (debug)
         {
@@ -73,10 +82,13 @@ public class EasyDeliveryAP : BaseUnityPlugin
         EasyAPI.AddListener<ScreenProgram>("Archipelago");
         TrackerFile = EasyAPI.InstantiateFile();
         TrackerFile.name = "Tracker";
-        TrackerFile.data = "WIP";
+        TrackerFile.data = "Not connected";
         TrackerFile.type = DesktopDotExe.FileType.txt;
         TrackerFile.icon = 3;
         TrackerFile.iconHover = 4;
+        trackerPosition.x = 0.35f;
+        trackerPosition.y = 3.15f;
+        TrackerFile.position = trackerPosition;
         EasyAPI.AddFile(EasyAPI.DesktopLocation.Main, TrackerFile);
         //EasyAPI.AddProgram(new TrackerDotExe());
 
@@ -90,6 +102,11 @@ public class EasyDeliveryAP : BaseUnityPlugin
         if (DeathLinkHandler.deathLinkEnabled != configDeathLink.Value && ArchipelagoClient.Authenticated)
         {
             ArchipelagoClient.DeathLinkHandler.ToggleDeathLink();
+        }
+
+        if (!ArchipelagoClient.Authenticated)
+        {
+            APGUI.Warning("Not Connected");
         }
 
         debug = configDebug?.Value ?? debug;

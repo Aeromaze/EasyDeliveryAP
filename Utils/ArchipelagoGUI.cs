@@ -25,14 +25,11 @@ public class APGUI
 
     public static void Inform(string text)
     {
-        if ((bool)hud)
-        {
-            hud.DisplayText(text, 5);
-        }
+        hud?.DisplayText(text, 5);
     }
 
     public static void Warning(string text)
     {
-        if ((bool)hud) hud.AddWarning(text);
+        hud?.AddWarning(text);
     }
 }

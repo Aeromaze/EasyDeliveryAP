@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using BepInEx;
+using EasyDeliveryAP.Archipelago;
 
 namespace EasyDeliveryAP;
 
@@ -14,6 +16,8 @@ struct APSaveFile
 
 public class APData
 {
+    private static readonly ArchipelagoClient archipelago = EasyDeliveryAP.ArchipelagoClient;
+
     // APWorld Settings
     public static string payload_checks;
     public static string perfect_deliveries;
@@ -42,5 +46,23 @@ public class APData
             radio_towers = Radio_towers.ToString();
             slotData.TryGetValue("car_upgrades", out object Car_upgrades);
             car_upgrades = Car_upgrades.ToString();
+    }
+
+    public static void SaveConnectionOrConnect()
+    {
+        if (ArchipelagoClient.Authenticated)
+                {
+                    EasyDeliveryAP.save.data.uri = ArchipelagoClient.ServerData.Uri;
+                    EasyDeliveryAP.save.data.slotName = ArchipelagoClient.ServerData.SlotName;
+                    EasyDeliveryAP.save.data.password = ArchipelagoClient.ServerData.Password;
+                    EasyDeliveryAP.save.data.modVersion = EasyDeliveryAP.PluginVersion;
+                }
+                else if (!EasyDeliveryAP.save.data.slotName.IsNullOrWhiteSpace() && EasyDeliveryAP.configAutoConnect.Value)
+                {
+                    ArchipelagoClient.ServerData.Uri = EasyDeliveryAP.save.data.uri;
+                    ArchipelagoClient.ServerData.SlotName = EasyDeliveryAP.save.data.slotName;
+                    ArchipelagoClient.ServerData.Password = EasyDeliveryAP.save.data.password;
+                    archipelago.Connect();
+                }
     }
 }

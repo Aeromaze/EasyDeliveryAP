@@ -108,6 +108,7 @@ public class ArchipelagoClient
 
             scoutedItemInfo = session.Locations.ScoutLocationsAsync([.. session.Locations.AllLocations]).Result;
             APData.SetSlotSettings(ServerData.slotData);
+            if (ScenePatches.currentScene != "TitleScreen") APData.SaveConnectionOrConnect();
 
             ArchipelagoConsole.LogMessage(outText);
         }
