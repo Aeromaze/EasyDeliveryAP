@@ -1,4 +1,5 @@
 using EasyDeliveryAP.Archipelago;
+using EasyDeliveryAP.Utils;
 using HarmonyLib;
 
 namespace EasyDeliveryAP;
@@ -13,9 +14,14 @@ public class DeathLinkPatches
     public static bool dying;
 
     [HarmonyPatch(typeof(DeathManager), "Update")]
-    private static void Prefix(DeathManager __instance)
+    private static void Prefix(ref DeathManager __instance)
     {
-        if (dead != __instance.dying)
+        if (__instance.deathTime >= 50)
+        {
+            __instance.deathTime = 30;
+            // ArchipelagoConsole.LogMessage("Attempt to set deathTime");
+        }
+        if (!ArchipelagoClient.Authenticated) return;
         {
             dead = __instance.dying;
             if (__instance.dying && !dying)

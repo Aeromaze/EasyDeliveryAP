@@ -107,4 +107,11 @@ public class Items
         {116, RestoreDisc},
         {117, HandheldRadio}
     };
+
+    public static Dictionary<string, ItemData> TunnelToItem = new()
+    {
+        {"Snowy Peaks", TunnelSP},
+        {"Fishing Town", TunnelFT},
+        // {"Mountain Town", },
+    };
 }

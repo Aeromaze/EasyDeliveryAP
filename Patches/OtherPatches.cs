@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Archipelago.MultiClient.Net;
 using Archipelago.MultiClient.Net.Packets;
 using EasyDeliveryAP.Archipelago;
 using EasyDeliveryAP.Utils;
@@ -131,7 +133,7 @@ public class OtherPatches
         }
 
 
-        if (currentScene == 4 && APData.radio_towers == "1" && Items.RadioTower.Received >= 3)
+        if (currentScene == 4 && (APData.radio_towers == "1" || APData.radio_towers == "3") && Items.RadioTower.Received >= 3)
         {
             GameObject.Find("ResetContainer")?.SetActive(false);
             GameObject.Find("ResetVolumes")?.SetActive(false);
@@ -297,6 +299,7 @@ public class OtherPatches
         {
             jobBoard.Job job = jobs[i];
             int checks = 0;
+            bool hinted = false;
 
             // Delivery locations
             if (job.isIntercity)
@@ -325,9 +328,15 @@ public class OtherPatches
                 if (Locations.Deliveries.TryGetValue($"{job.from.town.name} to {location} Delivery", out int deliveryId))                
                 {
                     if (!checkedLocations.Contains(deliveryId) && (APData.perfect_deliveries == "0" || APData.perfect_deliveries == "1"))
-                    checks += 1;
+                    {
+                        checks += 1;
+                        hinted = APData.IsHinted(deliveryId, hinted);
+                    }
                     if (!checkedLocations.Contains(deliveryId + 10000) && (APData.perfect_deliveries == "1" || APData.perfect_deliveries == "2"))
-                    checks += 1;
+                    {
+                        checks += 1;
+                        hinted = APData.IsHinted(deliveryId, hinted);
+                    }
                 }
                 //else ArchipelagoConsole.LogMessage($"{job.from.town.name} to {location} Delivery");
                 
@@ -337,9 +346,15 @@ public class OtherPatches
                 if (Locations.Deliveries.TryGetValue($"{job.from.town.name} to {job.to.town.name} Delivery", out int deliveryId))
                 {
                     if (!checkedLocations.Contains(deliveryId) && (APData.perfect_deliveries == "0" || APData.perfect_deliveries == "1"))
-                    checks += 1;
+                    {
+                        checks += 1;
+                        hinted = APData.IsHinted(deliveryId, hinted);
+                    }
                     if (!checkedLocations.Contains(deliveryId + 10000) && (APData.perfect_deliveries == "1" || APData.perfect_deliveries == "2"))
-                    checks += 1;
+                    {
+                        checks += 1;
+                        hinted = APData.IsHinted(deliveryId, hinted);
+                    }
                 }
                 //else ArchipelagoConsole.LogMessage($"{job.from.town.name} to {job.to.town.name} Delivery");
 
@@ -349,12 +364,21 @@ public class OtherPatches
             if (Locations.PayloadDeliveries.TryGetValue(job.payloadPrefab.name, out int payload))
             {
                 if (!checkedLocations.Contains(payload) && APData.payload_checks == "1")
-                checks += 1;
+                {
+                    checks += 1;
+                    hinted = APData.IsHinted(payload, hinted);
+                }
             }
             //else ArchipelagoConsole.LogMessage($"{job.payloadPrefab.name} is not registered");
 
             if (checks != 0)
-            __instance.R.fput(checks.ToString(), 128f, (24 + (6f + (i * 4)) * 8));
+            {
+                if (hinted)
+                {
+                    __instance.R.fput("!", 120f, (24 + (6f + (i * 4)) * 8));
+                }
+                __instance.R.fput(checks.ToString(), 128f, (24 + (6f + (i * 4)) * 8));
+            }
         }
     }
 }
