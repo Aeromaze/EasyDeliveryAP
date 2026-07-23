@@ -14,7 +14,7 @@ public class APLogic
 
     public static bool CanReachFishingTown()
     {
-        if (!HasSnowTires() || (APData.blocked_tunnels == "1" && Items.TunnelFT.Received !> 0)) return false;
+        if (!HasSnowTires() || (APData.blocked_tunnels == "1" && Items.TunnelFT.Received < 1)) return false;
         if (FTGateIsOpen()) return true;
         return false;
     }
