@@ -134,7 +134,10 @@ public class APJobGenerator
             destinationMapNode = tunnelNode.node;
         }
 
-        APData.UpdateHints();
+        if (__0 == 0)
+        {
+            APData.UpdateHints();
+        }
 
         jobBoard.Job job = new(shopInfo, destinationMapNode);
         job.path = __instance.navigation.FindPath(job.from, job.to);
