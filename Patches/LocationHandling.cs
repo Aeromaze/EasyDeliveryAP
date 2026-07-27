@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using Archipelago.MultiClient.Net;
 using EasyDeliveryAP.Archipelago;
 using EasyDeliveryAP.Utils;
@@ -38,19 +40,25 @@ public class LocationHandling
     {
         ArchipelagoConsole.LogMessage($"Completed delivering {__instance.selectedJob.payloadPrefab.name} to: {__instance.selectedJob.to.town.name} - {__instance.cityName} (Dest index: {jobDestinationIndex})");
 
+        List<long> locations = [];
         string delivery = $"{jobStartTown} to {__instance.selectedJob.to.town.name} Delivery";
         if (Locations.Deliveries.TryGetValue(delivery, out int locationId))
         {
             if (APData.perfect_deliveries == "0" || APData.perfect_deliveries == "1")
-                archipelago.SendLocation(locationId);
+                //archipelago.SendLocation(locationId);
+                locations.Add(locationId);
             if ((APData.perfect_deliveries == "1" || APData.perfect_deliveries == "2") && __instance.recoveries <= 0)
-                archipelago.SendLocation(10000 + locationId);
+                //archipelago.SendLocation(10000 + locationId);
+                locations.Add(10000 + locationId);
         }
         // ArchipelagoConsole.LogMessage($"payload_checks: {ArchipelagoClient.payload_checks}");
         if (APData.payload_checks == "1" && Locations.PayloadDeliveries.TryGetValue(__instance.selectedJob.payloadPrefab.name, out int payloadId))
         {
-            archipelago.SendLocation(payloadId);
+            //archipelago.SendLocation(payloadId);
+            locations.Add(payloadId);
         }
+        archipelago.SendLocations([.. locations]);
+
         // jobPayload = __instance.selectedJob.payloadPrefab.name;
         // APGUI.Inform(jobPayload);
     }

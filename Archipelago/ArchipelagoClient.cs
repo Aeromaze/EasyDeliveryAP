@@ -173,6 +173,39 @@ public class ArchipelagoClient
         TrackerText.UpdateTracker();
     }
 
+    public void SendLocations(long[] location)
+    {
+        if (!Authenticated)
+        {
+            ArchipelagoConsole.LogMessage("Not connected. Can't send location.");
+            return;
+        }
+        List<long> locations = [];
+        bool checks = false;
+        
+        //ArchipelagoConsole.LogMessage(location.ToString() + location[0]);
+        foreach (long locID in location)
+        {
+            if (session.Locations.AllMissingLocations.Contains(locID))
+            {
+                locations.Add(locID);
+                checks = true;
+            }
+        }
+        if (checks)
+        {
+            session.Locations.CompleteLocationChecks([.. locations]);
+            foreach (var locID in locations)
+            {
+                var item = scoutedItemInfo[locID];
+                ArchipelagoConsole.LogMessage($"Sending location: {item.LocationDisplayName} (Id: {locID})");
+                APGUI.Notification($"Sending {item.ItemDisplayName} to {item.Player}");
+                ServerData.CheckedLocations.Add(locID);
+            }
+        }
+        TrackerText.UpdateTracker();
+    }
+
     public void SendCompletion()
     {
         var statusUpdatePacket = new StatusUpdatePacket();
