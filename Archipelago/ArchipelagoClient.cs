@@ -17,7 +17,7 @@ namespace EasyDeliveryAP.Archipelago;
 
 public class ArchipelagoClient
 {
-    public const string APVersion = "0.6.4";
+    public const string APVersion = "0.6.7";
     private const string Game = "Easy Delivery Co.";
 
     public static bool Authenticated;
@@ -103,7 +103,7 @@ public class ArchipelagoClient
             Authenticated = true;
 
             DeathLinkHandler = new(session.CreateDeathLinkService(), ServerData.SlotName);
-            session.Locations.CompleteLocationChecksAsync(ServerData.CheckedLocations.ToArray());
+            session.Locations.CompleteLocationChecksAsync([.. ServerData.CheckedLocations]);
             outText = $"Successfully connected to {ServerData.Uri} as {ServerData.SlotName}!";
 
             scoutedItemInfo = session.Locations.ScoutLocationsAsync([.. session.Locations.AllLocations]).Result;
@@ -208,8 +208,10 @@ public class ArchipelagoClient
 
     public void SendCompletion()
     {
-        var statusUpdatePacket = new StatusUpdatePacket();
-        statusUpdatePacket.Status = ArchipelagoClientState.ClientGoal;
+        var statusUpdatePacket = new StatusUpdatePacket
+        {
+            Status = ArchipelagoClientState.ClientGoal
+        };
         session.Socket.SendPacket(statusUpdatePacket);
     }
 
@@ -263,7 +265,7 @@ public class ArchipelagoClient
                 ItemHandling.pendingItems = true;
                 APGUI.Notification($"Received {Items.APIdToItem[(int)receivedItem.ItemId].Name}");
                 break;
-            case 20 or 11 or 12 or 13:
+            case 20 or 11 or 12 or 13 or (>= 30 and <= 38):
                 APGUI.Notification($"Received {Items.APIdToItem[(int)receivedItem.ItemId].Name}");
                 break;
             default:

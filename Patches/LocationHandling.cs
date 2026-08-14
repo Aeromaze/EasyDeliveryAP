@@ -13,6 +13,7 @@ public class LocationHandling
     private static readonly ArchipelagoClient archipelago = EasyDeliveryAP.ArchipelagoClient;
 
     public static string jobStartTown;
+    public static string jobStartCity;
     public static string jobStartShop;
     public static int jobDestinationIndex;
     public static string jobPayload;
@@ -21,8 +22,8 @@ public class LocationHandling
     private static void Postfix(jobBoard __instance)
     {
         ArchipelagoConsole.LogMessage($"Starting delivery from: {__instance.selectedJob.shop.name} in {__instance.selectedJob.from.town.name} - {__instance.cityName} (Dest index: {__instance.selectedJob.destinationIndex})");
-        // ArchipelagoConsole.LogMessage($"Tunnel amount: {__instance.tunnelNodes.Length} GPS: {__instance.GPSEnabled}");
         jobStartTown = __instance.selectedJob.from.town.name;
+        jobStartCity = __instance.selectedJob.startingCityName;
         jobStartShop = __instance.selectedJob.shop.name;
         jobDestinationIndex = __instance.selectedJob.destinationIndex;
         if (EasyDeliveryAP.debug)
@@ -42,25 +43,26 @@ public class LocationHandling
 
         List<long> locations = [];
         string delivery = $"{jobStartTown} to {__instance.selectedJob.to.town.name} Delivery";
+        string deliveryCity = $"{jobStartCity} to {__instance.selectedJob.destCityName} Delivery";
         if (Locations.Deliveries.TryGetValue(delivery, out int locationId))
         {
             if (APData.perfect_deliveries == "0" || APData.perfect_deliveries == "1")
-                //archipelago.SendLocation(locationId);
                 locations.Add(locationId);
             if ((APData.perfect_deliveries == "1" || APData.perfect_deliveries == "2") && __instance.recoveries <= 0)
-                //archipelago.SendLocation(10000 + locationId);
                 locations.Add(10000 + locationId);
         }
-        // ArchipelagoConsole.LogMessage($"payload_checks: {ArchipelagoClient.payload_checks}");
+        if (Locations.Deliveries.TryGetValue(deliveryCity, out int cityLocationId))
+        {
+            if (APData.perfect_deliveries == "0" || APData.perfect_deliveries == "1")
+                locations.Add(cityLocationId);
+            if ((APData.perfect_deliveries == "1" || APData.perfect_deliveries == "2") && __instance.recoveries <= 0)
+                locations.Add(10000 + cityLocationId);
+        }
         if (APData.payload_checks == "1" && Locations.PayloadDeliveries.TryGetValue(__instance.selectedJob.payloadPrefab.name, out int payloadId))
         {
-            //archipelago.SendLocation(payloadId);
             locations.Add(payloadId);
         }
         archipelago.SendLocations([.. locations]);
-
-        // jobPayload = __instance.selectedJob.payloadPrefab.name;
-        // APGUI.Inform(jobPayload);
     }
 
     [HarmonyPatch(typeof(UpgradeCheckout), "InstallUpgrade")]

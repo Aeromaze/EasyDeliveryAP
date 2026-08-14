@@ -19,6 +19,13 @@ public class Locations
         {"Smalton", 33},
     };
 
+    public static readonly Dictionary<string, int> City = new()
+    {
+        {"Mountain Town", 10},
+        {"Snowy Peaks", 20},
+        {"Fishing Town", 30},
+    };
+
     private static Dictionary<string, int> GetDeliveries()
     {
         Dictionary<string, int> deliveries = [];
@@ -28,6 +35,13 @@ public class Locations
             foreach(KeyValuePair<string, int> endTown in Town)
             {
                 deliveries.Add($"{startTown.Key} to {endTown.Key} Delivery", int.Parse($"{startTown.Value}{endTown.Value}"));
+            }
+        }
+        foreach (KeyValuePair<string, int> startCity in City)
+        {
+            foreach(KeyValuePair<string, int> endCity in City)
+            {
+                deliveries.Add($"{startCity.Key} to {endCity.Key} Delivery", int.Parse($"{startCity.Value}{endCity.Value}"));
             }
         }
 

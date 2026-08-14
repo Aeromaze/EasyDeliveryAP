@@ -22,8 +22,10 @@ public class APData
     // APWorld Settings
     public static string payload_checks;
     public static string perfect_deliveries;
+    public static string intercity_deliveries;
     public static string snowcats;
     public static string blind_bags;
+    public static string lock_towns;
     public static string blocked_tunnels;
     public static string require_handheld_radio;
     public static string radio_towers;
@@ -38,10 +40,14 @@ public class APData
         payload_checks = Payload_checks.ToString();
         slotData.TryGetValue("perfect_deliveries", out object Perfect_deliveries);
         perfect_deliveries = Perfect_deliveries.ToString();
+        slotData.TryGetValue("intercity_deliveries", out object Intercity_deliveries);
+        intercity_deliveries = Intercity_deliveries.ToString();
         slotData.TryGetValue("snowcats", out object Snowcats);
         snowcats = Snowcats.ToString();
         slotData.TryGetValue("blind_bags", out object Blind_bags);
         blind_bags = Blind_bags.ToString();
+        slotData.TryGetValue("lock_towns", out object Lock_towns);
+        lock_towns = Lock_towns.ToString();
         slotData.TryGetValue("blocked_tunnels", out object Blocked_tunnels);
         blocked_tunnels = Blocked_tunnels.ToString();
         slotData.TryGetValue("require_handheld_radio", out object Handheld_radio);

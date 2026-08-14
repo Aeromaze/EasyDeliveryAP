@@ -73,13 +73,44 @@ public class TrackerText
             trackerItemsText += $"  Tunnels: {(Items.TunnelSP.Received > 0 ? "Snowy Peaks, " : "")}{(Items.TunnelFT.Received > 0 ? "Fishing Town, " : "")}{(Items.TunnelFactory.Received > 0 ? "Factory" : "")}\n";
         }
 
+        if (APData.lock_towns == "1")
+        {
+            trackerItemsText += "  Towns: ";
+            foreach (ItemData town in Items.TownToItem.Values)
+            {
+                if (town.Received >= 1)
+                {
+                    trackerItemsText += $"{town.Name}, ";
+                }
+            }
+            trackerItemsText += "\n";
+        }
+
         foreach (int id in Locations.Deliveries.Values)
         {
             if (checkedLocations.Contains(id)) deliveries += 1;
             if (checkedLocations.Contains(id + 10000)) deliveries += 1;
         }
 
-        trackerChecksText += $"  {(APData.perfect_deliveries == "2" ? "Perfect " : "")}Deliveries: {deliveries}/{(APData.perfect_deliveries == "1" ? "162" : "81")}\n";
+        int total_deliveries = 81;
+
+        switch(APData.intercity_deliveries)
+        {
+            case "0":
+                total_deliveries = 27;
+                break;
+            case "1":
+                total_deliveries = 81;
+                break;
+            case "2":
+                total_deliveries = 36;
+                break;
+            case "3":
+                total_deliveries = 90;
+                break;
+        }
+
+        trackerChecksText += $"  {(APData.perfect_deliveries == "2" ? "Perfect " : "")}Deliveries: {deliveries}/{(APData.perfect_deliveries == "1" ? total_deliveries*2 : total_deliveries)}\n";
 
         if (APData.payload_checks == "1")
         {

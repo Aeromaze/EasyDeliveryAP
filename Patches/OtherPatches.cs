@@ -359,6 +359,19 @@ public class OtherPatches
                 //else ArchipelagoConsole.LogMessage($"{job.from.town.name} to {job.to.town.name} Delivery");
 
             }
+            if (Locations.Deliveries.TryGetValue($"{job.startingCityName} to {job.destCityName} Delivery", out int deliveryIdCity))                
+            {
+                if (!checkedLocations.Contains(deliveryIdCity) && (APData.perfect_deliveries == "0" || APData.perfect_deliveries == "1"))
+                {
+                    checks += 1;
+                    hinted = APData.IsHinted(deliveryIdCity, hinted);
+                }
+                if (!checkedLocations.Contains(deliveryIdCity + 10000) && (APData.perfect_deliveries == "1" || APData.perfect_deliveries == "2"))
+                {
+                    checks += 1;
+                    hinted = APData.IsHinted(deliveryIdCity, hinted);
+                }
+            }
 
             // Payload locations
             if (Locations.PayloadDeliveries.TryGetValue(job.payloadPrefab.name, out int payload))

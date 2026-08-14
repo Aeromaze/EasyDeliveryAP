@@ -16,15 +16,14 @@ public class APJobGenerator
         if (!ArchipelagoClient.Authenticated)
         {
             __result = null;
-            // return false;
+            return false;
         }
 
         // Find active local towns
         List<Transform> towns = [];
         for (int i = 0; i < __instance.navigation.towns.Length; i++)
         {
-            // TODO: Add check for unlocked towns
-            if (__instance.navigation.towns[i].gameObject.activeSelf)
+            if (__instance.navigation.towns[i].gameObject.activeSelf && (APData.lock_towns != "1" || Items.TownToItem[__instance.navigation.towns[i].name].Received >= 1))
             {
                 towns.Add(__instance.navigation.towns[i]);
             }
@@ -154,6 +153,36 @@ public class APJobGenerator
             {
                 intercityDestIndex = UnityEngine.Random.Range(0, tunnelNode.distances.Length);
             }
+            if (APData.lock_towns == "1")
+            {
+                string tunnel = tunnelNode.node.name;
+                switch(tunnel)
+                {
+                    case "Mountain Town":
+                        if (Items.TownToItem[Locations.MountainTownIndex[intercityDestIndex].Town].Received < 1)
+                        {
+                            __result = null;
+                            return false;
+                        }
+                        break;
+                    case "Snowy Peaks":
+                        if (Items.TownToItem[Locations.SnowyPeaksIndex[intercityDestIndex].Town].Received < 1)
+                        {
+                            __result = null;
+                            return false;
+                        }
+                        break;
+                    case "Fishing Town":
+                        if (Items.TownToItem[Locations.FishingTownIndex[intercityDestIndex].Town].Received < 1)
+                        {
+                            __result = null;
+                            return false;
+                        }
+                        break;
+                }
+            }
+
+
             job.destinationIndex = intercityDestIndex;
             job.destCityName = tunnelNode.name;
             job.distance += (tunnelNode.distances[intercityDestIndex] + tunnelNode.distanceToOtherTown)/1000f;

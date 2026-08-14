@@ -73,6 +73,17 @@ public class Items
     public static ItemData TunnelFT = new("Fishing Town Tunnel");
     public static ItemData TunnelFactory = new("Factory Tunnel");
 
+    // Towns
+    public static ItemData Upton = new("Upton");
+    public static ItemData Weston = new("Weston");
+    public static ItemData Easton = new("Easton");
+    public static ItemData Winton = new("Winton");
+    public static ItemData Munton = new("Munton");
+    public static ItemData Lopton = new("Lopton");
+    public static ItemData Clifton = new("Clifton");
+    public static ItemData Damton = new("Damton");
+    public static ItemData Smalton = new("Smalton");
+
     // Misc
     public static ItemData Money = new("Money");
     public static ItemData RadioTower = new("Radio Tower");
@@ -88,6 +99,15 @@ public class Items
         {12, TunnelFT},
         {13, TunnelFactory},
         {20, RadioTower},
+        {30, Upton},
+        {31, Weston},
+        {32, Easton},
+        {33, Winton},
+        {34, Munton},
+        {35, Lopton},
+        {36, Clifton},
+        {37, Damton},
+        {38, Smalton},
         {100, EnergyDrink},
         {101, EmptyCan},
         {102, Lantern},
@@ -113,5 +133,18 @@ public class Items
         {"Snowy Peaks", TunnelSP},
         {"Fishing Town", TunnelFT},
         // {"Mountain Town", },
+    };
+
+    public static Dictionary<string, ItemData> TownToItem = new()
+    {
+        {"Upton", Upton},
+        {"Weston", Weston},
+        {"Easton", Easton},
+        {"Winton", Winton},
+        {"Munton", Munton},
+        {"Lopton", Lopton},
+        {"Clifton", Clifton},
+        {"Damton", Damton},
+        {"Smalton", Smalton}
     };
 }
