@@ -106,6 +106,8 @@ public class ArchipelagoClient
             session.Locations.CompleteLocationChecksAsync([.. ServerData.CheckedLocations]);
             outText = $"Successfully connected to {ServerData.Uri} as {ServerData.SlotName}!";
 
+            session.DataStorage.TrackHints(APData.OnHintsReceived);
+
             scoutedItemInfo = session.Locations.ScoutLocationsAsync([.. session.Locations.AllLocations]).Result;
             APData.SetSlotSettings(ServerData.slotData);
             if (ScenePatches.currentScene != "TitleScreen") APData.SaveConnectionOrConnect();

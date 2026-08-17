@@ -292,7 +292,7 @@ public class OtherPatches
     private static void Postfix(jobBoard __instance)
     {
         if (!ArchipelagoClient.Authenticated) return;
-        var checkedLocations = archipelago.session.Locations.AllLocationsChecked;
+        var uncheckedLocations = archipelago.session.Locations.AllMissingLocations;
 
         List<jobBoard.Job> jobs = __instance.jobs;
         for (int i = jobs.Count - 1; i >=0; i--)
@@ -327,15 +327,15 @@ public class OtherPatches
 
                 if (Locations.Deliveries.TryGetValue($"{job.from.town.name} to {location} Delivery", out int deliveryId))                
                 {
-                    if (!checkedLocations.Contains(deliveryId) && (APData.perfect_deliveries == "0" || APData.perfect_deliveries == "1"))
+                    if (uncheckedLocations.Contains(deliveryId) && (APData.perfect_deliveries == "0" || APData.perfect_deliveries == "1"))
                     {
                         checks += 1;
                         hinted = APData.IsHinted(deliveryId, hinted);
                     }
-                    if (!checkedLocations.Contains(deliveryId + 10000) && (APData.perfect_deliveries == "1" || APData.perfect_deliveries == "2"))
+                    if (uncheckedLocations.Contains(deliveryId + 10000) && (APData.perfect_deliveries == "1" || APData.perfect_deliveries == "2"))
                     {
                         checks += 1;
-                        hinted = APData.IsHinted(deliveryId, hinted);
+                        hinted = APData.IsHinted(deliveryId + 10000, hinted);
                     }
                 }
                 //else ArchipelagoConsole.LogMessage($"{job.from.town.name} to {location} Delivery");
@@ -345,15 +345,15 @@ public class OtherPatches
             {
                 if (Locations.Deliveries.TryGetValue($"{job.from.town.name} to {job.to.town.name} Delivery", out int deliveryId))
                 {
-                    if (!checkedLocations.Contains(deliveryId) && (APData.perfect_deliveries == "0" || APData.perfect_deliveries == "1"))
+                    if (uncheckedLocations.Contains(deliveryId) && (APData.perfect_deliveries == "0" || APData.perfect_deliveries == "1"))
                     {
                         checks += 1;
                         hinted = APData.IsHinted(deliveryId, hinted);
                     }
-                    if (!checkedLocations.Contains(deliveryId + 10000) && (APData.perfect_deliveries == "1" || APData.perfect_deliveries == "2"))
+                    if (uncheckedLocations.Contains(deliveryId + 10000) && (APData.perfect_deliveries == "1" || APData.perfect_deliveries == "2"))
                     {
                         checks += 1;
-                        hinted = APData.IsHinted(deliveryId, hinted);
+                        hinted = APData.IsHinted(deliveryId + 10000, hinted);
                     }
                 }
                 //else ArchipelagoConsole.LogMessage($"{job.from.town.name} to {job.to.town.name} Delivery");
@@ -361,22 +361,22 @@ public class OtherPatches
             }
             if (Locations.Deliveries.TryGetValue($"{job.startingCityName} to {job.destCityName} Delivery", out int deliveryIdCity))                
             {
-                if (!checkedLocations.Contains(deliveryIdCity) && (APData.perfect_deliveries == "0" || APData.perfect_deliveries == "1"))
+                if (uncheckedLocations.Contains(deliveryIdCity) && (APData.perfect_deliveries == "0" || APData.perfect_deliveries == "1"))
                 {
                     checks += 1;
                     hinted = APData.IsHinted(deliveryIdCity, hinted);
                 }
-                if (!checkedLocations.Contains(deliveryIdCity + 10000) && (APData.perfect_deliveries == "1" || APData.perfect_deliveries == "2"))
+                if (uncheckedLocations.Contains(deliveryIdCity + 10000) && (APData.perfect_deliveries == "1" || APData.perfect_deliveries == "2"))
                 {
                     checks += 1;
-                    hinted = APData.IsHinted(deliveryIdCity, hinted);
+                    hinted = APData.IsHinted(deliveryIdCity + 10000, hinted);
                 }
             }
 
             // Payload locations
             if (Locations.PayloadDeliveries.TryGetValue(job.payloadPrefab.name, out int payload))
             {
-                if (!checkedLocations.Contains(payload) && APData.payload_checks == "1")
+                if (uncheckedLocations.Contains(payload) && APData.payload_checks == "1")
                 {
                     checks += 1;
                     hinted = APData.IsHinted(payload, hinted);

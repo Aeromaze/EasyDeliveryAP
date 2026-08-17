@@ -76,19 +76,16 @@ public class APData
         }
     }
 
-    public static void UpdateHints()
+    public static void OnHintsReceived(Hint[] hint)
     {
-        if (!ArchipelagoClient.Authenticated) return;
-        hints = archipelago.session.Hints.GetHints();
+        hints = hint;
     }
 
     public static bool IsHinted(int locationId, bool hinted)
     {
         if (hinted) return true;
 
-        var Hints = hints;
-
-        foreach (var hint in Hints)
+        foreach (var hint in hints)
         {
             if (hint.FindingPlayer == archipelago.session.Players.ActivePlayer.Slot && hint.LocationId == locationId)
             {
