@@ -13,7 +13,7 @@ public class APJobGenerator
     [HarmonyPatch(typeof(jobBoard), "GenerateJobBetter")]
     private static bool Prefix(int __0, jobBoard __instance, ref jobBoard.Job __result)
     {
-        if (!ArchipelagoClient.Authenticated)
+        if (!ArchipelagoClient.Authenticated && !EasyDeliveryAP.debug)
         {
             __result = null;
             return false;

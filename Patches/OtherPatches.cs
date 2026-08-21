@@ -189,6 +189,12 @@ public class OtherPatches
     private static bool Prefix(InteractionPoint __instance, ref string __state)
     {
         __state = __instance.name;
+
+        if (EasyDeliveryAP.debug)
+        {
+            ArchipelagoConsole.LogMessage($"Action: {__instance.name}\nListener: {__instance.listener.name}");
+        }
+
         if (currentScene == 6)
         {
             if (APData.require_handheld_radio == "1" && __instance.name == "enter" && !ItemHandling.radio.Contains(17))
@@ -215,6 +221,11 @@ public class OtherPatches
         else if (__instance.listener.name == "Lighter" && Items.Lighter.Received == 0)
         {
             APGUI.Inform("Lighter can't\nbe bought yet");
+            return false;
+        }
+        else if (currentScene == 4 && __instance.listener.name == "StationEntrance" && (APData.radio_towers == "1" || APData.radio_towers == "3") && Items.RadioTower.Received < 3)
+        {
+            APGUI.Inform("This door lacks radio signal");
             return false;
         }
         else if (__instance.listener.name == "FishingRod" && Items.FishingRod.Received == 0)

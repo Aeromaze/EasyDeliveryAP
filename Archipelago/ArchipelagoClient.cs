@@ -179,7 +179,7 @@ public class ArchipelagoClient
     {
         if (!Authenticated)
         {
-            ArchipelagoConsole.LogMessage("Not connected. Can't send location.");
+            ArchipelagoConsole.LogMessage("Not connected. Can't send location(s).");
             return;
         }
         List<long> locations = [];
