@@ -22,6 +22,7 @@ public class DeathLinkPatches
             // ArchipelagoConsole.LogMessage("Attempt to set deathTime");
         }
         if (!ArchipelagoClient.Authenticated) return;
+        if (dead != __instance.dying)
         {
             dead = __instance.dying;
             if (__instance.dying && !dying)
