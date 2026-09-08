@@ -112,6 +112,8 @@ public class ArchipelagoClient
             APData.SetSlotSettings(ServerData.slotData);
             if (ScenePatches.currentScene != "TitleScreen") APData.SaveConnectionOrConnect();
 
+            TrackerApp.TotalDeliveries();
+
             ArchipelagoConsole.LogMessage(outText);
         }
         else
@@ -169,7 +171,7 @@ public class ArchipelagoClient
             var item = scoutedItemInfo[location];
             ArchipelagoConsole.LogMessage($"Sending location: {item.LocationDisplayName} (Id: {location})");
             session.Locations.CompleteLocationChecks(location);
-            APGUI.Notification($"Sending {item.ItemDisplayName} to {item.Player}");
+            APGUI.Notification($"Sending {item.ItemDisplayName} to {item.Player}", APGUI.packageReceive);
             ServerData.CheckedLocations.Add(location);
         }
         TrackerText.UpdateTracker();
@@ -201,11 +203,11 @@ public class ArchipelagoClient
             {
                 var item = scoutedItemInfo[locID];
                 ArchipelagoConsole.LogMessage($"Sending location: {item.LocationDisplayName} (Id: {locID})");
-                APGUI.Notification($"Sending {item.ItemDisplayName} to {item.Player}");
+                APGUI.Notification($"Sending {item.ItemDisplayName} to {item.Player}", APGUI.packageSend);
                 ServerData.CheckedLocations.Add(locID);
             }
         }
-        TrackerText.UpdateTracker();
+        // TrackerText.UpdateTracker();
     }
 
     public void SendCompletion()
@@ -245,19 +247,19 @@ public class ArchipelagoClient
         {
             case 1:
                 //Items.GPS.Enabled = true;
-                APGUI.Notification("Received Map");
+                APGUI.Notification("Received Map", APGUI.packageReceive);
                 break;
             case 2:
                 if (APData.car_upgrades == "1") Items.Tires.Enabled = true;
-                APGUI.Notification("Received Snow Tires");
+                APGUI.Notification("Received Snow Tires", APGUI.snowTires);
                 break;
             case 3:
                 if (APData.car_upgrades == "1") Items.Bumper.Enabled = true;
-                APGUI.Notification("Received Bumper Bar");
+                APGUI.Notification("Received Bumper Bar", APGUI.truckBumper);
                 break;
             case 4:
                 if (APData.car_upgrades == "1") Items.Chains.Enabled = true;
-                APGUI.Notification("Received Ice Chains");
+                APGUI.Notification("Received Ice Chains", APGUI.iceChains);
                 break;
             case 10:
                 ItemHandling.pendingMoney += 33;
@@ -265,10 +267,10 @@ public class ArchipelagoClient
             case >= 100 and <= 117: // Inventory items
                 ItemHandling.pendingItemIds.Add((int)receivedItem.ItemId - 100);
                 ItemHandling.pendingItems = true;
-                APGUI.Notification($"Received {Items.APIdToItem[(int)receivedItem.ItemId].Name}");
+                APGUI.Notification($"Received {Items.APIdToItem[(int)receivedItem.ItemId].Name}", APGUI.packageReceive);
                 break;
             case 20 or 11 or 12 or 13 or (>= 30 and <= 38):
-                APGUI.Notification($"Received {Items.APIdToItem[(int)receivedItem.ItemId].Name}");
+                APGUI.Notification($"Received {Items.APIdToItem[(int)receivedItem.ItemId].Name}", APGUI.packageReceive);
                 break;
             default:
                 ArchipelagoConsole.LogMessage($"Received unhandled item: {receivedItem.ItemName} Id: {receivedItem.ItemId}");

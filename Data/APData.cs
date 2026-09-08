@@ -81,7 +81,7 @@ public class APData
         hints = hint;
     }
 
-    public static bool IsHinted(int locationId, bool hinted)
+    public static bool IsHinted(int locationId, bool hinted = false)
     {
         if (hinted) return true;
 

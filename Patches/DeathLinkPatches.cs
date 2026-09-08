@@ -1,6 +1,7 @@
 using EasyDeliveryAP.Archipelago;
 using EasyDeliveryAP.Utils;
 using HarmonyLib;
+using UnityEngine;
 
 namespace EasyDeliveryAP;
 
@@ -18,7 +19,7 @@ public class DeathLinkPatches
     {
         if (__instance.deathTime >= 50)
         {
-            __instance.deathTime = 30;
+            __instance.deathTime = 20;
             // ArchipelagoConsole.LogMessage("Attempt to set deathTime");
         }
         if (!ArchipelagoClient.Authenticated) return;
@@ -35,7 +36,10 @@ public class DeathLinkPatches
         if (dying && !dead && !__instance.dying)
         {
             // ArchipelagoConsole.LogMessage("Dying");
-            __instance.dying = true;
+            var guy = Object.FindObjectOfType<sCharacterInteraction>();
+            guy.hud.temperature = 0f;
+            // __instance.dying = true;
+
             // dying = false;
         }
     }

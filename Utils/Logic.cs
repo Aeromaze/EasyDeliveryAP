@@ -15,13 +15,12 @@ public class APLogic
     public static bool CanReachFishingTown()
     {
         if (!HasSnowTires() || (APData.blocked_tunnels == "1" && Items.TunnelFT.Received < 1)) return false;
-        if (FTGateIsOpen()) return true;
-        return false;
+        return true;
     }
 
     public static bool CanAccessIntercity()
     {
-        if (CanReachSnowyPeaks() || CanReachFishingTown()) return true;
+        if (CanReachSnowyPeaks() || (CanReachFishingTown() && FTGateIsOpen())) return true;
         return false;
     }
 
@@ -30,7 +29,7 @@ public class APLogic
     {
         if (APData.radio_towers == "1" || APData.radio_towers == "3")
         {
-            if (Items.RadioTower.Received >= 3) return true;
+            if (Items.RadioTower.Received >= 3 && Items.Bumper.Received > 0) return true;
         }
         // TODO: change to actally check if the gate can be opened
         else if (CanReachSnowyPeaks() && Items.Bumper.Received > 0) return true;

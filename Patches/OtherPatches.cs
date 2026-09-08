@@ -336,6 +336,8 @@ public class OtherPatches
                     location = "";
                 }
 
+                __instance.R.put(location, 25f, (24 + (6f + (i * 4)) * 8));
+
                 if (Locations.Deliveries.TryGetValue($"{job.from.town.name} to {location} Delivery", out int deliveryId))                
                 {
                     if (uncheckedLocations.Contains(deliveryId) && (APData.perfect_deliveries == "0" || APData.perfect_deliveries == "1"))

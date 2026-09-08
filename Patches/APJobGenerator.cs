@@ -125,7 +125,9 @@ public class APJobGenerator
         {
             tunnelNode = __instance.tunnelNodes[UnityEngine.Random.Range(0, __instance.tunnelNodes.Length)];
             string tunnel = tunnelNode.node.name;
-            if (!__instance.navigation.nodes.Contains(tunnelNode.node) || (tunnel == "Snowy Peaks" && !APLogic.CanReachSnowyPeaks()) || (tunnel == "Fishing Town" && !APLogic.CanReachFishingTown()))// || (Items.TunnelToItem[tunnelNode.node.name]?.Received < 1 && APData.blocked_tunnels == "1"))
+            if (!__instance.navigation.nodes.Contains(tunnelNode.node) || 
+                    ((tunnel == "Snowy Peaks" || ScenePatches.currentScene == "Snowy Peaks") && !APLogic.CanReachSnowyPeaks()) || 
+                    ((tunnel == "Fishing Town" || ScenePatches.currentScene == "Fishing Town") && (!APLogic.CanReachFishingTown() || !APLogic.FTGateIsOpen())))
             {
                 __result = null;
                 return false;

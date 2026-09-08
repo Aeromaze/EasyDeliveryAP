@@ -16,7 +16,7 @@ public class EasyDeliveryAP : BaseUnityPlugin
 {
     public const string PluginGUID = "com.aeromaze.easyDeliveryAP";
     public const string PluginName = "EasyDeliveryAP";
-    public const string PluginVersion = "0.2.0";
+    public const string PluginVersion = "0.2.3";
 
     public const string ModDisplayInfo = $"{PluginName} v{PluginVersion}";
     private const string APDisplayInfo = $"Archipelago v{ArchipelagoClient.APVersion}";
@@ -79,16 +79,20 @@ public class EasyDeliveryAP : BaseUnityPlugin
 
         EasyAPI.AddConfig("Archipelago", Config);
 
-        EasyAPI.AddListener<ScreenProgram>("Archipelago");
+        //DesktopDotExe.File trackerAppFile = EasyAPI.InstantiateFile();
+
+
+        //EasyAPI.AddListener<ScreenProgram>("Archipelago");
         TrackerFile = EasyAPI.InstantiateFile();
         TrackerFile.name = "Tracker";
-        TrackerFile.data = "Not connected";
         TrackerFile.type = DesktopDotExe.FileType.txt;
         TrackerFile.icon = 3;
         TrackerFile.iconHover = 4;
+        TrackerFile.data = "listener_" + TrackerFile.name;
         trackerPosition.x = 0.35f;
         trackerPosition.y = 3.15f;
         TrackerFile.position = trackerPosition;
+        EasyAPI.AddListener<TrackerApp>(TrackerFile.name);
         EasyAPI.AddFile(EasyAPI.DesktopLocation.Main, TrackerFile);
         //EasyAPI.AddProgram(new TrackerDotExe());
 
@@ -243,6 +247,11 @@ public class EasyDeliveryAP : BaseUnityPlugin
             {
                 OtherPatches.Nodes["Easton"].gameObject.SetActive(easton);
                 easton = !easton;
+            }
+            if (GUI.Button(new Rect(16, 453, 100, 20), "Death"))
+            {
+                DeathLinkPatches.dying = true;
+                APGUI.Notification("Dying");
             }
         }
     }
