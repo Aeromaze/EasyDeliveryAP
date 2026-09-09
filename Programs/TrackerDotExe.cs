@@ -111,6 +111,7 @@ public class TrackerApp : MonoBehaviour
                             if (((from.Key == "Snowy Peaks" || to.Key == "Snowy Peaks") && (!sp || !(Items.Winton.Received > 0 || Items.Munton.Received > 0 || Items.Lopton.Received > 0))) || 
                                 ((from.Key == "Fishing Town" || to.Key == "Fishing Town") && (!ft || !(Items.Clifton.Received > 0 || Items.Damton.Received > 0 || Items.Smalton.Received > 0))))
                             {
+                                grid.y += 2;
                                 continue;
                             }
                             del = int.Parse($"{from.Value}{to.Value}");
@@ -405,6 +406,7 @@ public class TrackerApp : MonoBehaviour
                 };
                 if (!city)
                 {
+                    grid.y += 2;
                     continue;
                 }
                 city = to.Value switch
@@ -415,6 +417,7 @@ public class TrackerApp : MonoBehaviour
                 };
                 if (!city)
                 {
+                    grid.y += 2;
                     continue;
                 }
 

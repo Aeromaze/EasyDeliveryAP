@@ -16,7 +16,7 @@ public class EasyDeliveryAP : BaseUnityPlugin
 {
     public const string PluginGUID = "com.aeromaze.easyDeliveryAP";
     public const string PluginName = "EasyDeliveryAP";
-    public const string PluginVersion = "0.2.3";
+    public const string PluginVersion = "0.2.4";
 
     public const string ModDisplayInfo = $"{PluginName} v{PluginVersion}";
     private const string APDisplayInfo = $"Archipelago v{ArchipelagoClient.APVersion}";
