@@ -30,6 +30,8 @@ public class APData
     public static string require_handheld_radio;
     public static string radio_towers;
     public static string car_upgrades;
+    public static string progressive_car_upgrades;
+    public static int car_trail_color;
 
     // Other
     public static Hint[] hints;
@@ -56,6 +58,22 @@ public class APData
         radio_towers = Radio_towers.ToString();
         slotData.TryGetValue("car_upgrades", out object Car_upgrades);
         car_upgrades = Car_upgrades.ToString();
+        if (slotData.TryGetValue("progressive_car_upgrades", out object Progressive_car_upgrades))
+        {
+            progressive_car_upgrades = Progressive_car_upgrades.ToString();
+        }
+        else
+        {
+            progressive_car_upgrades = "0";
+        }
+        if (slotData.TryGetValue("randomize_trail_color", out object Car_trail_color))
+        {
+            car_trail_color = int.Parse(Car_trail_color.ToString());
+        }
+        else
+        {
+            car_trail_color = 0xFFFFFF;
+        }
     }
 
     public static void SaveConnectionOrConnect()

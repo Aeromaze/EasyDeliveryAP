@@ -78,9 +78,18 @@ public class ItemHandling
         if (APData.car_upgrades == "1")
         {
             __instance.hasGPS = Items.GPS.Enabled;
-            __instance.hasTires = Items.Tires.Received > 0;
-            __instance.hasBumper = Items.Bumper.Received > 0;
-            __instance.hasChains = Items.Chains.Received > 0;
+            if (APData.progressive_car_upgrades == "1")
+            {
+                __instance.hasTires = Items.ProgCarUpgrade.Received > 0;
+                __instance.hasBumper = Items.ProgCarUpgrade.Received > 1;
+                __instance.hasChains = Items.ProgCarUpgrade.Received > 2;
+            }
+            else
+            {
+                __instance.hasTires = Items.Tires.Received > 0;
+                __instance.hasBumper = Items.Bumper.Received > 0;
+                __instance.hasChains = Items.Chains.Received > 0;
+            }
         }
 
         // debug

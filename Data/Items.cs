@@ -47,6 +47,7 @@ public class Items
     public static ItemData Tires = new("Snow Tires");
     public static ItemData Bumper = new("Bumper");
     public static ItemData Chains = new("Ice Chains");
+    public static ItemData ProgCarUpgrade = new("Progressive Car Upgrade");
 
     // Inventory Items
     public static ItemData EnergyDrink = new("Energy Drink", 0);
@@ -67,6 +68,10 @@ public class Items
     public static ItemData DuctTape = new("Duct Tape", 15);
     public static ItemData RestoreDisc = new("Restore Disc", 16);
     public static ItemData HandheldRadio = new("Handheld Radio", 17);
+
+    // Traps
+    public static ItemData IceTrap = new("Ice Trap");
+    public static ItemData ShrinkTrap = new("Shrink Trap");
 
     // Tunnels
     public static ItemData TunnelSP = new("Snowy Peaks Tunnel");
@@ -94,6 +99,7 @@ public class Items
         {2, Tires},
         {3, Bumper},
         {4, Chains},
+        {5, ProgCarUpgrade},
         {10, Money},
         {11, TunnelSP},
         {12, TunnelFT},
@@ -125,7 +131,9 @@ public class Items
         {114, FishSoup},
         {115, DuctTape},
         {116, RestoreDisc},
-        {117, HandheldRadio}
+        {117, HandheldRadio},
+        {130, IceTrap},
+        {131, ShrinkTrap}
     };
 
     public static Dictionary<string, ItemData> TunnelToItem = new()

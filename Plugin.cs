@@ -16,7 +16,7 @@ public class EasyDeliveryAP : BaseUnityPlugin
 {
     public const string PluginGUID = "com.aeromaze.easyDeliveryAP";
     public const string PluginName = "EasyDeliveryAP";
-    public const string PluginVersion = "0.2.4";
+    public const string PluginVersion = "0.3.0";
 
     public const string ModDisplayInfo = $"{PluginName} v{PluginVersion}";
     private const string APDisplayInfo = $"Archipelago v{ArchipelagoClient.APVersion}";
@@ -105,7 +105,7 @@ public class EasyDeliveryAP : BaseUnityPlugin
     {
         if (DeathLinkHandler.deathLinkEnabled != configDeathLink.Value && ArchipelagoClient.Authenticated)
         {
-            ArchipelagoClient.DeathLinkHandler.ToggleDeathLink();
+            ArchipelagoClient.DeathLinkHandler?.ToggleDeathLink();
         }
 
         if (!ArchipelagoClient.Authenticated)
@@ -229,9 +229,45 @@ public class EasyDeliveryAP : BaseUnityPlugin
             {
                 ArchipelagoClient.Disconnect();
             }
-            if (GUI.Button(new Rect(16, 373, 100, 20), "TrackerText"))
+            Vector3 add = new(0, 100, 0);
+            Vector3 MountainTownTP = new(-452.94f, 328f, -325.21f);
+            Quaternion MountainTownQt = new (0.00282f, 0.45403f, -0.00174f, 0.89098f);
+            Vector3 SnowyPeaksTP = new(-350.28f, 287.33f, 388.10f);
+            Quaternion SnowyPeaksQt = new(0.00282f, 0.45403f, -0.00174f, 0.89098f);
+            Vector3 FishingTownTP = new(-471.51f, 124.06f, 193.76f);
+            Quaternion FishingTownQt = new(-0.00178f, 0.75104f, -0.00163f, -0.66025f);
+
+            if (GUI.Button(new Rect(16, 373, 100, 20), "Teleport"))
             {
-                TrackerText.UpdateTracker();
+                CarPatches.teleport = true;
+                /*
+                if (OtherPatches.currentScene == 1)
+                {
+                    OtherPatches.car.transform.SetPositionAndRotation(MountainTownTP, MountainTownQt);
+                }
+                if (OtherPatches.currentScene == 5)
+                {
+                    OtherPatches.car.transform.SetPositionAndRotation(SnowyPeaksTP, SnowyPeaksQt);
+                }
+                else if (OtherPatches.currentScene == 4)
+                {
+                    OtherPatches.car.transform.SetPositionAndRotation(FishingTownTP, FishingTownQt);
+                }
+                */
+            }
+            if (GUI.Button(new Rect(125, 373, 100, 20), "Position"))
+            {
+                OtherPatches.car.transform.GetPositionAndRotation(out Vector3 v3, out Quaternion qt);
+                ArchipelagoConsole.LogMessage($"Vector: {v3}\nQuaternion: {qt}");
+            }
+            if (GUI.Button(new Rect(225, 373, 100, 20), "Shrink"))
+            {
+                //OtherPatches.car.transform.localScale = new Vector3(1, 1, 1);
+                CarPatches.shrink = true;
+            }
+            if (GUI.Button(new Rect(225, 393, 100, 20), "Ice"))
+            {
+                CarPatches.iceTrap = true;
             }
             if (GUI.Button(new Rect(16, 393, 100, 20), "Upton") && OtherPatches.currentScene == 1)
             {

@@ -15,6 +15,8 @@ public class OtherPatches
 {
     private static readonly ArchipelagoClient archipelago = EasyDeliveryAP.ArchipelagoClient;
 
+    public static int currentScene;
+
     // Enable drinking energy drinks without GPS
     [HarmonyPatch(typeof(EnergyDrink), "ButtonPressed")]
     private static void Prefix(ref EnergyDrink __instance, ref bool __state)
@@ -35,13 +37,11 @@ public class OtherPatches
             __state = false;
         }
     }
-
-    public static int currentScene;
-
+    
+    // Adding received items to inventory on a new save
     [HarmonyPatch(typeof(SceneTransition), "LoadScene", new Type[] {typeof(int)})]
     private static bool Prefix(int __0)
     {
-        // ArchipelagoConsole.LogMessage($"Scene id: {__0}");
         currentScene = __0;
         if (__0 == 3)
         {
@@ -69,6 +69,7 @@ public class OtherPatches
     public static GameObject upgradedBasedProgression;
     public static GameObject shopInteriors;
     public static GameObject nodes;
+    public static sCarController car;
     public static Transform[] radios;
     public static GameObject radio1;
     public static GameObject radio2;
@@ -79,7 +80,6 @@ public class OtherPatches
 
 
     // A good place to get neccessary gameobjects on scene change
-    
     [HarmonyPatch(typeof(SceneTransition), "fadeIn")]
     private static void Prefix(SceneTransition __instance)
     {
@@ -101,6 +101,7 @@ public class OtherPatches
                 storeInteriors.TryAdd(transform.name, transform);
             }
             
+            // Differenciate between radiostations in Mountain Town
             radios = GameObject.Find("RadioStationManager").GetComponentsInChildren<Transform>(true);
             foreach (Transform radio in radios)
             {
@@ -130,9 +131,14 @@ public class OtherPatches
             {
                 MapNodes.TryAdd(mapNode.name, mapNode);
             }
+            car = GameObject.FindObjectOfType<sCarController>();
+        }
+        else if (currentScene == 6)
+        {
+            car = GameObject.FindObjectOfType<sCarController>();
         }
 
-
+        // Remove Fishing Town Gate with 3 "Radio Tower" items
         if (currentScene == 4 && (APData.radio_towers == "1" || APData.radio_towers == "3") && Items.RadioTower.Received >= 3)
         {
             GameObject.Find("ResetContainer")?.SetActive(false);

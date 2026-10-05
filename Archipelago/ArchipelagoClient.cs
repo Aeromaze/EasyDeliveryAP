@@ -12,6 +12,7 @@ using Archipelago.MultiClient.Net.Packets;
 using EasyDeliveryAP.Utils;
 using HarmonyLib;
 using UnityEngine;
+using Color = UnityEngine.Color;
 
 namespace EasyDeliveryAP.Archipelago;
 
@@ -114,6 +115,10 @@ public class ArchipelagoClient
 
             TrackerApp.TotalDeliveries();
 
+            CarPatches.trailColor = new((byte)((APData.car_trail_color>>16) & 0xFF)/256f, (byte)((APData.car_trail_color>>8) & 0xFF)/256f, (byte)((APData.car_trail_color) & 0xFF)/256f);
+
+            Color trail = CarPatches.trailColor;
+            ArchipelagoConsole.LogMessage($"{APData.car_trail_color} {trail.r} {trail.g} {trail.b}");
             ArchipelagoConsole.LogMessage(outText);
         }
         else
@@ -130,8 +135,6 @@ public class ArchipelagoClient
 
         ArchipelagoConsole.LogMessage(outText);
         attemptingConnection = false;
-        
-        TrackerText.UpdateTracker();
     }
 
     /// <summary>
@@ -150,8 +153,6 @@ public class ArchipelagoClient
         {
             itemData.Received = 0;
         }
-        
-        TrackerText.UpdateTracker();
     }
 
     public void SendMessage(string message)
@@ -174,7 +175,6 @@ public class ArchipelagoClient
             APGUI.Notification($"Sending {item.ItemDisplayName} to {item.Player}", APGUI.packageReceive);
             ServerData.CheckedLocations.Add(location);
         }
-        TrackerText.UpdateTracker();
     }
 
     public void SendLocations(long[] location)
@@ -245,6 +245,7 @@ public class ArchipelagoClient
 
         switch (receivedItem.ItemId)
         {
+            // Installing car upgrades is primarily done in ItemHandling
             case 1:
                 //Items.GPS.Enabled = true;
                 APGUI.Notification("Received Map", APGUI.packageReceive);
@@ -261,6 +262,35 @@ public class ArchipelagoClient
                 if (APData.car_upgrades == "1") Items.Chains.Enabled = true;
                 APGUI.Notification("Received Ice Chains", APGUI.iceChains);
                 break;
+            case 5:
+                if (Items.ProgCarUpgrade.Received > 0)
+                {
+                    Items.Tires.Received = 1;
+                    if (APData.car_upgrades == "1") Items.Tires.Enabled = true;
+                    if (Items.ProgCarUpgrade.Received == 1)
+                    {
+                        APGUI.Notification("Received Snow Tires", APGUI.snowTires);
+                    }
+                }
+                if (Items.ProgCarUpgrade.Received > 1)
+                {
+                    Items.Bumper.Received = 1;
+                    if (APData.car_upgrades == "1") Items.Bumper.Enabled = true;
+                    if (Items.ProgCarUpgrade.Received == 2)
+                    {
+                        APGUI.Notification("Received Bumper Bar", APGUI.truckBumper);
+                    }
+                }
+                if (Items.ProgCarUpgrade.Received > 2)
+                {
+                    Items.Chains.Received = 1;
+                    if (APData.car_upgrades == "1") Items.Chains.Enabled = true;
+                    if (Items.ProgCarUpgrade.Received == 3)
+                    {
+                        APGUI.Notification("Received Ice Chains", APGUI.iceChains);
+                    }
+                }
+                break;
             case 10:
                 ItemHandling.pendingMoney += 33;
                 break;
@@ -269,6 +299,14 @@ public class ArchipelagoClient
                 ItemHandling.pendingItems = true;
                 APGUI.Notification($"Received {Items.APIdToItem[(int)receivedItem.ItemId].Name}", APGUI.packageReceive);
                 break;
+            case 130:
+                APGUI.Notification("Ice Trap");
+                CarPatches.iceTrap = true;
+                break;
+            case 131:
+                APGUI.Notification("Shrink Trap");
+                CarPatches.shrink = true;
+                break;
             case 20 or 11 or 12 or 13 or (>= 30 and <= 38):
                 APGUI.Notification($"Received {Items.APIdToItem[(int)receivedItem.ItemId].Name}", APGUI.packageReceive);
                 break;
@@ -276,8 +314,6 @@ public class ArchipelagoClient
                 ArchipelagoConsole.LogMessage($"Received unhandled item: {receivedItem.ItemName} Id: {receivedItem.ItemId}");
                 break;
         }
-
-        TrackerText.UpdateTracker();
     }
 
     /// <summary>

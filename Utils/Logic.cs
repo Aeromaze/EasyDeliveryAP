@@ -4,7 +4,7 @@ public class APLogic
 {
     public static bool CanReachSnowyPeaks()
     {
-        if (Items.Lighter.Received > 0 && Items.Tires.Received > 0)
+        if (Items.Lighter.Received > 0 && (Items.Tires.Received > 0 || Items.ProgCarUpgrade.Received > 1))
         {
             if (APData.blocked_tunnels != "1") return true;
             else if (Items.TunnelSP.Received > 0) return true;
@@ -29,16 +29,16 @@ public class APLogic
     {
         if (APData.radio_towers == "1" || APData.radio_towers == "3")
         {
-            if (Items.RadioTower.Received >= 3 && Items.Bumper.Received > 0) return true;
+            if (Items.RadioTower.Received >= 3 && (Items.Bumper.Received > 0 || Items.ProgCarUpgrade.Received > 1)) return true;
         }
         // TODO: change to actally check if the gate can be opened
-        else if (CanReachSnowyPeaks() && Items.Bumper.Received > 0) return true;
+        else if (CanReachSnowyPeaks() && (Items.Bumper.Received > 0 || Items.ProgCarUpgrade.Received > 1)) return true;
         return false;
     }
 
     public static bool HasSnowTires()
     {
-        if (Items.Tires.Received > 0) 
+        if (Items.Tires.Received > 0 || Items.ProgCarUpgrade.Received > 0) 
         {
             if (APData.car_upgrades == "1") return true;
             if (CanReachSnowyPeaks()) return true;
@@ -46,7 +46,7 @@ public class APLogic
         return false;
     }
 
-    /// <summary>NOT YET IMPLEMENTED! Checks if the Snowy Peaks tunnel has already been entered.</summary>
+    /// <summary>NOT YET IMPLEMENTED! Checks if the Snowy Peaks tunnel has already been entered. Might be better in APData</summary>
     public static bool HasEnteredSPTunnel()
     {
         return false;
