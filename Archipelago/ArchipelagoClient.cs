@@ -299,16 +299,31 @@ public class ArchipelagoClient
                 ItemHandling.pendingItems = true;
                 APGUI.Notification($"Received {Items.APIdToItem[(int)receivedItem.ItemId].Name}", APGUI.packageReceive);
                 break;
-            case 130:
-                APGUI.Notification("Ice Trap");
+            case 130: // Ice Trap
+                APGUI.Notification($"Received {Items.APIdToItem[(int)receivedItem.ItemId].Name}", APGUI.warningTriangle);
                 CarPatches.iceTrap = true;
                 break;
-            case 131:
-                APGUI.Notification("Shrink Trap");
+            case 131: // Shrink Trap
+                APGUI.Notification($"Received {Items.APIdToItem[(int)receivedItem.ItemId].Name}", APGUI.warningTriangle);
                 CarPatches.shrink = true;
                 break;
-            case 20 or 11 or 12 or 13 or (>= 30 and <= 38):
+            case 132: // Stuck Turning Trap
+                APGUI.Notification($"Received {Items.APIdToItem[(int)receivedItem.ItemId].Name}", APGUI.warningTriangle);
+                CarPatches.turnTrap = true;
+                break;
+            case 133: // Forced Acceleration Trap
+                APGUI.Notification($"Received {Items.APIdToItem[(int)receivedItem.ItemId].Name}", APGUI.warningTriangle);
+                CarPatches.accelTrap = true;
+                break;
+            case 11 or 12 or 13 or (>= 30 and <= 38):
                 APGUI.Notification($"Received {Items.APIdToItem[(int)receivedItem.ItemId].Name}", APGUI.packageReceive);
+                break;
+            case 20:
+                APGUI.Notification($"Received {Items.APIdToItem[(int)receivedItem.ItemId].Name}", APGUI.radio);
+                if (Items.RadioTower.Received > 2 && OtherPatches.currentScene == 4)
+                {
+                    OtherPatches.RemoveGate();
+                }
                 break;
             default:
                 ArchipelagoConsole.LogMessage($"Received unhandled item: {receivedItem.ItemName} Id: {receivedItem.ItemId}");

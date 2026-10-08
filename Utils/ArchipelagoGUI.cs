@@ -22,6 +22,7 @@ public class APGUI
     public static Vector2 truckBumper = new(208f, 32f);
     public static Vector2 packageSend = new(0f, 48f);
     public static Vector2 packageReceive = new(48f, 48f);
+    public static Vector2 warningTriangle = new(64f, 32f);
 
     public static void Notification(string text)
     {

@@ -1,3 +1,4 @@
+using System;
 using EasyDeliveryAP.Archipelago;
 using HarmonyLib;
 using UnityEngine;
@@ -26,10 +27,16 @@ public class CarPatches
 
     public static Color trailColor = new(1, 1, 1);
 
+    public static bool turnTrap = false;
+    private static int turnTimer = 0;
+    private static float randomTurn = 0;
+    public static bool accelTrap = false;
+    private static int accelTimer = 0;
+
     [HarmonyPatch(typeof(sCarController), "Update")]
     private static void Prefix(sCarController __instance)
     {
-        if (!PauseSystem.paused)
+        if (!PauseSystem.paused && !__instance.guyActive)
         {
             // Shrink Trap
             if (shrink)
@@ -47,7 +54,7 @@ public class CarPatches
                 else
                 {
                     shrink = false;
-                    shrinkTimer += 3600;
+                    shrinkTimer += 1800;
                 }
             }
             else if (shrinkTimer > 0)
@@ -65,8 +72,9 @@ public class CarPatches
                 __instance.drivePowerScale += 1f/150;
             }
         }
-        if (teleport)
+        if (PauseSystem.paused && teleport && !__instance.guyActive)
         {
+            // Teleports
             if (OtherPatches.currentScene == 1)
             {
                 __instance.transform.SetPositionAndRotation(MountainTownTP, MountainTownQt);
@@ -88,7 +96,7 @@ public class CarPatches
     [HarmonyPatch(typeof(sCarController), "GetMaterialIndex")]
     private static bool Prefix(sCarController __instance, ref int __result)
     {
-        if (!PauseSystem.paused)
+        if (!PauseSystem.paused && !__instance.guyActive)
         {
             // Ice Trap. Makes the wheels drive like on ice
             if (iceTrap)
@@ -104,5 +112,39 @@ public class CarPatches
             }
         }
         return true;
+        
+    }
+
+    [HarmonyPatch(typeof(sCarController), "SetInput", new Type[] {typeof(Vector2)})]
+    private static void Prefix(sCarController __instance, ref Vector2 __0)
+    {
+        // y = turning, x = acceleration
+        if (!PauseSystem.paused && !__instance.guyActive)
+        {
+            // Lock steering for a moment
+            if (turnTrap)
+            {
+                turnTimer += 500;
+                turnTrap = false;
+                // randomTurn = UnityEngine.Random.Range(-1f, 1f);
+                randomTurn = __0.x;
+            }
+            else if (turnTimer > 0)
+            {
+                __0 = new(randomTurn, __0.y);
+                turnTimer -= 1;
+            }
+            // Lock acceleration for a moment
+            if (accelTrap)
+            {
+                accelTimer += 500;
+                accelTrap = false;
+            }
+            else if (accelTimer > 0)
+            {
+                __0 = new(__0.x, 1);
+                accelTimer -= 1;
+            }
+        }
     }
 }

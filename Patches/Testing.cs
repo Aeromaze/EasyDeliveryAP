@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using EasyDeliveryAP.Archipelago;
 using EasyDeliveryAP.Utils;
 using HarmonyLib;
@@ -130,10 +129,12 @@ public class Testing
         ArchipelagoConsole.LogMessage($"Gacha: {__instance.newItem}");
     }
 
+    // Garbage bin
     [HarmonyPatch(typeof(GarbageCan), "ThrowOut")]
     private static void Prefix(int __0, GarbageCan __instance)
     {
-        ArchipelagoConsole.LogMessage($"Trashing item id: {__0}");
+        // __instance.transform.GetLocalPositionAndRotation(out Vector3 pos, out Quaternion Qt);
+        // ArchipelagoConsole.LogMessage($"Trashing item id: {__0} {pos}");
     }
 
     // Might help with fixing goals, or not
@@ -242,13 +243,21 @@ public class Testing
         return true;
     }
 
+    private static List<string> signs = [];
+
     [HarmonyPatch(typeof(RoadSign), "Update")]
     private static void Postfix(RoadSign __instance)
     {
         Vector3 vector = __instance.cam.transform.position - __instance.transform.position;
         if (!(vector.magnitude > 30f) && !(Vector3.Dot(__instance.cam.transform.forward, vector.normalized) > 0f))
         {
-            //ArchipelagoConsole.LogMessage($"Road sign: {__instance.name}\n {__instance.enterLabel}\n{__instance.exitLabel}");
+            __instance.transform.GetLocalPositionAndRotation(out Vector3 pos, out Quaternion Qt);
+            if (!signs.Contains(pos.ToString()))
+            {
+                signs.Add(pos.ToString());
+                ArchipelagoConsole.LogMessage($"Road sign: {__instance.name}\n{__instance.transform.name}\n {__instance.enterLabel}\n{__instance.exitLabel}\n{pos}");
+                ArchipelagoConsole.LogMessage($"Signs: {signs}");
+            }
         }
     }
 

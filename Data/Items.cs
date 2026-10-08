@@ -72,6 +72,8 @@ public class Items
     // Traps
     public static ItemData IceTrap = new("Ice Trap");
     public static ItemData ShrinkTrap = new("Shrink Trap");
+    public static ItemData FrozenSteeringWheelTrap = new("Frozen Steering Wheel Trap");
+    public static ItemData ForcedAccelerationTrap = new("Forced Acceleration Trap");
 
     // Tunnels
     public static ItemData TunnelSP = new("Snowy Peaks Tunnel");
@@ -133,7 +135,22 @@ public class Items
         {116, RestoreDisc},
         {117, HandheldRadio},
         {130, IceTrap},
-        {131, ShrinkTrap}
+        {131, ShrinkTrap},
+        {132, FrozenSteeringWheelTrap},
+        {133, ForcedAccelerationTrap}
+    };
+
+    public static Dictionary<string, ItemData> NameToItem = new()
+    {
+        {"Upton", Upton},
+        {"Weston", Weston},
+        {"Easton", Easton},
+        {"Winton", Winton},
+        {"Munton", Munton},
+        {"Lopton", Lopton},
+        {"Clifton", Clifton},
+        {"Damton", Damton},
+        {"Smalton", Smalton}
     };
 
     public static Dictionary<string, ItemData> TunnelToItem = new()

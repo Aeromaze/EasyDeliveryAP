@@ -32,6 +32,8 @@ public class APData
     public static string car_upgrades;
     public static string progressive_car_upgrades;
     public static int car_trail_color;
+    public static string vending_machines;
+    public static string trash_bins;
 
     // Other
     public static Hint[] hints;
@@ -73,6 +75,22 @@ public class APData
         else
         {
             car_trail_color = 0xFFFFFF;
+        }
+        if (slotData.TryGetValue("vending_machines", out object Vending_machines))
+        {
+            vending_machines = Vending_machines.ToString();
+        }
+        else
+        {
+            vending_machines = "0";
+        }
+        if (slotData.TryGetValue("trash_bins", out object Trash_bins))
+        {
+            trash_bins = Trash_bins.ToString();
+        }
+        else
+        {
+            trash_bins = "0";
         }
     }
 

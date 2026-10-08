@@ -71,6 +71,7 @@ public class LocationHandling
         // ArchipelagoConsole.LogMessage($"Installing Upgrade: {__instance.item.name}");
     }
 
+    // Normal goal
     [HarmonyPatch(typeof(EndingManager), "SetEnding")]
     private static void Postfix(EndingManager.Ending __0,EndingManager __instance)
     {

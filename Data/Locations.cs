@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using HarmonyLib;
 
 namespace EasyDeliveryAP;
@@ -87,9 +88,9 @@ public class Locations
         {"4Blind Bag (3)", 31},
     };
 
-    // Mountain Town nodes
     public class MountainTown
     {
+        // Mountain Town nodes
         public static NodeData EasyFlowers = new("Easy Flowers", "Upton", 0);
         public static NodeData Node57 = new("Node (57)", "Upton", 1);
         public static NodeData Node48 = new("Node (48)", "Upton", 2);
@@ -116,11 +117,39 @@ public class Locations
         public static NodeData EZMart = new("EZ Mart", "Easton", 23);
         public static NodeData Node92 = new("Node (92)", "Upton", 24);
         public static NodeData Node93 = new("Node (93)", "Upton", 25);
+
+        // Mountain Town bins and vending machines
+        // Upton
+        public static PositionData VMUEats = new("VMUEats", "Upton", 100, "Vending Machine");
+        public static PositionData RBUFlowers = new("RBUFlowers", "Upton", 121, "Bin");
+        public static PositionData BBUFlowers = new("BBUFlowers", "Upton", 122, "Bin");
+        public static PositionData BBUFlowersEats = new("BBUFlowersEats", "Upton", 123, "Bin");
+        public static PositionData BBUEats = new("BBUEats", "Upton", 124, "Bin");
+        public static PositionData RBUEats = new("RBUEats", "Upton", 125, "Bin");
+        public static PositionData RBUTownEdge = new("RBUTownEdge", "Upton", 126, "Bin");
+        // Weston
+        public static PositionData BBWEntry = new("BBWEntry", "Weston", 127, "Bin");
+        public static PositionData RBWEntry = new("RBWEntry", "Weston", 128, "Bin");
+        public static PositionData BBWBakeryAcross = new("BBWBakeryAcross", "Weston", 129, "Bin");
+        public static PositionData RBWBakeryLeft = new("RBWBakeryLeft", "Weston", 130, "Bin");
+        public static PositionData BBWBakeryLeft = new("BBWBakeryLeft", "Weston", 131, "Bin");
+        public static PositionData RBWBarTunnel = new("RBWBarTunnel", "Weston", 132, "Bin");
+        public static PositionData VMWBarTunnel = new("VMWBarTunnel", "Weston", 101, "Vending Machine");
+        public static PositionData BBWDepot = new("BBWDepot", "Weston", 133, "Bin");
+        public static PositionData BBWBarLower = new("BBWBarLower", "Weston", 134, "Bin");
+        public static PositionData RBWCafe = new("RBWCafe", "Weston", 135, "Bin");
+        // Easton
+        public static PositionData BBEMart = new("BBEMart", "Easton", 136, "Bin");
+        public static PositionData RBEFuel = new("RBEFuel", "Easton", 137, "Bin");
+        public static PositionData BBEFuel = new("BBEFuel", "Easton", 138, "Bin");
+        public static PositionData VMEFuel = new("VMEFuel", "Easton", 102, "Vending Machine");
+        public static PositionData BBEPizzaRight = new("BBEPizzaRight", "Easton", 139, "Bin");
+        public static PositionData RBEPizzaLeft = new("RBEPizzaLeft", "Easton", 140, "Bin");
     }
 
-    // Snowy Peaks nodes
     public class SnowyPeaks
     {
+        // Snowy Peaks nodes
         public static NodeData Destnode5 = new("Destnode5", "Lopton", 0);
         public static NodeData Destnode1 = new("Destnode1", "Lopton", 1);
         public static NodeData Destnode3 = new("Destnode3", "Lopton", 2);
@@ -143,11 +172,30 @@ public class Locations
         public static NodeData Bar2 = new("Bar 2", "Munton", 19);
         public static NodeData EZMart = new("EZ Mart", "Munton", 20);
         public static NodeData PawnShop = new("Pawn Shop", "Munton", 21);
+
+        // Snowy Peaks bins and vending machines
+        // Winton
+        public static PositionData BBWFlowers = new("BBWFlowers", "Winton", 141, "Bin");
+        public static PositionData RBWEats = new("RBWEats", "Winton", 142, "Bin");
+        public static PositionData VMWFuel = new("VMWFuel", "Winton", 103, "Vending Machine");
+        public static PositionData BBWFuel = new("BBWFuel", "Winton", 143, "Bin");
+        public static PositionData RBWFuel = new("RBWFuel", "Winton", 144, "Bin");
+        // Munton
+        public static PositionData VMMAuto = new("VMMAuto", "Munton", 104, "Vending Machine");
+        public static PositionData RBMPawn = new("RBMPawn", "Munton", 145, "Bin");
+        public static PositionData RBMMart = new("RBMMart", "Munton", 146, "Bin");
+        public static PositionData BBMMart = new("BBMMart", "Munton", 147, "Bin");
+        public static PositionData VMMBar = new("VMMBar", "Munton", 105, "Vending Machine");
+        // Lopton
+        public static PositionData RBLBar = new("RBLBar", "Lopton", 148, "Bin");
+        public static PositionData VMLDepot = new("VMLDepot", "Lopton", 106, "Vending Machine");
+        public static PositionData RBLDepot = new("RBLDepot", "Lopton", 149, "Bin");
+        public static PositionData BBLDepot = new("BBLDepot", "Lopton", 150, "Bin");
     }
 
-    // Fishing Town
     public class FishingTown
     {
+        // Fishing Town nodes
         public static NodeData Node93 = new("Node (93)", "Clifton", 0);
         public static NodeData Nodedock = new("Node(dock)", "Smalton", 1);
         public static NodeData Node59 = new("Node (59)", "Damton", 2);
@@ -184,6 +232,28 @@ public class Locations
         public static NodeData EasyPizza = new("Easy Pizza", "Smalton", 33);
         public static NodeData EZAuto = new("EZ Auto", "Clifton", 34);
         public static NodeData EZBakery = new("EZ Bakery", "Damton", 35);
+
+        // Fishing Town bins and vending machines
+        // Clifton
+        public static PositionData RBCBar = new("RBCBar", "Clifton", 151, "Bin");
+        public static PositionData BBCBar = new("BBCBar", "Clifton", 152, "Bin");
+        public static PositionData VMCMart = new("VMCMart", "Clifton", 107, "Vending Machine");
+        public static PositionData BBCMart = new("BBCMart", "Clifton", 153, "Bin");
+        public static PositionData RBCMart = new("RBCMart", "Clifton", 154, "Bin");
+        // Damton
+        public static PositionData RBDBar = new("RBDBar", "Damton", 155, "Bin");
+        public static PositionData BBDBar = new("BBDBar", "Damton", 156, "Bin");
+        public static PositionData VMDBar = new("VMDBar", "Damton", 108, "Vending Machine");
+        public static PositionData RBDDepot = new("RBDDepot", "Damton", 157, "Bin");
+        public static PositionData BBDDepot = new("BBDDepot", "Damton", 158, "Bin");
+        public static PositionData VMDDepot = new("VMDDepot", "Damton", 109, "Vending Machine");
+        // Smalton
+        public static PositionData BBSPizza = new("BBSPizza", "Smalton", 159, "Bin");
+        public static PositionData RBSPizza = new("RBSPizza", "Smalton", 160, "Bin");
+        public static PositionData VMSEatsLeft = new("VMSEatsLeft", "Smalton", 110, "Vending Machine");
+        public static PositionData VMSEatsRight = new("VMSEatsRight", "Smalton", 111, "Vending Machine");
+        public static PositionData RBSEats = new("RBSEats", "Smalton", 161, "Bin");
+        public static PositionData BBSEats = new("BBSEats", "Smalton", 162, "Bin");
     }
 
     public static readonly Dictionary<string, NodeData> MountainTownNode = new()
@@ -378,6 +448,80 @@ public class Locations
         {35, FishingTown.EZBakery},
     };
 
+    public static readonly Dictionary<string, PositionData> MountainTownPositions = new()
+    {
+        // Upton
+        {"(-323.89, 326.97, -278.76)", MountainTown.VMUEats}, // VMUEats
+        {"(-379.38, 326.80, -291.69)", MountainTown.RBUFlowers}, // RBUFlowers
+        {"(-378.53, 326.80, -290.91)", MountainTown.BBUFlowers}, // BBUFlowers
+        {"(-355.97, 326.82, -288.83)", MountainTown.BBUFlowersEats}, // BBUFlowersEats
+        {"(-326.58, 326.80, -279.27)", MountainTown.BBUEats}, // BBUEats
+        {"(-325.83, 326.79, -279.25)", MountainTown.RBUEats}, // RBUEats
+        {"(-267.40, 328.12, -278.91)", MountainTown.RBUTownEdge}, // RBUTownEdge
+        // Weston
+        {"(287.45, 198.50, -49.99)", MountainTown.BBWEntry}, // BBWEntry
+        {"(320.60, 198.86, -65.65)", MountainTown.RBWEntry}, // RBWEntry
+        {"(407.72, 196.02, -72.15)", MountainTown.BBWBakeryAcross}, // BBWBakeryAcross
+        {"(436.57, 195.03, -84.92)", MountainTown.RBWBakeryLeft}, // RBWBakeryLeft
+        {"(435.85, 195.05, -84.81)", MountainTown.BBWBakeryLeft}, // BBWBakeryLeft
+        {"(457.49, 195.15, -50.03)", MountainTown.RBWBarTunnel}, // RBWBarTunnel
+        {"(446.47, 195.79, -43.11)", MountainTown.VMWBarTunnel}, // VMWBarTunnel
+        {"(398.14, 195.00, -37.17)", MountainTown.BBWDepot}, // BBWDepot
+        {"(279.93, 156.83, 69.52)", MountainTown.BBWBarLower}, // BBWBarLower
+        {"(230.71, 156.11, 68.35)", MountainTown.RBWCafe}, // RBWCafe
+        // Easton
+        {"(-208.38, 146.34, 42.44)", MountainTown.BBEMart}, // BBEMart
+        {"(-143.60, 146.19, 38.97)", MountainTown.RBEFuel}, // RBEFuel
+        {"(-144.36, 146.22, 39.11)", MountainTown.BBEFuel}, // BBEFuel
+        {"(-140.00, 146.32, 37.85)", MountainTown.VMEFuel}, // VMEFuel
+        {"(-202.84, 146.27, 26.13)", MountainTown.BBEPizzaRight}, // BBEPizzaRight
+        {"(-139.48, 146.15, 6.84)", MountainTown.RBEPizzaLeft} // RBEPizzaLeft
+    };
+
+    public static readonly Dictionary<string, PositionData> SnowyPeaksPositions = new()
+    {
+        // Winton
+        {"(-586.90, 0.26, 616.57)", SnowyPeaks.BBWFlowers},
+        {"(-596.36, 0.04, 615.28)", SnowyPeaks.RBWEats},
+        {"(-446.21, 33.01, -42.56)", SnowyPeaks.VMWFuel},
+        {"(-630.71, -0.10, 595.56)", SnowyPeaks.BBWFuel},
+        {"(-629.87, -0.08, 595.92)", SnowyPeaks.RBWFuel},
+        // Munton
+        {"(0.00, -0.74, 0.00)", SnowyPeaks.VMMAuto},
+        {"(-195.85, -33.65, 605.07)", SnowyPeaks.RBMPawn},
+        {"(-52.17, 53.53, 645.23)", SnowyPeaks.RBMMart},
+        {"(-51.45, 53.56, 644.61)", SnowyPeaks.BBMMart},
+        {"(152.72, 86.37, -8.95)", SnowyPeaks.VMMBar},
+        // Lopton
+        {"(0.00, 0.00, 0.00)", SnowyPeaks.RBLBar},
+        {"(113.55, 32.65, -692.20)", SnowyPeaks.VMLDepot},
+        {"(-79.79, -0.20, -56.63)", SnowyPeaks.RBLDepot},
+        {"(-79.34, -0.20, -55.91)", SnowyPeaks.BBLDepot}
+    };
+
+    public static readonly Dictionary<string, PositionData> FishingTownPositions = new()
+    {
+        // Clifton
+        {"(0.34, 0.01, 1.03)", FishingTown.RBCBar},
+        {"(0.00, 0.00, 0.00)", FishingTown.BBCBar},
+        {"(278.26, 92.31, 313.60)", FishingTown.VMCMart},
+        {"(54.99, 0.25, 27.34)", FishingTown.BBCMart},
+        {"(54.07, 0.26, 27.37)", FishingTown.RBCMart},
+        // Damton
+        {"(183.00, -17.49, -653.05)", FishingTown.RBDBar},
+        {"(183.82, -17.49, -653.01)", FishingTown.BBDBar},
+        {"(414.58, 74.61, -364.05)", FishingTown.VMDBar},
+        {"(-22.45, -55.79, -763.66)", FishingTown.RBDDepot},
+        {"(-21.64, -55.74, -763.70)", FishingTown.BBDDepot},
+        {"(207.45, 36.32, -474.97)", FishingTown.VMDDepot},
+        // Smalton
+        {"(-431.89, -66.74, -786.37)", FishingTown.BBSPizza},
+        {"(-432.70, -66.74, -786.38)", FishingTown.RBSPizza},
+        {"(-410.32, 76.99, -430.47)", FishingTown.VMSEatsLeft},
+        {"(-412.82, 76.99, -430.47)", FishingTown.VMSEatsRight},
+        {"(-641.40, -15.20, -719.75)", FishingTown.RBSEats},
+        {"(-642.22, -15.19, -719.72)", FishingTown.BBSEats}
+    };
 }
 
 public class NodeData
@@ -397,5 +541,34 @@ public class NodeData
         Name = name;
         Town = town;
         Index = index;
+    }
+}
+
+public class PositionData
+{
+    public string Name { get; set; }
+
+    public string Town { get; set; }
+
+    public string Type { get; set; }
+
+    // public Vector3 Position { get; set; }
+
+    public int LocationId { get; set; }
+
+    public PositionData(string name, string town, int locId)
+    {
+        Name = name;
+        Town = town;
+        LocationId = locId;
+        Type = "None";
+    }
+
+    public PositionData(string name, string town, int locId, string type)
+    {
+        Name = name;
+        Town = town;
+        LocationId = locId;
+        Type = type;
     }
 }

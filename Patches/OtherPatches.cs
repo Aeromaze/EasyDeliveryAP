@@ -139,6 +139,8 @@ public class OtherPatches
         }
 
         // Remove Fishing Town Gate with 3 "Radio Tower" items
+        RemoveGate();
+        /*
         if (currentScene == 4 && (APData.radio_towers == "1" || APData.radio_towers == "3") && Items.RadioTower.Received >= 3)
         {
             GameObject.Find("ResetContainer")?.SetActive(false);
@@ -147,6 +149,7 @@ public class OtherPatches
             GameObject.Find("GATE movable")?.SetActive(false);
             // GameObject.Find("Destroy Gate Check").SetActive(false);
         }
+        */
 
         if (currentScene == 1 && EasyDeliveryAP.debug)
         {
@@ -181,6 +184,18 @@ public class OtherPatches
         }
         */
     }
+
+    public static void RemoveGate()
+    {
+        if (currentScene == 4 && (APData.radio_towers == "1" || APData.radio_towers == "3") && Items.RadioTower.Received >= 3)
+        {
+            GameObject.Find("ResetContainer")?.SetActive(false);
+            GameObject.Find("ResetVolumes")?.SetActive(false);
+            GameObject.Find("Destroy Gate Check")?.SetActive(false);
+            GameObject.Find("GATE movable")?.SetActive(false);
+            // GameObject.Find("Destroy Gate Check").SetActive(false);
+        }
+    }
     
 
     // Get an instance of sHUD for ingame messages
@@ -195,12 +210,53 @@ public class OtherPatches
     private static bool Prefix(InteractionPoint __instance, ref string __state)
     {
         __state = __instance.name;
+        __instance.listener.transform.GetLocalPositionAndRotation(out Vector3 pos, out Quaternion _);
 
-        if (EasyDeliveryAP.debug)
+        if (EasyDeliveryAP.debug && false)
         {
             ArchipelagoConsole.LogMessage($"Action: {__instance.name}\nListener: {__instance.listener.name}");
+            if (Locations.MountainTownPositions.TryGetValue(pos.ToString(), out PositionData posData))
+            {
+                ArchipelagoConsole.LogMessage($"Position: {pos.ToString()} id: {posData.LocationId}");
+            }
+            else
+            {
+                ArchipelagoConsole.LogMessage($"Position: {pos.ToString()} id: unknown");
+            }
         }
+        // Vending Machines and Bins
+        if (__instance.name == "throw away" || __instance.name == "take")
+        {
+            Dictionary<string, PositionData> PositionList = [];
+            
+            if (currentScene == 1) // Mountain Town
+            {
+                PositionList = Locations.MountainTownPositions;
+            }
+            else if (currentScene == 4) // Fishing Town
+            {
+                PositionList = Locations.FishingTownPositions;
+            }
+            else if (currentScene == 5) // Snowy Peaks
+            {
+                PositionList = Locations.SnowyPeaksPositions;
+            }
 
+            if (PositionList.TryGetValue(pos.ToString(), out PositionData posData))
+            {
+                ArchipelagoConsole.LogMessage($"VendingBin: {posData.Name}");
+                APGUI.Notification(posData.Name);
+                if (APData.lock_towns == "0" || (APData.lock_towns == "1" && Items.NameToItem[posData.Town]?.Received > 0))
+                {
+                    archipelago.SendLocations([posData.LocationId]);
+                }
+            }
+            else
+            {
+                ArchipelagoConsole.LogMessage($"VendingBin: {pos}");
+                APGUI.Notification(pos.ToString());
+            }
+        }
         if (currentScene == 6)
         {
             if (APData.require_handheld_radio == "1" && __instance.name == "enter" && !ItemHandling.radio.Contains(17))

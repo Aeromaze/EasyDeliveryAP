@@ -269,6 +269,15 @@ public class EasyDeliveryAP : BaseUnityPlugin
             {
                 CarPatches.iceTrap = true;
             }
+            if (GUI.Button(new Rect(325, 373, 100, 20), "Turn"))
+            {
+                //OtherPatches.car.transform.localScale = new Vector3(1, 1, 1);
+                CarPatches.turnTrap = true;
+            }
+            if (GUI.Button(new Rect(325, 393, 100, 20), "Accel"))
+            {
+                CarPatches.accelTrap = true;
+            }
             if (GUI.Button(new Rect(16, 393, 100, 20), "Upton") && OtherPatches.currentScene == 1)
             {
                 OtherPatches.Nodes["Upton"].gameObject.SetActive(upton);
