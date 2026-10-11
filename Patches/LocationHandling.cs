@@ -4,6 +4,7 @@ using Archipelago.MultiClient.Net;
 using EasyDeliveryAP.Archipelago;
 using EasyDeliveryAP.Utils;
 using HarmonyLib;
+using UnityEngine;
 
 namespace EasyDeliveryAP;
 
@@ -111,5 +112,23 @@ public class LocationHandling
     {
         ArchipelagoConsole.LogMessage($"SnowcatBobbleIndex: {__result}");
         if (snowcat) archipelago.SendLocation(__result + 40);
+    }
+
+    [HarmonyPatch(typeof(RoadSign), "Update")]
+    private static void Postfix(RoadSign __instance)
+    {
+        Vector3 vector = __instance.cam.transform.position - __instance.transform.position;
+        if (!(vector.magnitude > 30f) && !(Vector3.Dot(__instance.cam.transform.forward, vector.normalized) > 0f))
+        {
+            int? locationId = Locations.MountainTownPositions[__instance.gameObject.transform.position.ToString()]?.LocationId;
+            if (locationId != null)
+            {
+                archipelago.SendLocations([(int)locationId]);
+            }
+            else
+            {
+                ArchipelagoConsole.LogMessage($"Unregistered or knocked over sign: {__instance.gameObject.transform.position}");
+            }
+        }
     }
 }

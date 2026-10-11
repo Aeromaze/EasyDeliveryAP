@@ -145,6 +145,24 @@ public class Locations
         public static PositionData VMEFuel = new("VMEFuel", "Easton", 102, "Vending Machine");
         public static PositionData BBEPizzaRight = new("BBEPizzaRight", "Easton", 139, "Bin");
         public static PositionData RBEPizzaLeft = new("RBEPizzaLeft", "Easton", 140, "Bin");
+
+        // Signs
+        public static PositionData SignToSP = new("Welcome to Mountain Town", "Upton", 200, "Sign");
+        public static PositionData SignUptonExit = new("To Weston, To Easton", "Upton", 201, "Sign");
+        public static PositionData SignUptonRadio = new("Upton Radio Tower", "Upton", 202, "Sign");
+        public static PositionData SignWestonEntryUpton = new("Weston Upper To Upton", "Weston", 203, "Sign");
+        public static PositionData SignWestonEntryEaston = new("Weston Upper To Easton", "Weston", 204, "Sign");
+        public static PositionData SignFactory = new("Factory", "Weston", 205, "Sign");
+        public static PositionData SignWestonExitUpton = new("Weston To Upton", "Weston", 206, "Sign");
+        public static PositionData SignWestonExitEaston = new("Weston To Easton", "Weston", 207, "Sign");
+        public static PositionData SignToEaston = new("Weston Bar", "Weston", 208, "Sign");
+        public static PositionData SignEastonEntry = new("Weston Bridge", "Weston", 209, "Sign");
+        public static PositionData SignEastonOtherEntry = new("Easton To Weston, To Upton", "Easton", 210, "Sign");
+        public static PositionData SignToFTLower = new("Easton Tunnel to Fishing Town", "Easton", 211, "Sign");
+        public static PositionData SignEastonExit = new("Easton", "Easton", 212, "Sign");
+        public static PositionData SignToFTUpper = new("Easton Edge Tunnel to Fishing Town", "Easton", 213, "Sign");
+        public static PositionData SignEastonRadio = new("Easton Radio Tower", "Easton", 214, "Sign");
+        public static PositionData SignToFT = new("Easton Tunnel", "Easton", 215, "Sign");
     }
 
     public class SnowyPeaks
@@ -191,6 +209,18 @@ public class Locations
         public static PositionData VMLDepot = new("VMLDepot", "Lopton", 106, "Vending Machine");
         public static PositionData RBLDepot = new("RBLDepot", "Lopton", 149, "Bin");
         public static PositionData BBLDepot = new("BBLDepot", "Lopton", 150, "Bin");
+
+        // Signs
+        public static PositionData SignToMT = new("Welcome to Snowy Peaks", "Winton", 216, "Sign");
+        public static PositionData SignWintonExit = new("To Munton", "Winton", 217, "Sign");
+        public static PositionData SignWintonEntry = new("Winton", "Winton", 218, "Sign");
+        public static PositionData SignMuntonEntry = new("Munton", "Munton", 219, "Sign");
+        public static PositionData SignMuntonBridgeWinton = new("To Winton", "Munton", 220, "Sign");
+        public static PositionData SignMuntonBridgeLopton = new("To Lopton", "Munton", 221, "Sign");
+        public static PositionData SignUpperMunton = new("Upper Munton", "Munton", 222, "Sign");
+        public static PositionData SignLoptonEntry = new("Lopton", "Lopton", 223, "Sign");
+        public static PositionData SignLoptonBridge = new("To Munton, To Winton", "Lopton", 224, "Sign");
+        public static PositionData SignLoptonRadio = new("Snowy Peaks Radio Tower", "Lopton", 225, "Sign");
     }
 
     public class FishingTown
@@ -254,6 +284,33 @@ public class Locations
         public static PositionData VMSEatsRight = new("VMSEatsRight", "Smalton", 111, "Vending Machine");
         public static PositionData RBSEats = new("RBSEats", "Smalton", 161, "Bin");
         public static PositionData BBSEats = new("BBSEats", "Smalton", 162, "Bin");
+
+        // Signs
+        public static PositionData SignWelcome = new("Welcome to Fishing Town", "Clifton", 226, "Sign");
+        public static PositionData SignToMT = new("Tunnel to Mountain Town", "Clifton", 227, "Sign");
+        public static PositionData SignCliftonTSTD = new("To Smalton, To Damton", "Clifton", 228, "Sign");
+        public static PositionData SignCliftonC = new("Clifton", "Clifton", 229, "Sign");
+        public static PositionData SignCliftonForkToMT = new("Fork Tunnel to Mountain Town", "Clifton", 230, "Sign");
+        public static PositionData SignCliftonForkTSTD = new("Fork To Smalton, To Damton", "Clifton", 231, "Sign");
+        public static PositionData SignCliftonTD = new("To Damton", "Clifton", 232, "Sign");
+        public static PositionData SignCliftonTS = new("To Smalton", "Clifton", 233, "Sign");
+        public static PositionData SignLCliftonRLC = new("SignLCliftonRLC", "Clifton", 234, "Sign");
+        public static PositionData SignLCliftonRTS = new("SignLCliftonRTS", "Clifton", 235, "Sign");
+        public static PositionData SignLCliftonRTD = new("SignLCliftonRTD", "Clifton", 236, "Sign");
+        public static PositionData SignLCliftonLTD = new("SignLCliftonLTD", "Clifton", 237, "Sign");
+        public static PositionData SignLCliftonLTS = new("SignLCliftonLTS", "Clifton", 238, "Sign");
+        public static PositionData SignLCliftonLLC = new("SignLCliftonLLC", "Clifton", 239, "Sign");
+        public static PositionData SignSmaltonBS = new("Smalton Bridge", "Smalton", 240, "Sign");
+        public static PositionData SignSmaltonTD = new("Smalton Dam", "Smalton", 241, "Sign");
+        public static PositionData SignDamtonDTS = new("SignDamtonDTS", "Damton", 242, "Sign");
+        public static PositionData SignDamtonDTCTS = new("SignDamtonDTCTS", "Damton", 243, "Sign");
+        public static PositionData SignDamtonDLD = new("SignDamtonDLD", "Damton", 244, "Sign");
+        public static PositionData SignDamtonUD = new("Upper Damton", "Damton", 245, "Sign");
+        public static PositionData SignDamtonLD = new("Lower Damton", "Damton", 246, "Sign");
+        public static PositionData SignDamtonD = new("SignDamtonD", "Damton", 247, "Sign");
+        public static PositionData SignDamtonTCTS = new("SignDamtonTCTS", "Damton", 248, "Sign");
+        public static PositionData SignDamtonTS = new("SignDamtonTS", "Damton", 249, "Sign");
+        public static PositionData SignDamtonTD = new("SignDamtonTD", "Damton", 250, "Sign");
     }
 
     public static readonly Dictionary<string, NodeData> MountainTownNode = new()
@@ -475,7 +532,25 @@ public class Locations
         {"(-144.36, 146.22, 39.11)", MountainTown.BBEFuel}, // BBEFuel
         {"(-140.00, 146.32, 37.85)", MountainTown.VMEFuel}, // VMEFuel
         {"(-202.84, 146.27, 26.13)", MountainTown.BBEPizzaRight}, // BBEPizzaRight
-        {"(-139.48, 146.15, 6.84)", MountainTown.RBEPizzaLeft} // RBEPizzaLeft
+        {"(-139.48, 146.15, 6.84)", MountainTown.RBEPizzaLeft}, // RBEPizzaLeft
+
+        // Signs
+        {"(-445.35, 329.58, -305.98)", MountainTown.SignToSP}, // Enter: Tunnel to Snowy Peaks Exit: Welcome to Mountain Town
+        {"(-192.70, 331.69, -251.75)", MountainTown.SignUptonExit}, // Enter: Upton Exit: To Weston To Easton
+        {"(385.50, 352.25, -244.08)", MountainTown.SignUptonRadio}, // Enter:  Exit: Upton Radio Tower
+        {"(262.00, 199.57, -67.52)", MountainTown.SignWestonEntryUpton}, // Enter: Weston Exit: To Upton
+        {"(269.42, 200.02, -45.38)", MountainTown.SignWestonEntryEaston}, // Enter: To Easton Exit: 
+        {"(486.47, 195.85, -61.77)", MountainTown.SignFactory}, // Enter: Factory Exit: 
+        {"(374.95, 164.78, 35.62)", MountainTown.SignWestonExitUpton}, // Enter: To Upton Exit: 
+        {"(373.63, 163.87, 47.30)", MountainTown.SignWestonExitEaston}, // Enter: To Easton Exit: 
+        {"(274.21, 159.25, 84.87)", MountainTown.SignToEaston}, // Enter: To Easton Exit: 
+        {"(126.83, 152.05, 41.89)", MountainTown.SignEastonEntry}, // Enter: Weston Exit: To Easton
+        {"(-33.76, 142.62, 62.99)", MountainTown.SignEastonOtherEntry}, // Enter: To Weston To Upton Exit: 
+        {"(-45.99, 142.62, 70.29)", MountainTown.SignToFTLower}, // Enter: Tunnel to Fishing Town Exit: 
+        {"(-58.33, 142.32, 54.48)", MountainTown.SignEastonExit}, // Enter: Easton Exit: 
+        {"(-382.42, 146.43, 39.41)", MountainTown.SignToFTUpper}, // Enter: Tunnel to Fishing Town Exit: Easton
+        {"(-436.95, 140.38, 35.60)", MountainTown.SignEastonRadio}, // Enter: Easton Radio Tower Exit: Easton Radio Tower
+        {"(-495.71, 126.33, 140.12)", MountainTown.SignToFT} // Enter: Tunnel to Fishing Town Exit: Welcome to Mountain Town
     };
 
     public static readonly Dictionary<string, PositionData> SnowyPeaksPositions = new()
@@ -496,7 +571,20 @@ public class Locations
         {"(0.00, 0.00, 0.00)", SnowyPeaks.RBLBar},
         {"(113.55, 32.65, -692.20)", SnowyPeaks.VMLDepot},
         {"(-79.79, -0.20, -56.63)", SnowyPeaks.RBLDepot},
-        {"(-79.34, -0.20, -55.91)", SnowyPeaks.BBLDepot}
+        {"(-79.34, -0.20, -55.91)", SnowyPeaks.BBLDepot},
+
+        // Signs
+        {"(-156.92, 245.51, 272.73)", SnowyPeaks.SignToMT}, // Enter: Tunnel to Mountain Town Exit: Welcome to Snowy Peaks
+        {"(-139.71, 245.77, 249.59)", SnowyPeaks.SignWintonExit}, // Enter: To Munton Exit: 
+        {"(-153.33, 246.28, 247.21)", SnowyPeaks.SignWintonEntry}, // Enter: Winton Exit: 
+        {"(81.62, 246.57, 221.57)", SnowyPeaks.SignMuntonEntry}, // Enter: Munton Exit: To Winton
+        {"(335.00, 245.57, 124.35)", SnowyPeaks.SignMuntonBridgeWinton}, // Enter: To Winton Exit: 
+        {"(335.29, 246.03, 105.27)", SnowyPeaks.SignMuntonBridgeLopton}, // Enter: Munton Exit: To Lopton
+        {"(360.68, 246.47, 125.37)", SnowyPeaks.SignUpperMunton}, // Enter: Upper Munton Exit: 
+        {"(353.74, 248.13, -214.54)", SnowyPeaks.SignLoptonEntry}, // Enter: Lopton Exit: To Munton To Winton
+        {"(-331.79, 246.64, -266.31)", SnowyPeaks.SignLoptonBridge}, // Enter: To Munton To Winton Exit: 
+        {"(-320.11, 247.85, -247.79)", SnowyPeaks.SignLoptonRadio} // Enter: Snowy Peaks Radio Tower Exit: 
+
     };
 
     public static readonly Dictionary<string, PositionData> FishingTownPositions = new()
@@ -520,7 +608,34 @@ public class Locations
         {"(-410.32, 76.99, -430.47)", FishingTown.VMSEatsLeft},
         {"(-412.82, 76.99, -430.47)", FishingTown.VMSEatsRight},
         {"(-641.40, -15.20, -719.75)", FishingTown.RBSEats},
-        {"(-642.22, -15.19, -719.72)", FishingTown.BBSEats}
+        {"(-642.22, -15.19, -719.72)", FishingTown.BBSEats},
+
+        // Signs
+        {"(-426.09, 125.57, 201.99)", FishingTown.SignWelcome}, // Enter: Tunnel to Mountain Town Exit: Welcome to Fishing Town
+        {"(-6.70, 82.43, 351.96)", FishingTown.SignToMT}, // Enter: Tunnel to Mountain Town Exit: 
+        {"(-2.87, 80.72, 337.14)", FishingTown.SignCliftonTSTD}, // Enter: To Smalton To Damton Exit: 
+        {"(19.71, 81.17, 342.55)", FishingTown.SignCliftonC}, // Enter: Clifton Exit: 
+        {"(89.07, 92.61, 335.14)", FishingTown.SignCliftonForkToMT}, // Enter: Tunnel to Mountain Town Exit: 
+        {"(87.40, 93.06, 313.40)", FishingTown.SignCliftonForkTSTD}, // Enter: To Smalton To Damton Exit: 
+        {"(-10.98, 68.86, 282.54)", FishingTown.SignCliftonTD}, // Enter: To Damton Exit: 
+        {"(-25.19, 67.54, 285.79)", FishingTown.SignCliftonTS}, // Enter: To Smalton Exit: 
+        {"(-14.93, 33.02, 195.51)", FishingTown.SignLCliftonRLC}, // Enter: Clifton Exit: Leaving Clifton
+        {"(-14.25, 32.98, 176.99)", FishingTown.SignLCliftonRTS}, // Enter: To Smalton Exit: 
+        {"(2.11, 33.39, 178.20)", FishingTown.SignLCliftonRTD}, // Enter: To Damton Exit: 
+        {"(238.04, 35.06, 102.83)", FishingTown.SignLCliftonLTD}, // Enter: To Damton Exit: 
+        {"(231.32, 34.65, 117.80)", FishingTown.SignLCliftonLTS}, // Enter: To Smalton Exit: 
+        {"(249.88, 34.85, 123.69)", FishingTown.SignLCliftonLLC}, // Enter: Clifton Exit: Leaving Clifton
+        {"(-398.06, 45.30, -128.26)", FishingTown.SignSmaltonBS}, // Enter: Smalton Exit: To Clifton To Damton
+        {"(-136.70, 26.10, -484.49)", FishingTown.SignSmaltonTD}, // Enter: Smalton Exit: To Damton
+        {"(93.58, 36.67, -444.48)", FishingTown.SignDamtonDTS}, // Enter: To Smalton Exit: 
+        {"(100.39, 36.67, -432.55)", FishingTown.SignDamtonDTCTS}, // Enter: To Clifton To Smalton Exit: 
+        {"(115.01, 37.37, -439.39)", FishingTown.SignDamtonDLD}, // Enter: Damton Exit: Leaving Damton
+        {"(254.17, 39.26, -376.64)", FishingTown.SignDamtonUD}, // Enter: Upper Damton Exit: 
+        {"(419.08, 76.57, -193.78)", FishingTown.SignDamtonLD}, // Enter: Lower Damton Exit: 
+        {"(162.18, 31.89, -353.16)", FishingTown.SignDamtonD}, // Enter: Damton Exit: Leaving Damton
+        {"(155.50, 31.61, -335.05)", FishingTown.SignDamtonTCTS}, // Enter: To Clifton To Smalton Exit: 
+        {"(141.19, 32.72, -339.13)", FishingTown.SignDamtonTS}, // Enter: To Smalton Exit: 
+        {"(351.96, 43.82, -138.48)", FishingTown.SignDamtonTD} // Enter: To Damton Exit: To Clifton To Smalton
     };
 }
 
@@ -554,7 +669,7 @@ public class PositionData
 
     // public Vector3 Position { get; set; }
 
-    public int LocationId { get; set; }
+    public int LocationId { get; set; } // Could be made an array if needed for multiple locations
 
     public PositionData(string name, string town, int locId)
     {
