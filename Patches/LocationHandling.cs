@@ -120,10 +120,23 @@ public class LocationHandling
         Vector3 vector = __instance.cam.transform.position - __instance.transform.position;
         if (!(vector.magnitude > 30f) && !(Vector3.Dot(__instance.cam.transform.forward, vector.normalized) > 0f))
         {
-            int? locationId = Locations.MountainTownPositions[__instance.gameObject.transform.position.ToString()]?.LocationId;
-            if (locationId != null)
+            Dictionary<string, PositionData> positions = [];
+            switch (OtherPatches.currentScene)
             {
-                archipelago.SendLocations([(int)locationId]);
+                case 1:
+                    positions = Locations.MountainTownPositions;
+                    break;
+                case 4:
+                    positions = Locations.FishingTownPositions;
+                    break;
+                case 5:
+                    positions = Locations.SnowyPeaksPositions;
+                    break;
+            }
+            // int? locationId = positions[__instance.gameObject.transform.position.ToString()]?.LocationId;
+            if (positions.TryGetValue(__instance.gameObject.transform.position.ToString(), out PositionData positionData))
+            {
+                archipelago.SendLocations([(int)positionData.LocationId]);
             }
             else
             {

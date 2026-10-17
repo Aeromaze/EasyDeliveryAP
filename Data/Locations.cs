@@ -183,11 +183,11 @@ public class Locations
         public static NodeData EZBakery = new("EZ Bakery", "Lopton", 12);
         public static NodeData EasyPizza = new("Easy Pizza", "Lopton", 13);
         public static NodeData EasyFlowers = new("Easy Flowers", "Winton", 14);
-        public static NodeData Bar1 = new("Bar 1", "Lopton", 15);
+        public static NodeData Bar1 = new("Bar 1", "Munton", 15);
         public static NodeData EasyDepot = new("Easy Depot", "Lopton", 16);
         public static NodeData EZAuto = new("EZ Auto", "Munton", 17);
         public static NodeData EZCafe = new("EZ Cafe", "Lopton", 18);
-        public static NodeData Bar2 = new("Bar 2", "Munton", 19);
+        public static NodeData Bar2 = new("Bar 2", "Lopton", 19);
         public static NodeData EZMart = new("EZ Mart", "Munton", 20);
         public static NodeData PawnShop = new("Pawn Shop", "Munton", 21);
 
@@ -288,12 +288,12 @@ public class Locations
         // Signs
         public static PositionData SignWelcome = new("Welcome to Fishing Town", "Clifton", 226, "Sign");
         public static PositionData SignToMT = new("Tunnel to Mountain Town", "Clifton", 227, "Sign");
-        public static PositionData SignCliftonTSTD = new("To Smalton, To Damton", "Clifton", 228, "Sign");
+        public static PositionData SignCliftonEdgeTSTD = new("To Smalton, To Damton", "Clifton", 228, "Sign");
         public static PositionData SignCliftonC = new("Clifton", "Clifton", 229, "Sign");
-        public static PositionData SignCliftonForkToMT = new("Fork Tunnel to Mountain Town", "Clifton", 230, "Sign");
-        public static PositionData SignCliftonForkTSTD = new("Fork To Smalton, To Damton", "Clifton", 231, "Sign");
-        public static PositionData SignCliftonTD = new("To Damton", "Clifton", 232, "Sign");
-        public static PositionData SignCliftonTS = new("To Smalton", "Clifton", 233, "Sign");
+        public static PositionData SignCliftonToMT = new("Tunnel to Mountain Town", "Clifton", 232, "Sign"); // Clifton proper
+        public static PositionData SignCliftonTSTD = new("To Smalton, To Damton", "Clifton", 233, "Sign"); // Clifton proper
+        public static PositionData SignCliftonTD = new("Fork To Damton", "Clifton", 230, "Sign"); // Fork
+        public static PositionData SignCliftonTS = new("Fork To Smalton", "Clifton", 231, "Sign"); // Fork
         public static PositionData SignLCliftonRLC = new("SignLCliftonRLC", "Clifton", 234, "Sign");
         public static PositionData SignLCliftonRTS = new("SignLCliftonRTS", "Clifton", 235, "Sign");
         public static PositionData SignLCliftonRTD = new("SignLCliftonRTD", "Clifton", 236, "Sign");
@@ -356,7 +356,7 @@ public class Locations
         {8, MountainTown.Node5},
         {9, MountainTown.EZBakery},
         {10, MountainTown.Node59},
-        {11, MountainTown.Node60},
+        {11, MountainTown.Node60}, // Still correct
         {12, MountainTown.Bar1},
         {13, MountainTown.EasyDepot},
         {14, MountainTown.Bar2},
@@ -416,7 +416,7 @@ public class Locations
         {12, SnowyPeaks.EZBakery},
         {13, SnowyPeaks.EasyPizza},
         {14, SnowyPeaks.EasyFlowers},
-        {15, SnowyPeaks.Bar1},
+        {15, SnowyPeaks.Bar1}, // Bar 1 (Munton)
         {16, SnowyPeaks.EasyDepot},
         {17, SnowyPeaks.EZAuto},
         {18, SnowyPeaks.EZCafe},
@@ -488,7 +488,7 @@ public class Locations
         {18, FishingTown.Node12},
         {19, FishingTown.Nodedock3},
         {20, FishingTown.Nodedock1},
-        {21, FishingTown.Node14},
+        {21, FishingTown.Node14}, // house left of Depot ?
         {22, FishingTown.Nodedock21},
         {23, FishingTown.Node102},
         {24, FishingTown.Node98},
@@ -613,10 +613,10 @@ public class Locations
         // Signs
         {"(-426.09, 125.57, 201.99)", FishingTown.SignWelcome}, // Enter: Tunnel to Mountain Town Exit: Welcome to Fishing Town
         {"(-6.70, 82.43, 351.96)", FishingTown.SignToMT}, // Enter: Tunnel to Mountain Town Exit: 
-        {"(-2.87, 80.72, 337.14)", FishingTown.SignCliftonTSTD}, // Enter: To Smalton To Damton Exit: 
+        {"(-2.87, 80.72, 337.14)", FishingTown.SignCliftonEdgeTSTD}, // Enter: To Smalton To Damton Exit: 
         {"(19.71, 81.17, 342.55)", FishingTown.SignCliftonC}, // Enter: Clifton Exit: 
-        {"(89.07, 92.61, 335.14)", FishingTown.SignCliftonForkToMT}, // Enter: Tunnel to Mountain Town Exit: 
-        {"(87.40, 93.06, 313.40)", FishingTown.SignCliftonForkTSTD}, // Enter: To Smalton To Damton Exit: 
+        {"(89.07, 92.61, 335.14)", FishingTown.SignCliftonToMT}, // Enter: Tunnel to Mountain Town Exit: 
+        {"(87.40, 93.06, 313.40)", FishingTown.SignCliftonTSTD}, // Enter: To Smalton To Damton Exit: 
         {"(-10.98, 68.86, 282.54)", FishingTown.SignCliftonTD}, // Enter: To Damton Exit: 
         {"(-25.19, 67.54, 285.79)", FishingTown.SignCliftonTS}, // Enter: To Smalton Exit: 
         {"(-14.93, 33.02, 195.51)", FishingTown.SignLCliftonRLC}, // Enter: Clifton Exit: Leaving Clifton
