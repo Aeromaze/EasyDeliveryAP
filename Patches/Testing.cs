@@ -158,19 +158,6 @@ public class Testing
         ArchipelagoConsole.LogMessage("Hello");
     }
 
-    [HarmonyPatch(typeof(PayloadManager), "GetRandomPayload")]
-    private static void Postfix(ShopInfo __0, PayloadManager __instance, GameObject __result)
-    {
-        ArchipelagoConsole.LogMessage("RandomPayload");
-        ArchipelagoConsole.LogMessage($"Payload: {__result.name} from shop: {__0.name}");
-    }
-
-    [HarmonyPatch(typeof(PayloadManager), "GetPayload")]
-    private static void Postfix(GameObject __result)
-    {
-        ArchipelagoConsole.LogMessage($"Payload: {__result.name}");
-    }
-
     [HarmonyPatch(typeof(BigDoor), "Start")]
     private static void Prefix(BigDoor __instance)
     {
@@ -251,35 +238,30 @@ public class Testing
         Vector3 vector = __instance.cam.transform.position - __instance.transform.position;
         if (!(vector.magnitude > 30f) && !(Vector3.Dot(__instance.cam.transform.forward, vector.normalized) > 0f))
         {
-            __instance.transform.GetLocalPositionAndRotation(out Vector3 pos, out Quaternion Qt);
-            if (!signs.Contains(pos.ToString()))
+            string sign = $"{__instance.gameObject.transform.position} Enter: {__instance.enterLabel} Exit: {__instance.exitLabel}";
+            if (!signs.Contains(sign))
             {
-                signs.Add(pos.ToString());
-                ArchipelagoConsole.LogMessage($"Road sign: {__instance.name}\n{__instance.transform.name}\n {__instance.enterLabel}\n{__instance.exitLabel}\n{pos}");
-                ArchipelagoConsole.LogMessage($"Signs: {signs}");
+                signs.Add(sign);
+                ArchipelagoConsole.LogMessage($"Road sign: {__instance.name}\n{__instance.transform.name}\n {__instance.enterLabel}\n{__instance.exitLabel}\n{__instance.gameObject.transform.position}");
+                
+                foreach (var item in signs)
+                {
+                    ArchipelagoConsole.LogMessage($"{{\"{item}\", }}, \\\\ {__instance.enterLabel}");
+                }
             }
         }
+    }
+
+    [HarmonyPatch(typeof(Crashable), "Start")]
+    private static void Prefix(Crashable __instance)
+    {
+        ArchipelagoConsole.LogMessage($"Crashable: {__instance.name}, {__instance.transform.position}");
     }
 
     [HarmonyPatch(typeof(InteractiveToggle), "ToggleOn")]
     private static void Prefix(InteractiveToggle __instance)
     {
         ArchipelagoConsole.LogMessage($"Interactive toggle: {__instance.name}");
-    }
-
-    [HarmonyPatch(typeof(InteractionPoint), "DoAction", new Type[] {})]
-    [HarmonyPatch(typeof(InteractionPoint), "DoAction", new Type[] {typeof(int)})]
-    private static void Prefix(object[] __args, InteractionPoint __instance)
-    {
-        if (__args.Length != 0)
-        {
-            ArchipelagoConsole.LogMessage($"DoAction: {__instance.name} int: {__args[0]}");
-        }
-        else
-        {
-            ArchipelagoConsole.LogMessage($"DoAction: {__instance.name} listener: {__instance.listener.name}");
-        }
-        //__instance.listener.SetActive(false); // LOL
     }
 
     [HarmonyPatch(typeof(PurchasableItem), "OnEnable")]

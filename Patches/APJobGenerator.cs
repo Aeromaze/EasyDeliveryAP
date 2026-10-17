@@ -194,6 +194,17 @@ public class APJobGenerator
 
         __result = job;
 
+        /* // Print distance to node from tunnel
+        if (EasyDeliveryAP.debug && (bool)tunnelNode)
+        {
+            ArchipelagoConsole.LogMessage($"Distance Cutoff: {tunnelNode.distanceCutoff} To other Town: {tunnelNode.distanceToOtherTown}");
+            for (int i = 0; i < tunnelNode.distances.Length; i++)
+            {
+                ArchipelagoConsole.LogMessage($"{i}: {tunnelNode.distances[i].ToString()}");
+            }
+        }
+        */
+
         return false;
     }
 }

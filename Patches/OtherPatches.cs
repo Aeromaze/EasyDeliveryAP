@@ -210,20 +210,9 @@ public class OtherPatches
     private static bool Prefix(InteractionPoint __instance, ref string __state)
     {
         __state = __instance.name;
-        __instance.listener.transform.GetLocalPositionAndRotation(out Vector3 pos, out Quaternion _);
+        // __instance.listener.transform.GetLocalPositionAndRotation(out Vector3 pos, out Quaternion _);
+        Vector3 pos = __instance.listener.transform.position;
 
-        if (EasyDeliveryAP.debug && false)
-        {
-            ArchipelagoConsole.LogMessage($"Action: {__instance.name}\nListener: {__instance.listener.name}");
-            if (Locations.MountainTownPositions.TryGetValue(pos.ToString(), out PositionData posData))
-            {
-                ArchipelagoConsole.LogMessage($"Position: {pos.ToString()} id: {posData.LocationId}");
-            }
-            else
-            {
-                ArchipelagoConsole.LogMessage($"Position: {pos.ToString()} id: unknown");
-            }
-        }
         // Vending Machines and Bins
         if (__instance.name == "throw away" || __instance.name == "take")
         {
@@ -245,7 +234,7 @@ public class OtherPatches
             if (PositionList.TryGetValue(pos.ToString(), out PositionData posData))
             {
                 ArchipelagoConsole.LogMessage($"VendingBin: {posData.Name}");
-                APGUI.Notification(posData.Name);
+                // APGUI.Notification(posData.Name);
                 if (APData.lock_towns == "0" || (APData.lock_towns == "1" && Items.NameToItem[posData.Town]?.Received > 0))
                 {
                     archipelago.SendLocations([posData.LocationId]);
@@ -254,7 +243,7 @@ public class OtherPatches
             else
             {
                 ArchipelagoConsole.LogMessage($"VendingBin: {pos}");
-                APGUI.Notification(pos.ToString());
+                // APGUI.Notification(pos.ToString());
             }
         }
         if (currentScene == 6)
