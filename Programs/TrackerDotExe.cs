@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using EasyDeliveryAP.Archipelago;
 using EasyDeliveryAP.Utils;
 using EasyDeliveryAPI;
@@ -8,22 +10,40 @@ namespace EasyDeliveryAP;
 public class TrackerApp : MonoBehaviour
 {
     private static readonly ArchipelagoClient archipelago = EasyDeliveryAP.ArchipelagoClient;
+    private ReadOnlyCollection<long> checkedLocations;
 
     private UIUtil Util = new();
     private Rect P;
     private Vector2 offset = new(5f, 5f);
-    private float textSize = 8;
-    private float spriteSize = 16;
+    private readonly float textSize = 8;
+    private readonly float spriteSize = 16;
 
-    // Button variables
-    private bool logicButton = false;
-    private bool townDeliveries = true;
-    private bool cityDeliveries = false;
-    private bool payloadDeliveries = false;
-    private bool restButton = false;
-    
     private static int total_deliveries = 81;
-    int deliveries;
+    private int deliveries;
+
+    // spritesheets
+    Texture altSpriteSheet;
+    Texture spriteSheet;
+    Texture spriteSheetBackup;
+
+    private int page = 0;
+    private bool pageIndex = false;
+
+    public static List<int> pages = [0, 1]; // page index list initiallized with always active pages
+    
+    private readonly static Dictionary<int, string> ButtonText = new()
+    {
+        {0, "Overview"},
+        {1, "Town Deliveries"},
+        {2, "City Deliveries"},
+        {3, "Payload Deliveries"},
+        {4, "Snowcats"},
+        {5, "Blindbags"},
+        {6, "Radio Towers"},
+        {7, "Vending Machines"},
+        {8, "Bins"},
+        {9, "Signs"}
+    };
 
     public void FrameUpdate(DesktopDotExe.WindowView window)
     {
@@ -43,307 +63,98 @@ public class TrackerApp : MonoBehaviour
             DrawText("Not connected to Archipelago", 1, 1);
         }
     }
-
+    
     private void DrawTracker(DesktopDotExe.WindowView window)
     {
-        var checkedLocations = archipelago.session.Locations.AllLocationsChecked;
+        checkedLocations = archipelago.session.Locations.AllLocationsChecked;
 
-        Texture altSpriteSheet = window.M.altSpriteSheet;
-        // Texture spriteSheet = window.M.spriteSheet;
-        // Texture spriteSheetBackup = window.M.spriteSheetBackup;
+        altSpriteSheet = window.M.altSpriteSheet;
+        spriteSheet = window.M.spriteSheet;
+        spriteSheetBackup = window.M.spriteSheetBackup;
 
-        if (Util.Button((logicButton ? "Overview" : "Extra info"), P.x + 8, P.y + 192))
+        if (Util.Button("Index", P.x + offset.x + 208, P.y + offset.y + 192, true))
         {
-            logicButton = !logicButton;
+            pageIndex = !pageIndex;
         }
-        if (logicButton)
+        if (pageIndex)
         {
-            // Select screen/menu
-            if (Util.Button((townDeliveries ? ">Town Deliveries<" : " Town Deliveries"), P.x, P.y, true))
+            int indexPosition = 0;
+            foreach (int page in pages)
             {
-                townDeliveries = true;
-                cityDeliveries = false;
-                payloadDeliveries = false;
-                restButton = false;
-            }
-            if (Util.Button((cityDeliveries ? ">Other Deliveries<" : " Other Deliveries"), P.x + 128, P.y, true))
-            {
-                townDeliveries = false;
-                cityDeliveries = true;
-                payloadDeliveries = false;
-                restButton = false;
-            }
-            if (Util.Button((payloadDeliveries ? ">Payload Deliveries<" : " Payload Deliveries"), P.x, P.y + 8, true))
-            {
-                townDeliveries = false;
-                cityDeliveries = false;
-                payloadDeliveries = true;
-                restButton = false;
-            }
-            if (Util.Button((restButton ? ">Snowcats<" : " Snowcats"), P.x + 128, P.y + 8, true))
-            {
-                townDeliveries = false;
-                cityDeliveries = false;
-                payloadDeliveries = false;
-                restButton = true;
-            }
-
-            // Draw the different logic trackers
-            if (townDeliveries)
-            {
-                DeliveryGrid(0, 3);
-            }
-            else if (cityDeliveries)
-            {
-                if (APData.intercity_deliveries == "2" || APData.intercity_deliveries == "3")
+                if (Util.Button(ButtonText[page], P.x, P.y + indexPosition * 8))
                 {
-                    Vector2 grid = new (0, 0);
-                    int del;
-                    bool sp = APLogic.CanReachSnowyPeaks();
-                    bool ft = APLogic.CanReachFishingTown() && APLogic.FTGateIsOpen();
-
-                    DrawText("Mt Sp Ft", 3, 3);
-                    DrawText("Mt\n\nSp\n\nFt", 0, 5);
-                    foreach (var from in Locations.City)
-                    {
-                        foreach (var to in Locations.City)
-                        {
-                            if (((from.Key == "Snowy Peaks" || to.Key == "Snowy Peaks") && (!sp || !(Items.Winton.Received > 0 || Items.Munton.Received > 0 || Items.Lopton.Received > 0))) || 
-                                ((from.Key == "Fishing Town" || to.Key == "Fishing Town") && (!ft || !(Items.Clifton.Received > 0 || Items.Damton.Received > 0 || Items.Smalton.Received > 0))))
-                            {
-                                grid.y += 2;
-                                continue;
-                            }
-                            del = int.Parse($"{from.Value}{to.Value}");
-                            if (APData.perfect_deliveries == "0" || APData.perfect_deliveries == "1")
-                            {
-                                DrawText($"{(checkedLocations.Contains(del) ? "x" : "o")}", 3 + grid.x, 5 + grid.y);
-                            }
-                            if (APData.perfect_deliveries == "1" || APData.perfect_deliveries == "2")
-                            {
-                                DrawText($"{(checkedLocations.Contains(del + 10000) ? "x" : "o")}", 4 + grid.x, 5 + grid.y);
-                            }
-                            grid.y += 2;
-                        }
-                        grid.x += 3;
-                        grid.y = 0;
-                    }
+                    this.page = indexPosition;
+                    pageIndex = false;
                 }
-            }
-            else if (payloadDeliveries)
-            {
-                if (APData.payload_checks == "1")
-                {
-                    bool sp = APLogic.CanReachSnowyPeaks();
-                    bool ft = APLogic.CanReachFishingTown();
-
-                    DrawText($"Box Bunch:", 0, 6);
-                    DrawText($"Box Stack:", 0, 7);
-                    DrawText($"Crate of Drinks:", 0, 9);
-                    DrawText($"Sack:", 0, 18);
-                    DrawText($"Sack Stack:", 0, 19);
-                    DrawText($"Big Box:", 0, 4);
-                    DrawText($"Big Box Stack:", 0, 5);
-                    DrawText($"Crate:", 0, 8);
-                    DrawText($"Crate Stack:", 0, 10);
-                    DrawText($"Lots of Crates of Drinks:", 0, 11);
-                    DrawText($"Drink:", 0, 20);
-                    DrawText($"Pizza Stack:", 0, 12);
-                    DrawText($"Pizza Stack Mega:", 0, 13);
-                    DrawText($"Plant Pot:", 0, 14);
-                    DrawText($"Plant Pot Bunch:", 0, 15);
-                    DrawText($"Plant Pot Stack:", 0, 16);
-                    DrawText($"Plant Pot Wide:", 0, 17);
-
-                    // Any town
-                    DrawText($"{(checkedLocations.Contains(3) ? "x" : "o")}", 26, 6);
-                    DrawText($"{(checkedLocations.Contains(4) ? "x" : "o")}", 26, 7);
-                    DrawText($"{(checkedLocations.Contains(6) ? "x" : "o")}", 26, 9);
-                    DrawText($"{(checkedLocations.Contains(15) ? "x" : "o")}", 26, 18);
-                    DrawText($"{(checkedLocations.Contains(16) ? "x" : "o")}", 26, 19);
-                    if (Items.Weston.Received > 0 || Items.Easton.Received > 0 || (sp && (Items.Munton.Received > 0 || Items.Lopton.Received > 0)) || (ft && (Items.Clifton.Received > 0 || Items.Damton.Received > 0)))
-                    {
-                        DrawText($"{(checkedLocations.Contains(1) ? "x" : "o")}", 26, 4);
-                        DrawText($"{(checkedLocations.Contains(2) ? "x" : "o")}", 26, 5);
-                        DrawText($"{(checkedLocations.Contains(5) ? "x" : "o")}", 26, 8);
-                        DrawText($"{(checkedLocations.Contains(7) ? "x" : "o")}", 26, 10);
-                    }
-                    if (Items.Weston.Received > 0 || (sp && (Items.Munton.Received > 0 || Items.Lopton.Received > 0)) || (ft && (Items.Clifton.Received > 0 || Items.Damton.Received > 0)))
-                    {
-                        DrawText($"{(checkedLocations.Contains(8) ? "x" : "o")}", 26, 11);
-                        DrawText($"{(checkedLocations.Contains(17) ? "x" : "o")}", 26, 20);
-                    }
-                    if (Items.Upton.Received > 0 || Items.Easton.Received > 0 || (sp && (Items.Winton.Received > 0 || Items.Lopton.Received > 0) || (ft && Items.Smalton.Received > 0)))
-                    {
-                        DrawText($"{(checkedLocations.Contains(9) ? "x" : "o")}", 26, 12);
-                        DrawText($"{(checkedLocations.Contains(10) ? "x" : "o")}", 26, 13);
-                    }
-                    if (Items.Upton.Received > 0 || Items.Easton.Received > 0 || (sp && (Items.Winton.Received > 0 || Items.Munton.Received > 0)) || (ft && (Items.Clifton.Received > 0 || Items.Smalton.Received > 0)))
-                    {
-                        DrawText($"{(checkedLocations.Contains(11) ? "x" : "o")}", 26, 14);
-                        DrawText($"{(checkedLocations.Contains(12) ? "x" : "o")}", 26, 15);
-                        DrawText($"{(checkedLocations.Contains(13) ? "x" : "o")}", 26, 16);
-                        DrawText($"{(checkedLocations.Contains(14) ? "x" : "o")}", 26, 17);
-                    }
-                }
-            }
-            else if (restButton)
-            {
-                bool sp = APLogic.CanReachSnowyPeaks();
-                bool ft = APLogic.CanReachFishingTown();
-                bool gate = APLogic.FTGateIsOpen() && ft;
-                if (APData.snowcats == "1" || APData.snowcats == "2")
-                {
-                    DrawText($"Theo:", 0, 4);
-                    DrawText($"Cici:", 0, 5);
-                    DrawText($"Tooey:", 0, 9);
-                    DrawText($"Gus:", 0, 14);
-                    DrawText($"Fives:", 0, 11);
-                    DrawText($"Sixo:", 0, 12);
-                    DrawText($"Foreman:", 0, 8);
-                    DrawText($"Seb:", 0, 15);
-                    DrawText($"Reed:", 0, 10);
-                    DrawText($"Fortino:", 0, 6);
-                    DrawText($"Ellie:", 0, 7);
-                    DrawText($"Fit:", 0, 13);
-
-                    DrawText($"{(checkedLocations.Contains(40) ? "x" : "o")}", 9, 4);
-                    DrawText($"{(checkedLocations.Contains(41) ? "x" : "o")}", 9, 5);
-                    if (APLogic.HasSnowTires())
-                    {
-                        DrawText($"{(checkedLocations.Contains(45) ? "x" : "o")}", 9, 9);
-                        DrawText($"{(checkedLocations.Contains(51) ? "x" : "o")}", 9, 14);
-                    }
-                    if (sp)
-                    {
-                        DrawText($"{(checkedLocations.Contains(47) ? "x" : "o")}", 9, 11);
-                        DrawText($"{(checkedLocations.Contains(48) ? "x" : "o")}", 9, 12);
-                        DrawText($"{(checkedLocations.Contains(44) ? "x" : "o")}", 9, 8);
-                        DrawText($"{(checkedLocations.Contains(52) ? "x" : "o")}", 9, 15);
-                    }
-                    if (ft)
-                    {
-                        DrawText($"{(checkedLocations.Contains(46) ? "x" : "o")}", 9, 10);
-                    }
-                    if (gate)
-                    {
-                        DrawText($"{(checkedLocations.Contains(42) ? "x" : "o")}", 9, 6);
-                        DrawText($"{(checkedLocations.Contains(43) ? "x" : "o")}", 9, 7);
-                        if (Items.Chains.Received > 0)
-                        {
-                            DrawText($"{(checkedLocations.Contains(50) ? "x" : "o")}", 9, 13);
-                        }
-                    }
-                }
-                if (APData.snowcats == "1")
-                {
-                    DrawText($"Ada:", 0, 16);
-
-                    DrawText($"{(checkedLocations.Contains(49) ? "x" : "o")}", 9, 16);
-                }
+                indexPosition++;
             }
         }
         else
         {
-            DrawText("Items Received:", 9, 0);
-
-            // Car upgrades
-            DrawText($"U\np\ng\nr\na\nd\ne\ns\n{(APData.car_upgrades == "0" ? "(Buy)" : "")}", 0, 1);
-            if(Items.Tires.Received > 0)
-            DrawSprite(altSpriteSheet, APGUI.snowTires, 0.75f, 3/4f);
-            if(Items.Bumper.Received > 0)
-            DrawSprite(altSpriteSheet, APGUI.truckBumper, 0.75f, 2f);
-            if(Items.Chains.Received > 0)
-            DrawSprite(altSpriteSheet, APGUI.iceChains, 0.75f, 13/4f);
-
-            // Radio Towers
-            if(APData.radio_towers == "1" || APData.radio_towers == "3")
+            if (Util.Button("Teleport", P.x + offset.x, P.y + offset.y + 192, true))
             {
-                DrawSprite(altSpriteSheet, APGUI.radio, 2.5f, 3/4f);
-                DrawText($"x", 5.5f, 3.5f);
-                DrawText($"{Items.RadioTower.Received}", 5.5f, 5f);
+                CarPatches.teleport = true;
             }
 
-            // Towns and Tunnels
-            if (APData.lock_towns == "1" || APData.blocked_tunnels == "1" || APData.blocked_tunnels == "2")
+            DrawText($"Page {page+1}/{pages.Count}", 12, 24);
+            if (Util.Button(" < ", P.x + offset.x + 72, P.y + offset.y + 192, true))
             {
-                DrawText("Mountain\nTown:", 8f, 1.5f);
-                DrawText("Snowy\nPeaks:", 17f, 1.5f);
-                DrawText("Fishing\nTown:", 24f, 1.5f);
-                if (APData.lock_towns == "1")
+                if (page > 0)
                 {
-                    DrawText($"{(Items.Upton.Received > 0 ? "Upton" : "")}\n{(Items.Weston.Received > 0 ? "Weston" : "")}\n{(Items.Easton.Received > 0 ? "Easton" : "")}", 8f, 3.7f);
-                    DrawText($"{(Items.Winton.Received > 0 ? "Winton" : "")}\n{(Items.Munton.Received > 0 ? "Munton" : "")}\n{(Items.Lopton.Received > 0 ? "Lopton" : "")}", 17f, 3.7f);
-                    DrawText($"{(Items.Clifton.Received > 0 ? "Clifton" : "")}\n{(Items.Damton.Received > 0 ? "Damton" : "")}\n{(Items.Smalton.Received > 0 ? "Smalton" : "")}", 24f, 3.7f);
+                    page -= 1;
                 }
-                if (APData.blocked_tunnels == "1" || APData.blocked_tunnels == "2")
+                else
                 {
-                    DrawText($"{(Items.TunnelFactory.Received > 0 ? "Factory\nTunnel" : "")}", 8f, 7f);
-                    DrawText($"{(Items.TunnelSP.Received > 0 ? "Tunnel" : "")}", 17f, 7f);
-                    DrawText($"{(Items.TunnelFT.Received > 0 ? "Tunnel" : "")}", 24f, 7f);
+                    page = pages.Count - 1;
                 }
             }
-
-
-            DrawText("Locations checked:", 9, 12);
-            // DrawText(TrackerText.trackerChecksTextNew, 0, 13);
-
-            int textHeight = 14;
-
-            // Deliveries
-            deliveries = 0;
-            foreach (int id in Locations.Deliveries.Values)
+            if(Util.Button(" > ", P.x + offset.x + 160, P.y + offset.y + 192, true))
             {
-                if (checkedLocations.Contains(id)) deliveries += 1;
-                if (checkedLocations.Contains(id + 10000)) deliveries += 1;
-            }
-            DrawText($"{(APData.perfect_deliveries == "2" ? "Perfect " : "")}Deliveries: {deliveries}/{(APData.perfect_deliveries == "1" ? total_deliveries*2 : total_deliveries)}", 0, 13);
-
-            // Payload checks
-            if (APData.payload_checks == "1")
-            {
-                int payloads = 0;
-                foreach (int id in Locations.PayloadDeliveries.Values)
+                if (page < pages.Count - 1)
                 {
-                    if (checkedLocations.Contains(id)) payloads += 1;
+                    page += 1;
                 }
-                DrawText($"Payload Deliveries: {payloads}/17", 0, textHeight);
-                textHeight += 1;
-            }
-
-            // Radio Checks
-            if (APData.radio_towers == "1" || APData.radio_towers == "3")
-            {
-                int radios = 0;
-                for (int id = 60; id < 64; id++)
+                else
                 {
-                    if (checkedLocations.Contains(id)) radios += 1;
+                    page = 0;
                 }
-                DrawText($"Radio Towers: {radios}/4", 0, textHeight);
-                textHeight += 1;
             }
-
-            // Blind Bags
-            if (APData.blind_bags == "1")
+            switch (pages[page])
             {
-                int blindbags = 0;
-                foreach (int id in Locations.BlindBags.Values)
-                {
-                    if (checkedLocations.Contains(id)) blindbags += 1;
-                }
-                DrawText($"Blind Bags: {blindbags}/12", 0, textHeight);
-                textHeight += 1;
-            }
-
-            // Snowcats
-            if (APData.snowcats == "1" || APData.snowcats == "2")
-            {
-                int snowcats = 0;
-                for (int id = 40; id < 53; id++)
-                {
-                    if (checkedLocations.Contains(id)) snowcats += 1;
-                }
-                DrawText($"Snowcats: {snowcats}/{(APData.snowcats == "1" ? "13" : "12")}", 0, textHeight);
+                case 0: // Overview
+                    Overview(0, 0);
+                    break;
+                case 1: // Town Deliveries
+                    DrawText("Town Deliveries", 4, 0);
+                    TownDeliveryGrid(0, 3);
+                    break;
+                case 2: // City Deliveries
+                    DrawText("City Deliveries", 4, 0);
+                    CityDeliveryGrid(); // add parameters to the ones missing?
+                    break;
+                case 3: // Payload Deliveries
+                    DrawText("Payload Deliveries", 4, 0);
+                    PayloadDelivery();
+                    break;
+                case 4: // Snowcats
+                    DrawText("Snowcats", 4, 0);
+                    Snowcats();
+                    break;
+                case 5: // Blindbags
+                    DrawText("Blindbags", 4, 0);
+                    break;
+                case 6: // Radio Towers
+                    DrawText("Radio Towers", 4, 0);
+                    break;
+                case 7: // Vending Machines
+                    DrawText("Vending Machines", 4, 0);
+                    break;
+                case 8: // Bins
+                    DrawText("Bins", 4, 0);
+                    break;
+                case 9: // Signs
+                    DrawText("Signs", 4, 0);
+                    break;
             }
         }
     }
@@ -358,6 +169,22 @@ public class TrackerApp : MonoBehaviour
         Util.R.put(text, offset.x + P.x + x * textSize, offset.y + P.y + y * textSize);
     }
 
+    private char? LogicIndicator(int locID, bool inLogic)
+    {
+        if (checkedLocations.Contains(locID))
+        {
+            return 'x';
+        }
+        else if (inLogic)
+        {
+            return 'o';
+        }
+        else
+        {
+            return null;
+        }
+    }
+
     public static void TotalDeliveries()
     {
         total_deliveries = APData.intercity_deliveries switch
@@ -370,24 +197,24 @@ public class TrackerApp : MonoBehaviour
         };
     }
 
-    private void DeliveryGrid(float x, float y)
+    // Town Deliveries
+    private void TownDeliveryGrid(float x, float y)
     {
-        var checkedLocations = archipelago.session.Locations.AllLocationsChecked;
-
         Vector2 grid = new (0, 0);
         int del;
         bool sp = APLogic.CanReachSnowyPeaks();
         bool ft = APLogic.CanReachFishingTown() && APLogic.FTGateIsOpen();
         bool city;
+        bool inLogic;
 
         if (APData.intercity_deliveries == "0" || APData.intercity_deliveries == "2")
         {
             DrawText("Up We Ea", x + 3, y);
-            DrawText("Wi Mu Lo", x + 12, y);
-            DrawText("Cl Da Sm", x + 21, y);
+            DrawText("Wi Mu Lo", x + 12, y + 6);
+            DrawText("Cl Da Sm", x + 21, y + 12);
             DrawText("Up\n\nWe\n\nEa", x, y + 2);
-            DrawText("Wi\n\nMu\n\nLo", x + 9, y + 12);
-            DrawText("Cl\n\nDa\n\nSm", x + 18, y + 21);
+            DrawText("Wi\n\nMu\n\nLo", x + 9, y + 8);
+            DrawText("Cl\n\nDa\n\nSm", x + 18, y + 14);
         }
         else
         {
@@ -398,45 +225,38 @@ public class TrackerApp : MonoBehaviour
         {
             foreach (var to in Locations.Town)
             {
+                if (!(APData.intercity_deliveries == "1" || APData.intercity_deliveries == "3") && ((from.Value / to.Value < 0.8f) || (from.Value / to.Value > 1.2f)))
+                {
+                    grid.y += 2;
+                    continue;
+                }
+
                 city = from.Value switch
                 {
                     > 20 and < 24 => sp,
                     > 30 and < 34 => ft,
                     _ => true
                 };
-                if (!city)
+                if (city)
                 {
-                    grid.y += 2;
-                    continue;
-                }
-                city = to.Value switch
-                {
-                    > 20 and < 24 => sp,
-                    > 30 and < 34 => ft,
-                    _ => true
-                };
-                if (!city)
-                {
-                    grid.y += 2;
-                    continue;
+                    city = to.Value switch
+                    {
+                        > 20 and < 24 => sp,
+                        > 30 and < 34 => ft,
+                        _ => true
+                    };
                 }
 
                 del = int.Parse($"{from.Value}{to.Value}");
-                if (checkedLocations.Contains(del))
+                inLogic = city && (APData.lock_towns == "0" || (Items.TownToItem[from.Key].Received > 0 && Items.TownToItem[to.Key].Received > 0));
+
+                if (APData.perfect_deliveries == "0" || APData.perfect_deliveries == "1")
                 {
-                    DrawText($"x", x + 3 + grid.x, y + 2 + grid.y);
+                    DrawText($"{LogicIndicator(del, inLogic)}", x + 3 + grid.x, y + 2 + grid.y);
                 }
-                else if (APData.lock_towns == "0" || (Items.TownToItem[from.Key].Received > 0 && Items.TownToItem[to.Key].Received > 0))
+                if (APData.perfect_deliveries == "1" || APData.perfect_deliveries == "2")
                 {
-                    DrawText($"o", x + 3 + grid.x, y + 2 + grid.y);
-                }
-                if (checkedLocations.Contains(del + 10000))
-                {
-                    DrawText($"x", x + 4 + grid.x, y + 2 + grid.y);
-                }
-                else if (APData.lock_towns == "0" || (Items.TownToItem[from.Key].Received > 0 && Items.TownToItem[to.Key].Received > 0))
-                {
-                    DrawText($"o", x + 4 + grid.x, y + 2 + grid.y);
+                    DrawText($"{LogicIndicator(del + 10000, inLogic)}", x + 4 + grid.x, y + 2 + grid.y);
                 }
                 grid.y += 2;
             }
@@ -444,146 +264,246 @@ public class TrackerApp : MonoBehaviour
             grid.y = 0;
         }
     }
-}
 
-// Mostly obsolete
-public class TrackerText
-{
-    private static readonly ArchipelagoClient archipelago = EasyDeliveryAP.ArchipelagoClient;
-    static string trackerItemsText;
-    public static string trackerChecksText;
-    public static string trackerChecksTextNew;
-    static int donePayloads;
-    static int deliveries;
-    static int blindBags;
-    static int snowcats;
-    static int radioTowers;
-    public static string trackerText;
-
-    public static void UpdateTracker()
+    private void CityDeliveryGrid()
     {
-        DesktopDotExe.File file = EasyDeliveryAP.TrackerFile;
-        trackerItemsText = "Items received:\n";
-        trackerChecksText = "Locations checked:\n";
-        trackerChecksTextNew = "";
-        donePayloads = 0;
-        deliveries = 0;
-        blindBags = 0;
-        snowcats = 0;
-        radioTowers = 0;
-
-        if (!ArchipelagoClient.Authenticated)
+        if (APData.intercity_deliveries == "2" || APData.intercity_deliveries == "3")
         {
-            // file.data = "Not connected";
-            return;
-        }
+            Vector2 grid = new (0, 0);
+            int del;
+            bool sp = APLogic.CanReachSnowyPeaks();
+            bool ft = APLogic.CanReachFishingTown() && APLogic.FTGateIsOpen();
+            bool inLogic;
 
-        var checkedLocations = archipelago.session.Locations.AllLocationsChecked;
-
-        trackerItemsText += ($"{(APData.car_upgrades == "0" ? "  (Buy upgrades)" : "(Direct upgrades)")}\n" +
-                             $"  Snow Tires: {(Items.Tires.Received > 0 ? "Received" : "Missing")}\n" +
-                             $"  Bumper Bar: {(Items.Bumper.Received > 0 ? "Received" : "Missing")}\n" +
-                             $"  Ice Chains: {(Items.Chains.Received > 0 ? "Received" : "Missing")}\n");
-
-        if (APData.blocked_tunnels != "0")
-        {
-            trackerItemsText += $"  Tunnels: {(Items.TunnelSP.Received > 0 ? "Snowy Peaks, " : "")}{(Items.TunnelFT.Received > 0 ? "Fishing Town, " : "")}{(Items.TunnelFactory.Received > 0 ? "Factory" : "")}\n";
-        }
-
-        if (APData.lock_towns == "1")
-        {
-            trackerItemsText += "  Towns: ";
-            foreach (ItemData town in Items.TownToItem.Values)
+            DrawText("Mt Sp Ft", 3, 3);
+            DrawText("Mt\n\nSp\n\nFt", 0, 5);
+            foreach (var from in Locations.City)
             {
-                if (town.Received >= 1)
+                foreach (var to in Locations.City)
                 {
-                    trackerItemsText += $"{town.Name}, ";
+                    if (((from.Key == "Snowy Peaks" || to.Key == "Snowy Peaks") && (!sp || !(Items.Winton.Received > 0 || Items.Munton.Received > 0 || Items.Lopton.Received > 0))) || 
+                        ((from.Key == "Fishing Town" || to.Key == "Fishing Town") && (!ft || !(Items.Clifton.Received > 0 || Items.Damton.Received > 0 || Items.Smalton.Received > 0))))
+                    {
+                        inLogic = false;
+                    }
+                    else
+                    {
+                        inLogic = true;
+                    }
+                    del = int.Parse($"{from.Value}{to.Value}");
+                    if (APData.perfect_deliveries == "0" || APData.perfect_deliveries == "1")
+                    {
+                        DrawText($"{LogicIndicator(del, inLogic)}", 3 + grid.x, 5 + grid.y);
+                    }
+                    if (APData.perfect_deliveries == "1" || APData.perfect_deliveries == "2")
+                    {
+                        DrawText($"{LogicIndicator(del + 10000, inLogic)}", 4 + grid.x, 5 + grid.y);
+                    }
+                    grid.y += 2;
                 }
+                grid.x += 3;
+                grid.y = 0;
             }
-            trackerItemsText += "\n";
+        }
+    }
+
+    // Overview tracker screen
+    private void Overview(float x, float y)
+    {
+
+        DrawText("Items Received:", 9, 0);
+
+        // Car upgrades
+        DrawText($"U\np\ng\nr\na\nd\ne\ns\n{(APData.car_upgrades == "0" ? "(Buy)" : "")}", 0, 1);
+        if(Items.Tires.Received > 0)
+        DrawSprite(altSpriteSheet, APGUI.snowTires, 0.75f, 3/4f);
+        if(Items.Bumper.Received > 0)
+        DrawSprite(altSpriteSheet, APGUI.truckBumper, 0.75f, 2f);
+        if(Items.Chains.Received > 0)
+        DrawSprite(altSpriteSheet, APGUI.iceChains, 0.75f, 13/4f);
+
+        // Radio Towers
+        if(APData.radio_towers == "1" || APData.radio_towers == "3")
+        {
+            DrawSprite(altSpriteSheet, APGUI.radio, 2.5f, 3/4f);
+            DrawText($"x", 5.5f, 3.5f);
+            DrawText($"{Items.RadioTower.Received}", 5.5f, 5f);
         }
 
+        // Towns and Tunnels
+        if (APData.lock_towns == "1" || APData.blocked_tunnels == "1" || APData.blocked_tunnels == "2")
+        {
+            DrawText("Mountain\nTown:", 8f, 1.5f);
+            DrawText("Snowy\nPeaks:", 17f, 1.5f);
+            DrawText("Fishing\nTown:", 24f, 1.5f);
+            if (APData.lock_towns == "1")
+            {
+                DrawText($"{(Items.Upton.Received > 0 ? "Upton" : "")}\n{(Items.Weston.Received > 0 ? "Weston" : "")}\n{(Items.Easton.Received > 0 ? "Easton" : "")}", 8f, 3.7f);
+                DrawText($"{(Items.Winton.Received > 0 ? "Winton" : "")}\n{(Items.Munton.Received > 0 ? "Munton" : "")}\n{(Items.Lopton.Received > 0 ? "Lopton" : "")}", 17f, 3.7f);
+                DrawText($"{(Items.Clifton.Received > 0 ? "Clifton" : "")}\n{(Items.Damton.Received > 0 ? "Damton" : "")}\n{(Items.Smalton.Received > 0 ? "Smalton" : "")}", 24f, 3.7f);
+            }
+            if (APData.blocked_tunnels == "1" || APData.blocked_tunnels == "2")
+            {
+                DrawText($"{(Items.TunnelFactory.Received > 0 ? "Factory\nTunnel" : "")}", 8f, 7f);
+                DrawText($"{(Items.TunnelSP.Received > 0 ? "Tunnel" : "")}", 17f, 7f);
+                DrawText($"{(Items.TunnelFT.Received > 0 ? "Tunnel" : "")}", 24f, 7f);
+            }
+        }
+
+
+        DrawText("Locations checked:", 9, 12);
+        // DrawText(TrackerText.trackerChecksTextNew, 0, 13);
+
+        int textHeight = 14;
+
+        // Deliveries
+        deliveries = 0;
         foreach (int id in Locations.Deliveries.Values)
         {
             if (checkedLocations.Contains(id)) deliveries += 1;
             if (checkedLocations.Contains(id + 10000)) deliveries += 1;
         }
+        DrawText($"{(APData.perfect_deliveries == "2" ? "Perfect " : "")}Deliveries: {deliveries}/{(APData.perfect_deliveries == "1" ? total_deliveries*2 : total_deliveries)}", 0, 13);
 
-        int total_deliveries = 81;
-
-        switch(APData.intercity_deliveries)
-        {
-            case "0":
-                total_deliveries = 27;
-                break;
-            case "1":
-                total_deliveries = 81;
-                break;
-            case "2":
-                total_deliveries = 36;
-                break;
-            case "3":
-                total_deliveries = 90;
-                break;
-        }
-
-        trackerChecksText += $"  {(APData.perfect_deliveries == "2" ? "Perfect " : "")}Deliveries: {deliveries}/{(APData.perfect_deliveries == "1" ? total_deliveries*2 : total_deliveries)}\n";
-        trackerChecksTextNew += $"{(APData.perfect_deliveries == "2" ? "Perfect " : "")}Deliveries: {deliveries}/{(APData.perfect_deliveries == "1" ? total_deliveries*2 : total_deliveries)}\n";
-
+        // Payload checks
         if (APData.payload_checks == "1")
         {
+            int payloads = 0;
             foreach (int id in Locations.PayloadDeliveries.Values)
             {
-                if (checkedLocations.Contains(id)) donePayloads += 1;
+                if (checkedLocations.Contains(id)) payloads += 1;
             }
-            trackerChecksText += $"  Payload Deliveries: {donePayloads}/17\n";
-            trackerChecksTextNew += $"Payload Deliveries: {donePayloads}/17\n";
+            DrawText($"Payload Deliveries: {payloads}/17", 0, textHeight);
+            textHeight += 1;
         }
 
-        switch (APData.radio_towers)
+        // Radio Checks
+        if (APData.radio_towers == "1" || APData.radio_towers == "3")
         {
-            case "1":
-                trackerItemsText += $"  Radio Towers: {Items.RadioTower.Received}\n";
-                for (int id = 60; id < 64; id++)
-                {
-                    if (checkedLocations.Contains(id)) radioTowers += 1;
-                }
-                trackerChecksText += $"  Radio Towers: {radioTowers}/4\n";
-                trackerChecksTextNew += $"Radio Towers: {radioTowers}/4\n";
-                break;
-            case "2":
-                for (int id = 60; id < 64; id++)
-                {
-                    if (checkedLocations.Contains(id)) radioTowers += 1;
-                }
-                trackerChecksText += $"  Radio Towers: {radioTowers}/4\n";
-                trackerChecksTextNew += $"Radio Towers: {radioTowers}/4\n";
-                break;
-            case "3":
-                trackerItemsText += $"  Radio Towers: {Items.RadioTower.Received}\n";
-                break;
+            int radios = 0;
+            for (int id = 60; id < 64; id++)
+            {
+                if (checkedLocations.Contains(id)) radios += 1;
+            }
+            DrawText($"Radio Towers: {radios}/4", 0, textHeight);
+            textHeight += 1;
         }
 
+        // Blind Bags
         if (APData.blind_bags == "1")
         {
+            int blindbags = 0;
             foreach (int id in Locations.BlindBags.Values)
             {
-                if (checkedLocations.Contains(id)) blindBags += 1;
+                if (checkedLocations.Contains(id)) blindbags += 1;
             }
-            trackerChecksText += $"  Blind Bags: {blindBags}/12\n";
-            trackerChecksTextNew += $"Blind Bags: {blindBags}/12\n";
+            DrawText($"Blind Bags: {blindbags}/12", 0, textHeight);
+            textHeight += 1;
         }
 
+        // Snowcats
         if (APData.snowcats == "1" || APData.snowcats == "2")
         {
+            int snowcats = 0;
             for (int id = 40; id < 53; id++)
             {
                 if (checkedLocations.Contains(id)) snowcats += 1;
             }
-            trackerChecksText += $"  Snowcats: {snowcats}/{(APData.snowcats == "1" ? "13" : "12")}\n";
-            trackerChecksTextNew += $"Snowcats: {snowcats}/{(APData.snowcats == "1" ? "13" : "12")}\n";
+            DrawText($"Snowcats: {snowcats}/{(APData.snowcats == "1" ? "13" : "12")}", 0, textHeight);
         }
+    }
 
-        trackerText = trackerItemsText + trackerChecksText;
+    private void PayloadDelivery()
+    {
+        if (APData.payload_checks == "1")
+        {
+            bool sp = APLogic.CanReachSnowyPeaks();
+            bool ft = APLogic.CanReachFishingTown();
+
+            bool boxes = Items.Weston.Received > 0 || Items.Easton.Received > 0 || (sp && (Items.Munton.Received > 0 || Items.Lopton.Received > 0)) || (ft && (Items.Clifton.Received > 0 || Items.Damton.Received > 0));
+            bool bar = Items.Weston.Received > 0 || (sp && (Items.Munton.Received > 0 || Items.Lopton.Received > 0)) || (ft && (Items.Clifton.Received > 0 || Items.Damton.Received > 0));
+            bool pizza = Items.Upton.Received > 0 || Items.Easton.Received > 0 || (sp && (Items.Winton.Received > 0 || Items.Lopton.Received > 0) || (ft && Items.Smalton.Received > 0));
+            bool plant = Items.Upton.Received > 0 || Items.Easton.Received > 0 || (sp && (Items.Winton.Received > 0 || Items.Munton.Received > 0)) || (ft && (Items.Clifton.Received > 0 || Items.Smalton.Received > 0));
+
+            DrawText($"Box Bunch:", 0, 6);
+            DrawText($"Box Stack:", 0, 7);
+            DrawText($"Crate of Drinks:", 0, 9);
+            DrawText($"Sack:", 0, 18);
+            DrawText($"Sack Stack:", 0, 19);
+            DrawText($"Big Box:", 0, 4);
+            DrawText($"Big Box Stack:", 0, 5);
+            DrawText($"Crate:", 0, 8);
+            DrawText($"Crate Stack:", 0, 10);
+            DrawText($"Lots of Crates of Drinks:", 0, 11);
+            DrawText($"Drink:", 0, 20);
+            DrawText($"Pizza Stack:", 0, 12);
+            DrawText($"Pizza Stack Mega:", 0, 13);
+            DrawText($"Plant Pot:", 0, 14);
+            DrawText($"Plant Pot Bunch:", 0, 15);
+            DrawText($"Plant Pot Stack:", 0, 16);
+            DrawText($"Plant Pot Wide:", 0, 17);
+
+            // Any town
+            DrawText($"{LogicIndicator(3, true)}", 26, 6);
+            DrawText($"{LogicIndicator(4, true)}", 26, 7);
+            DrawText($"{LogicIndicator(6, true)}", 26, 9);
+            DrawText($"{LogicIndicator(15, true)}", 26, 18);
+            DrawText($"{LogicIndicator(16, true)}", 26, 19);
+            DrawText($"{LogicIndicator(1, boxes)}", 26, 4);
+            DrawText($"{LogicIndicator(2, boxes)}", 26, 5);
+            DrawText($"{LogicIndicator(5, boxes)}", 26, 8);
+            DrawText($"{LogicIndicator(7, boxes)}", 26, 10);
+            DrawText($"{LogicIndicator(8, bar)}", 26, 11);
+            DrawText($"{LogicIndicator(17, bar)}", 26, 20);
+            DrawText($"{LogicIndicator(9, pizza)}", 26, 12);
+            DrawText($"{LogicIndicator(10, pizza)}", 26, 13);
+            DrawText($"{LogicIndicator(11, plant)}", 26, 14);
+            DrawText($"{LogicIndicator(12, plant)}", 26, 15);
+            DrawText($"{LogicIndicator(13, plant)}", 26, 16);
+            DrawText($"{LogicIndicator(14, plant)}", 26, 17);
+        }
+    }
+
+    private void Snowcats()
+    {
+        // Snowcat logic tracker
+        bool snowtires = APLogic.HasSnowTires();
+        bool sp = APLogic.CanReachSnowyPeaks();
+        bool ft = APLogic.CanReachFishingTown();
+        bool gate = APLogic.FTGateIsOpen() && ft;
+        if (APData.snowcats == "1" || APData.snowcats == "2")
+        {
+            DrawText($"Theo:", 0, 4);
+            DrawText($"Cici:", 0, 5);
+            DrawText($"Tooey:", 0, 9);
+            DrawText($"Gus:", 0, 14);
+            DrawText($"Fives:", 0, 11);
+            DrawText($"Sixo:", 0, 12);
+            DrawText($"Foreman:", 0, 8);
+            DrawText($"Seb:", 0, 15);
+            DrawText($"Reed:", 0, 10);
+            DrawText($"Fortino:", 0, 6);
+            DrawText($"Ellie:", 0, 7);
+            DrawText($"Fit:", 0, 13);
+
+            DrawText($"{LogicIndicator(40, true)}", 9, 4);
+            DrawText($"{LogicIndicator(41, true)}", 9, 5);
+            DrawText($"{LogicIndicator(45, snowtires)}", 9, 9);
+            DrawText($"{LogicIndicator(51, snowtires)}", 9, 14);
+            DrawText($"{LogicIndicator(47, sp)}", 9, 11);
+            DrawText($"{LogicIndicator(48, sp)}", 9, 12);
+            DrawText($"{LogicIndicator(44, sp)}", 9, 8);
+            DrawText($"{LogicIndicator(52, sp)}", 9, 15);
+            DrawText($"{LogicIndicator(46, ft)}", 9, 10);
+            DrawText($"{LogicIndicator(42, gate)}", 9, 6);
+            DrawText($"{LogicIndicator(43, gate)}", 9, 7);
+            DrawText($"{LogicIndicator(50, gate && Items.Chains.Received > 0)}", 9, 13);
+        }
+        if (APData.snowcats == "1")
+        {
+            DrawText($"Ada:", 0, 16);
+
+            DrawText($"{(checkedLocations.Contains(49) ? "x" : "o")}", 9, 16);
+        }
     }
 }

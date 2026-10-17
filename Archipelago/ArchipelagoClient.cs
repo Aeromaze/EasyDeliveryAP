@@ -149,6 +149,7 @@ public class ArchipelagoClient
 
         ServerData.Index = 0;
         ItemHandling.pendingItemIds = [];
+        TrackerApp.pages = [0, 1];
         foreach (ItemData itemData in Items.APIdToItem.Values)
         {
             itemData.Received = 0;
@@ -172,7 +173,7 @@ public class ArchipelagoClient
             var item = scoutedItemInfo[location];
             ArchipelagoConsole.LogMessage($"Sending location: {item.LocationDisplayName} (Id: {location})");
             session.Locations.CompleteLocationChecks(location);
-            APGUI.Notification($"Sending {item.ItemDisplayName} to {item.Player}", APGUI.packageReceive);
+            APGUI.Notification($"Sending {item.ItemDisplayName} to {item.Player}", APGUI.packageSend);
             ServerData.CheckedLocations.Add(location);
         }
     }

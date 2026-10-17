@@ -34,6 +34,7 @@ public class APData
     public static int car_trail_color;
     public static string vending_machines;
     public static string trash_bins;
+    public static string signs;
 
     // Other
     public static Hint[] hints;
@@ -91,6 +92,48 @@ public class APData
         else
         {
             trash_bins = "0";
+        }
+        if (slotData.TryGetValue("signs", out object Signs))
+        {
+            signs = Signs.ToString();
+        }
+        else
+        {
+            signs = "0";
+        }
+
+
+        if (intercity_deliveries == "2" || intercity_deliveries == "3")
+        {
+            TrackerApp.pages.Add(2);
+        }
+        if (payload_checks == "1")
+        {
+            TrackerApp.pages.Add(3);
+        }
+        if (snowcats == "1" || snowcats == "2")
+        {
+            TrackerApp.pages.Add(4);
+        }
+        if (blind_bags == "1")
+        {
+            TrackerApp.pages.Add(5);
+        }
+        if (radio_towers == "1" || radio_towers == "2")
+        {
+            TrackerApp.pages.Add(6);
+        }
+        if (vending_machines == "1")
+        {
+            TrackerApp.pages.Add(7);
+        }
+        if (trash_bins == "1")
+        {
+            TrackerApp.pages.Add(8);
+        }
+        if (signs == "1")
+        {
+            TrackerApp.pages.Add(9);
         }
     }
 
