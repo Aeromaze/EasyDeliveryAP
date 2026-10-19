@@ -108,7 +108,7 @@ public class TrackerApp : MonoBehaviour
                     page = pages.Count - 1;
                 }
             }
-            if(Util.Button(" > ", P.x + offset.x + 160, P.y + offset.y + 192, true))
+            if(Util.Button(" > ", P.x + offset.x + 176, P.y + offset.y + 192, true))
             {
                 if (page < pages.Count - 1)
                 {
@@ -460,7 +460,7 @@ public class TrackerApp : MonoBehaviour
         if (APData.payload_checks == "1")
         {
             bool sp = APLogic.CanReachSnowyPeaks();
-            bool ft = APLogic.CanReachFishingTown();
+            bool ft = APLogic.CanReachFishingTown() && APLogic.FTGateIsOpen();
 
             bool boxes = Items.Weston.Received > 0 || Items.Easton.Received > 0 || (sp && (Items.Munton.Received > 0 || Items.Lopton.Received > 0)) || (ft && (Items.Clifton.Received > 0 || Items.Damton.Received > 0));
             bool bar = Items.Weston.Received > 0 || (sp && (Items.Munton.Received > 0 || Items.Lopton.Received > 0)) || (ft && (Items.Clifton.Received > 0 || Items.Damton.Received > 0));
@@ -551,7 +551,7 @@ public class TrackerApp : MonoBehaviour
     private void Radio(float x, float y)
     {
         bool sp = APLogic.CanReachSnowyPeaks();
-        bool ft = APLogic.CanReachFishingTown();
+        bool ft = APLogic.CanReachFishingTown() && APLogic.FTGateIsOpen();
         
         DrawText("Upton:", 0 + x, 0 + y);
         DrawText("Easton:", 0 + x, 1 + y);
@@ -567,7 +567,7 @@ public class TrackerApp : MonoBehaviour
     private void BlindBags(float x, float y)
     {
         bool sp = APLogic.CanReachSnowyPeaks();
-        bool ft = APLogic.CanReachFishingTown();
+        bool ft = APLogic.CanReachFishingTown() && APLogic.FTGateIsOpen();
         bool logic = true;
 
         int bag;
@@ -591,7 +591,7 @@ public class TrackerApp : MonoBehaviour
     private void VendingMachines(float x, float y)
     {
         bool sp = APLogic.CanReachSnowyPeaks();
-        bool ft = APLogic.CanReachFishingTown();
+        bool ft = APLogic.CanReachFishingTown() && APLogic.FTGateIsOpen();
 
         DrawText("Upton:", x, y);
         DrawText("Weston:", x, y + 1);
@@ -622,11 +622,99 @@ public class TrackerApp : MonoBehaviour
 
     private void GarbageBins(float x, float y)
     {
-        DrawText("WIP", x, y);
+        bool sp = APLogic.CanReachSnowyPeaks();
+        bool ft = APLogic.CanReachFishingTown() && APLogic.FTGateIsOpen();
+
+        int upton = 0;
+        int weston = 0;
+        int easton = 0;
+        int winton = 0;
+        int munton = 0;
+        int lopton = 0;
+        int clifton = 0;
+        int damton = 0;
+        int smalton = 0;
+
+        DrawText("Upton:\nWeston:\nEaston:\nWinton:\nMunton:\nLopton:\nClifton:\nDamton:\nSmalton:", x, y);
+
+        for (int i = 121; i <= 162; i++)
+        {
+            if (checkedLocations.Contains(i))
+            {
+                switch (i)
+                {
+                    case <= 126:
+                        upton++;
+                        break;
+                    case <= 135:
+                        weston++;
+                        break;
+                    case <= 140:
+                        easton++;
+                        break;
+                    case <= 144:
+                        winton++;
+                        break;
+                    case <= 147:
+                        munton++;
+                        break;
+                    case <= 150:
+                        lopton++;
+                        break;
+                    case <= 154:
+                        clifton++;
+                        break;
+                    case <= 158:
+                        damton++;
+                        break;
+                    case <= 162:
+                        smalton++;
+                        break;
+                }
+            }
+        }
+        DrawText($"{(upton == 6 ? "x" : (APData.lock_towns != "1" || Items.Upton.Received > 0) ? "o" : " ")} ({upton}/6)", x + 10, y);
+        DrawText($"{(weston == 9 ? "x" : (APData.lock_towns != "1" || Items.Weston.Received > 0) ? "o" : " ")} ({weston}/9)", x + 10, y + 1);
+        DrawText($"{(easton == 5 ? "x" : (APData.lock_towns != "1" || Items.Easton.Received > 0) ? "o" : " ")} ({easton}/5)", x + 10, y + 2);
+        DrawText($"{(winton == 4 ? "x" : sp && (APData.lock_towns != "1" || Items.Winton.Received > 0) ? "o" : " ")} ({winton}/4)", x + 10, y + 3);
+        DrawText($"{(munton == 3 ? "x" : sp && (APData.lock_towns != "1" || Items.Munton.Received > 0) ? "o" : " ")} ({munton}/3)", x + 10, y + 4);
+        DrawText($"{(lopton == 3 ? "x" : sp && (APData.lock_towns != "1" || Items.Lopton.Received > 0) ? "o" : " ")} ({lopton}/3)", x + 10, y + 5);
+        DrawText($"{(clifton == 4 ? "x" : ft && (APData.lock_towns != "1" || Items.Clifton.Received > 0) ? "o" : " ")} ({clifton}/4)", x + 10, y + 6);
+        DrawText($"{(damton == 4 ? "x" : ft && (APData.lock_towns != "1" || Items.Damton.Received > 0) ? "o" : " ")} ({damton}/4)", x + 10, y + 7);
+        DrawText($"{(smalton == 4 ? "x" : ft && (APData.lock_towns != "1" || Items.Smalton.Received > 0) ? "o" : " ")} ({smalton}/4)", x + 10, y + 8);
     }
 
     private void Signs(float x, float y)
     {
-        DrawText("WIP", x, y);
+        bool sp = APLogic.CanReachSnowyPeaks();
+        bool ft = APLogic.CanReachFishingTown() && APLogic.FTGateIsOpen();
+
+        int mountain = 0;
+        int snowy = 0;
+        int fishing = 0;
+
+        DrawText("Mountain Town:\nSnowy Peaks:\nFishing Town:", x, y);
+
+        for (int i = 200; i <= 250; i++)
+        {
+            if (checkedLocations.Contains(i))
+            {
+                switch (i)
+                {
+                    case <= 215:
+                        mountain++;
+                        break;
+                    case <= 225:
+                        snowy++;
+                        break;
+                    case <= 250:
+                        fishing++;
+                        break;
+                }
+            }
+        }
+        DrawText($"{(mountain == 16 ? "x" : "o")} ({mountain}/16)", x + 17, y);
+        DrawText($"{(snowy == 10 ? "x" : sp ? "o" : " ")} ({snowy}/10)", x + 17, y + 1);
+        DrawText($"{(fishing == 25 ? "x" : ft ? "o" : " ")} ({fishing}/25)", x + 17, y + 2);
     }
 }
