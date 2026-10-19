@@ -145,6 +145,7 @@ public class APData
             EasyDeliveryAP.save.data.slotName = ArchipelagoClient.ServerData.SlotName;
             EasyDeliveryAP.save.data.password = ArchipelagoClient.ServerData.Password;
             EasyDeliveryAP.save.data.modVersion = EasyDeliveryAP.PluginVersion;
+            EasyDeliveryAP.save.data.APSeed = ArchipelagoClient.ServerData.seed;
         }
         else if (!EasyDeliveryAP.save.data.slotName.IsNullOrWhiteSpace() && EasyDeliveryAP.configAutoConnect.Value)
         {

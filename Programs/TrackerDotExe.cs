@@ -142,18 +142,23 @@ public class TrackerApp : MonoBehaviour
                     break;
                 case 5: // Blindbags
                     DrawText("Blindbags", 4, 0);
+                    BlindBags(0, 3);
                     break;
                 case 6: // Radio Towers
                     DrawText("Radio Towers", 4, 0);
+                    Radio(0, 3);
                     break;
                 case 7: // Vending Machines
                     DrawText("Vending Machines", 4, 0);
+                    VendingMachines(0, 3);
                     break;
                 case 8: // Bins
                     DrawText("Bins", 4, 0);
+                    GarbageBins(0, 3);
                     break;
                 case 9: // Signs
                     DrawText("Signs", 4, 0);
+                    Signs(0, 3);
                     break;
             }
         }
@@ -225,7 +230,7 @@ public class TrackerApp : MonoBehaviour
         {
             foreach (var to in Locations.Town)
             {
-                if (!(APData.intercity_deliveries == "1" || APData.intercity_deliveries == "3") && ((from.Value / to.Value < 0.8f) || (from.Value / to.Value > 1.2f)))
+                if (!(APData.intercity_deliveries == "1" || APData.intercity_deliveries == "3") && ((int)(from.Value/10) != (int)(to.Value/10)))
                 {
                     grid.y += 2;
                     continue;
@@ -410,6 +415,43 @@ public class TrackerApp : MonoBehaviour
                 if (checkedLocations.Contains(id)) snowcats += 1;
             }
             DrawText($"Snowcats: {snowcats}/{(APData.snowcats == "1" ? "13" : "12")}", 0, textHeight);
+            textHeight += 1;
+        }
+
+        // Vending Machines
+        if (APData.vending_machines == "1")
+        {
+            int vending = 0;
+            for (int id = 100; id < 112; id++)
+            {
+                if (checkedLocations.Contains(id)) vending += 1;
+            }
+            DrawText($"Vending Machines: {vending}/12", 0, textHeight);
+            textHeight += 1;
+        }
+
+        // Bins
+        if (APData.trash_bins == "1")
+        {
+            int bins = 0;
+            for (int id = 121; id < 163; id++)
+            {
+                if (checkedLocations.Contains(id)) bins += 1;
+            }
+            DrawText($"Garbage Bins: {bins}/62", 0, textHeight);
+            textHeight += 1;
+        }
+
+        // Signs
+        if (APData.signs == "1")
+        {
+            int signs = 0;
+            for (int id = 200; id < 251; id++)
+            {
+                if (checkedLocations.Contains(id)) signs += 1;
+            }
+            DrawText($"Signs: {signs}/51", 0, textHeight);
+            textHeight += 1;
         }
     }
 
@@ -425,25 +467,24 @@ public class TrackerApp : MonoBehaviour
             bool pizza = Items.Upton.Received > 0 || Items.Easton.Received > 0 || (sp && (Items.Winton.Received > 0 || Items.Lopton.Received > 0) || (ft && Items.Smalton.Received > 0));
             bool plant = Items.Upton.Received > 0 || Items.Easton.Received > 0 || (sp && (Items.Winton.Received > 0 || Items.Munton.Received > 0)) || (ft && (Items.Clifton.Received > 0 || Items.Smalton.Received > 0));
 
-            DrawText($"Box Bunch:", 0, 6);
-            DrawText($"Box Stack:", 0, 7);
-            DrawText($"Crate of Drinks:", 0, 9);
-            DrawText($"Sack:", 0, 18);
-            DrawText($"Sack Stack:", 0, 19);
-            DrawText($"Big Box:", 0, 4);
-            DrawText($"Big Box Stack:", 0, 5);
-            DrawText($"Crate:", 0, 8);
-            DrawText($"Crate Stack:", 0, 10);
-            DrawText($"Lots of Crates of Drinks:", 0, 11);
-            DrawText($"Drink:", 0, 20);
-            DrawText($"Pizza Stack:", 0, 12);
-            DrawText($"Pizza Stack Mega:", 0, 13);
-            DrawText($"Plant Pot:", 0, 14);
-            DrawText($"Plant Pot Bunch:", 0, 15);
-            DrawText($"Plant Pot Stack:", 0, 16);
-            DrawText($"Plant Pot Wide:", 0, 17);
+            DrawText("Box Bunch:", 0, 6);
+            DrawText("Box Stack:", 0, 7);
+            DrawText("Crate of Drinks:", 0, 9);
+            DrawText("Sack:", 0, 18);
+            DrawText("Sack Stack:", 0, 19);
+            DrawText("Big Box:", 0, 4);
+            DrawText("Big Box Stack:", 0, 5);
+            DrawText("Crate:", 0, 8);
+            DrawText("Crate Stack:", 0, 10);
+            DrawText("Lots of Crates of Drinks:", 0, 11);
+            DrawText("Drink:", 0, 20);
+            DrawText("Pizza Stack:", 0, 12);
+            DrawText("Pizza Stack Mega:", 0, 13);
+            DrawText("Plant Pot:", 0, 14);
+            DrawText("Plant Pot Bunch:", 0, 15);
+            DrawText("Plant Pot Stack:", 0, 16);
+            DrawText("Plant Pot Wide:", 0, 17);
 
-            // Any town
             DrawText($"{LogicIndicator(3, true)}", 26, 6);
             DrawText($"{LogicIndicator(4, true)}", 26, 7);
             DrawText($"{LogicIndicator(6, true)}", 26, 9);
@@ -473,18 +514,18 @@ public class TrackerApp : MonoBehaviour
         bool gate = APLogic.FTGateIsOpen() && ft;
         if (APData.snowcats == "1" || APData.snowcats == "2")
         {
-            DrawText($"Theo:", 0, 4);
-            DrawText($"Cici:", 0, 5);
-            DrawText($"Tooey:", 0, 9);
-            DrawText($"Gus:", 0, 14);
-            DrawText($"Fives:", 0, 11);
-            DrawText($"Sixo:", 0, 12);
-            DrawText($"Foreman:", 0, 8);
-            DrawText($"Seb:", 0, 15);
-            DrawText($"Reed:", 0, 10);
-            DrawText($"Fortino:", 0, 6);
-            DrawText($"Ellie:", 0, 7);
-            DrawText($"Fit:", 0, 13);
+            DrawText("Theo:", 0, 4);
+            DrawText("Cici:", 0, 5);
+            DrawText("Tooey:", 0, 9);
+            DrawText("Gus:", 0, 14);
+            DrawText("Fives:", 0, 11);
+            DrawText("Sixo:", 0, 12);
+            DrawText("Foreman:", 0, 8);
+            DrawText("Seb:", 0, 15);
+            DrawText("Reed:", 0, 10);
+            DrawText("Fortino:", 0, 6);
+            DrawText("Ellie:", 0, 7);
+            DrawText("Fit:", 0, 13);
 
             DrawText($"{LogicIndicator(40, true)}", 9, 4);
             DrawText($"{LogicIndicator(41, true)}", 9, 5);
@@ -501,9 +542,91 @@ public class TrackerApp : MonoBehaviour
         }
         if (APData.snowcats == "1")
         {
-            DrawText($"Ada:", 0, 16);
+            DrawText("Ada:", 0, 16);
 
             DrawText($"{(checkedLocations.Contains(49) ? "x" : "o")}", 9, 16);
         }
+    }
+    
+    private void Radio(float x, float y)
+    {
+        bool sp = APLogic.CanReachSnowyPeaks();
+        bool ft = APLogic.CanReachFishingTown();
+        
+        DrawText("Upton:", 0 + x, 0 + y);
+        DrawText("Easton:", 0 + x, 1 + y);
+        DrawText("Snowy Peaks:", 0 + x, 2 + y);
+        DrawText("Fishing Town:", 0 + x, 3 + y);
+
+        DrawText($"{LogicIndicator(60, true)}", 15 + x, 0 + y);
+        DrawText($"{LogicIndicator(61, APLogic.HasSnowTires() || Items.Lighter.Received > 0)}", 15 + x, 1 + y);
+        DrawText($"{LogicIndicator(62, sp)}", 15 + x, 2 + y);
+        DrawText($"{LogicIndicator(63, ft && Items.Chains.Received > 0)}", 15 + x, 3 + y);
+    }
+
+    private void BlindBags(float x, float y)
+    {
+        bool sp = APLogic.CanReachSnowyPeaks();
+        bool ft = APLogic.CanReachFishingTown();
+        bool logic = true;
+
+        int bag;
+
+        DrawText("1 2 3 4", 17 + x, y);
+        DrawText("Mountain Town:", x, 1 + y);
+        DrawText("Snowy Peaks:", x, 2 + y);
+        DrawText("Fishing Town:", x, 3 + y);
+
+        for (int i = 20; i <= 31; i++)
+        {
+            bag = (i - 20) % 4;
+            if (i > 23)
+            {
+                logic = i > 27 ? ft : sp;
+            }
+            DrawText($"{LogicIndicator(i, logic)}", 17 + x + bag * 2, 1 + y + (int)((i - 20)/4));
+        }
+    }
+
+    private void VendingMachines(float x, float y)
+    {
+        bool sp = APLogic.CanReachSnowyPeaks();
+        bool ft = APLogic.CanReachFishingTown();
+
+        DrawText("Upton:", x, y);
+        DrawText("Weston:", x, y + 1);
+        DrawText("Easton:", x, y + 2);
+        DrawText("Winton:", x, y + 3);
+        DrawText("Lower Munton:", x, y + 4);
+        DrawText("Upper Munton:", x, y + 5);
+        DrawText("Lopton:", x, y + 6);
+        DrawText("Clifton:", x, y + 7);
+        DrawText("Upper Damton:", x, y + 8);
+        DrawText("Lower Damton:", x, y + 9);
+        DrawText("Smalton (Left):", x, y + 10);
+        DrawText("Smalton (Right):", x, y + 11);
+
+        DrawText($"{LogicIndicator(100, (APData.lock_towns != "1" || Items.Upton.Received > 0))}", x + 18, y);
+        DrawText($"{LogicIndicator(101, (APData.lock_towns != "1" || Items.Weston.Received > 0))}", x + 18, y + 1);
+        DrawText($"{LogicIndicator(102, (APData.lock_towns != "1" || Items.Easton.Received > 0))}", x + 18, y + 2);
+        DrawText($"{LogicIndicator(103, sp && (APData.lock_towns != "1" || Items.Winton.Received > 0))}", x + 18, y + 3);
+        DrawText($"{LogicIndicator(104, sp && (APData.lock_towns != "1" || Items.Munton.Received > 0))}", x + 18, y + 4);
+        DrawText($"{LogicIndicator(105, sp && (APData.lock_towns != "1" || Items.Munton.Received > 0))}", x + 18, y + 5);
+        DrawText($"{LogicIndicator(106, sp && (APData.lock_towns != "1" || Items.Lopton.Received > 0))}", x + 18, y + 6);
+        DrawText($"{LogicIndicator(107, ft && (APData.lock_towns != "1" || Items.Clifton.Received > 0))}", x + 18, y + 7);
+        DrawText($"{LogicIndicator(108, ft && (APData.lock_towns != "1" || Items.Damton.Received > 0))}", x + 18, y + 8);
+        DrawText($"{LogicIndicator(109, ft && (APData.lock_towns != "1" || Items.Damton.Received > 0))}", x + 18, y + 9);
+        DrawText($"{LogicIndicator(110, ft && (APData.lock_towns != "1" || Items.Smalton.Received > 0))}", x + 18, y + 10);
+        DrawText($"{LogicIndicator(111, ft && (APData.lock_towns != "1" || Items.Smalton.Received > 0))}", x + 18, y + 11);
+    }
+
+    private void GarbageBins(float x, float y)
+    {
+        DrawText("WIP", x, y);
+    }
+
+    private void Signs(float x, float y)
+    {
+        DrawText("WIP", x, y);
     }
 }

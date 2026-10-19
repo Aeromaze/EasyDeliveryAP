@@ -16,7 +16,7 @@ public class ArchipelagoData
     /// seed for this archipelago data. Can be used when loading a file to verify the session the player is trying to
     /// load is valid to the room it's connecting to.
     /// </summary>
-    private string seed;
+    public string seed;
 
     public Dictionary<string, object> slotData;
 
