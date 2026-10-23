@@ -33,7 +33,7 @@ public class APData
     public static string progressive_car_upgrades;
     public static int car_trail_color;
     public static string vending_machines;
-    public static string trash_bins;
+    public static string garbage_bins;
     public static string signs;
 
     // Other
@@ -85,13 +85,13 @@ public class APData
         {
             vending_machines = "0";
         }
-        if (slotData.TryGetValue("trash_bins", out object Trash_bins))
+        if (slotData.TryGetValue("garbage_bins", out object Garbage_bins))
         {
-            trash_bins = Trash_bins.ToString();
+            garbage_bins = Garbage_bins.ToString();
         }
         else
         {
-            trash_bins = "0";
+            garbage_bins = "0";
         }
         if (slotData.TryGetValue("signs", out object Signs))
         {
@@ -127,7 +127,7 @@ public class APData
         {
             TrackerApp.pages.Add(7);
         }
-        if (trash_bins == "1")
+        if (garbage_bins == "1")
         {
             TrackerApp.pages.Add(8);
         }

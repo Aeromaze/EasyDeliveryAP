@@ -4,7 +4,7 @@ public class APLogic
 {
     public static bool CanReachSnowyPeaks()
     {
-        if (Items.Lighter.Received > 0 && (Items.Tires.Received > 0 || Items.ProgCarUpgrade.Received > 1))
+        if (Items.Lighter.Received > 0 && (Items.Tires.Received > 0 || Items.ProgCarUpgrade.Received > 0))
         {
             if (APData.blocked_tunnels != "1") return true;
             else if (Items.TunnelSP.Received > 0) return true;

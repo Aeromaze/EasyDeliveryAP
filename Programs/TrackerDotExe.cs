@@ -91,9 +91,16 @@ public class TrackerApp : MonoBehaviour
         }
         else
         {
-            if (Util.Button("Teleport", P.x + offset.x, P.y + offset.y + 192, true))
+            if ((OtherPatches.currentScene == 5 && (!APLogic.HasSnowTires() ||
+                (APData.lock_towns != "1" || !(Items.Winton.Received > 0 || Items.Munton.Received > 0))))
+                || (OtherPatches.currentScene == 4 && (!APLogic.CanReachFishingTown() ||
+                (APData.lock_towns != "1" || !(Items.Clifton.Received > 0 || Items.Damton.Received > 0 || Items.Smalton.Received > 0))))
+                )
             {
-                CarPatches.teleport = true;
+                if (Util.Button("Teleport", P.x + offset.x, P.y + offset.y + 192, true))
+                {
+                    CarPatches.teleport = true;
+                }
             }
 
             DrawText($"Page {page+1}/{pages.Count}", 12, 24);
@@ -122,7 +129,7 @@ public class TrackerApp : MonoBehaviour
             switch (pages[page])
             {
                 case 0: // Overview
-                    Overview(0, 0);
+                    Overview();
                     break;
                 case 1: // Town Deliveries
                     DrawText("Town Deliveries", 4, 0);
@@ -313,19 +320,25 @@ public class TrackerApp : MonoBehaviour
     }
 
     // Overview tracker screen
-    private void Overview(float x, float y)
+    private void Overview()
     {
 
         DrawText("Items Received:", 9, 0);
 
         // Car upgrades
         DrawText($"U\np\ng\nr\na\nd\ne\ns\n{(APData.car_upgrades == "0" ? "(Buy)" : "")}", 0, 1);
-        if(Items.Tires.Received > 0)
-        DrawSprite(altSpriteSheet, APGUI.snowTires, 0.75f, 3/4f);
-        if(Items.Bumper.Received > 0)
-        DrawSprite(altSpriteSheet, APGUI.truckBumper, 0.75f, 2f);
-        if(Items.Chains.Received > 0)
-        DrawSprite(altSpriteSheet, APGUI.iceChains, 0.75f, 13/4f);
+        if(Items.Tires.Received > 0 || Items.ProgCarUpgrade.Received > 0)
+        {
+            DrawSprite(altSpriteSheet, APGUI.snowTires, 0.75f, 3/4f);
+        }
+        if(Items.Bumper.Received > 0 || Items.ProgCarUpgrade.Received > 1)
+        {
+            DrawSprite(altSpriteSheet, APGUI.truckBumper, 0.75f, 2f);
+        }
+        if(Items.Chains.Received > 0 || Items.ProgCarUpgrade.Received > 2)
+        {
+            DrawSprite(altSpriteSheet, APGUI.iceChains, 0.75f, 13/4f);
+        }
 
         // Radio Towers
         if(APData.radio_towers == "1" || APData.radio_towers == "3")
@@ -431,14 +444,14 @@ public class TrackerApp : MonoBehaviour
         }
 
         // Bins
-        if (APData.trash_bins == "1")
+        if (APData.garbage_bins == "1")
         {
             int bins = 0;
             for (int id = 121; id < 163; id++)
             {
                 if (checkedLocations.Contains(id)) bins += 1;
             }
-            DrawText($"Garbage Bins: {bins}/62", 0, textHeight);
+            DrawText($"Garbage Bins: {bins}/42", 0, textHeight);
             textHeight += 1;
         }
 
