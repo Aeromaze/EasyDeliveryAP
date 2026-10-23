@@ -70,6 +70,7 @@ public class OtherPatches
     public static GameObject shopInteriors;
     public static GameObject nodes;
     public static sCarController car;
+    public static sCharacterController guy;
     public static Transform[] radios;
     public static GameObject radio1;
     public static GameObject radio2;
@@ -131,25 +132,15 @@ public class OtherPatches
             {
                 MapNodes.TryAdd(mapNode.name, mapNode);
             }
-            car = GameObject.FindObjectOfType<sCarController>();
+            guy = GameObject.FindObjectOfType<sCharacterController>();
         }
         else if (currentScene == 6)
         {
-            car = GameObject.FindObjectOfType<sCarController>();
+            guy = GameObject.FindObjectOfType<sCharacterController>();
         }
 
         // Remove Fishing Town Gate with 3 "Radio Tower" items
         RemoveGate();
-        /*
-        if (currentScene == 4 && (APData.radio_towers == "1" || APData.radio_towers == "3") && Items.RadioTower.Received >= 3)
-        {
-            GameObject.Find("ResetContainer")?.SetActive(false);
-            GameObject.Find("ResetVolumes")?.SetActive(false);
-            GameObject.Find("Destroy Gate Check")?.SetActive(false);
-            GameObject.Find("GATE movable")?.SetActive(false);
-            // GameObject.Find("Destroy Gate Check").SetActive(false);
-        }
-        */
 
         if (currentScene == 1 && EasyDeliveryAP.debug)
         {
@@ -163,7 +154,6 @@ public class OtherPatches
                     }
                 ArchipelagoConsole.LogMessage($"{node} - D: {MapNodes[node].destination} - E: {MapNodes[node].enabled}");
             }
-            //Nodes["Upton"].gameObject.SetActive(false);
         }
 
         /*

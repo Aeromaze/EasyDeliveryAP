@@ -33,6 +33,9 @@ public class CarPatches
     public static bool accelTrap = false;
     private static int accelTimer = 0;
 
+    public static bool debugTP = false;
+    public static Vector3 debugTPDest;
+
     [HarmonyPatch(typeof(sCarController), "Update")]
     private static void Prefix(sCarController __instance)
     {
@@ -55,6 +58,7 @@ public class CarPatches
                 {
                     shrink = false;
                     shrinkTimer += 1800;
+                    OtherPatches.guy.transform.localScale = new(0.75f ,0.75f ,0.75f);
                 }
             }
             else if (shrinkTimer > 0)
@@ -70,7 +74,13 @@ public class CarPatches
                 __instance.maxSpeed += 100f/150;
                 __instance.maxSpeedScale += 1f/150;
                 __instance.drivePowerScale += 1f/150;
+                OtherPatches.guy.transform.localScale = new(1.13f ,1.13f ,1.13f);
             }
+        }
+        if (PauseSystem.paused && debugTP && !__instance.guyActive)
+        {
+            debugTP = !debugTP;
+            __instance.transform.SetPositionAndRotation(debugTPDest, MountainTownQt);
         }
         if (PauseSystem.paused && teleport && !__instance.guyActive)
         {
@@ -145,6 +155,15 @@ public class CarPatches
                 __0 = new(__0.x, 1);
                 accelTimer -= 1;
             }
+        }
+    }
+
+    [HarmonyPatch(typeof(sCharacterInteraction), "ExitObstructed")]
+    private static void Prefix(sCharacterInteraction __instance, ref Vector3 __0)
+    {
+        if (shrinkTimer > 0)
+        {
+            __0.y += 0.5f;
         }
     }
 }

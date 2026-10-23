@@ -330,6 +330,7 @@ public class ArchipelagoClient
                 ArchipelagoConsole.LogMessage($"Received unhandled item: {receivedItem.ItemName} Id: {receivedItem.ItemId}");
                 break;
         }
+        EasyDeliveryAP.save.data.handledIndex = ServerData.Index;
     }
 
     /// <summary>

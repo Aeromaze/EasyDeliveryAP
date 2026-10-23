@@ -118,7 +118,7 @@ public class LocationHandling
     private static void Postfix(RoadSign __instance)
     {
         Vector3 vector = __instance.cam.transform.position - __instance.transform.position;
-        if (!(vector.magnitude > 30f) && !(Vector3.Dot(__instance.cam.transform.forward, vector.normalized) > 0f))
+        if (ArchipelagoClient.Authenticated && !(vector.magnitude > 30f) && !(Vector3.Dot(__instance.cam.transform.forward, vector.normalized) > 0f))
         {
             Dictionary<string, PositionData> positions = [];
             switch (OtherPatches.currentScene)

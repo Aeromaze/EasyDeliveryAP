@@ -41,8 +41,7 @@ public class EasyDeliveryAP : BaseUnityPlugin
     string itemId = "";
     string obj = "";
     bool upton = true;
-    bool weston = true;
-    bool easton = true;
+    string debugNode = "";
     // GameObject obj2;
 
     private void Awake()
@@ -283,15 +282,15 @@ public class EasyDeliveryAP : BaseUnityPlugin
                 OtherPatches.Nodes["Upton"].gameObject.SetActive(upton);
                 upton = !upton;
             }
-            if (GUI.Button(new Rect(16, 413, 100, 20), "Weston") && OtherPatches.currentScene == 1)
+            debugNode = GUI.TextField(new Rect(16, 413, 100, 20), debugNode);
+            if (GUI.Button(new Rect(16, 433, 100, 20), "Nothing"))
             {
-                OtherPatches.Nodes["Weston"].gameObject.SetActive(weston);
-                weston = !weston;
-            }
-            if (GUI.Button(new Rect(16, 433, 100, 20), "Easton") && OtherPatches.currentScene == 1)
-            {
-                OtherPatches.Nodes["Easton"].gameObject.SetActive(easton);
-                easton = !easton;
+                if (OtherPatches.MapNodes.TryGetValue(debugNode, out sMapNode mapNode))
+                {
+                    CarPatches.debugTPDest = mapNode.transform.position;
+                    CarPatches.debugTPDest.y += 3;
+                    CarPatches.debugTP = true;
+                }
             }
             if (GUI.Button(new Rect(16, 453, 100, 20), "Death"))
             {
