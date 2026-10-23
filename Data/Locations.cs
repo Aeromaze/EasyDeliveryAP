@@ -247,7 +247,7 @@ public class Locations
         public static NodeData Node12 = new("Node (12)", "Damton", 18);
         public static NodeData Nodedock3 = new("Node (dock3)", "Damton", 19);
         public static NodeData Nodedock1 = new("Node(dock)(1)", "Smalton", 20);
-        public static NodeData Node14 = new("Node (14)", "Smalton", 21);
+        public static NodeData Node14 = new("Node (14)", "Damton", 21);
         public static NodeData Nodedock21 = new("Node (dock2) (1)", "Smalton", 22);
         public static NodeData Node102 = new("Node (102)", "Clifton", 23);
         public static NodeData Node98 = new("Node (98)", "Clifton", 24);
@@ -255,7 +255,7 @@ public class Locations
         public static NodeData EasyEats = new("Easy Eats", "Smalton", 26);
         public static NodeData PawnShop = new("Pawn Shop", "Clifton", 27);
         public static NodeData EZMart = new("EZ Mart", "Clifton", 28);
-        public static NodeData Bar2 = new("Bar", "Damton", 29);
+        public static NodeData Bar2 = new("Bar", "Damton", 29); // might be swapped
         public static NodeData EasyDepot = new("Easy Depot", "Damton", 30);
         public static NodeData Bar1 = new("Bar", "Clifton", 31);
         public static NodeData EZCafe = new("EZ Cafe", "Damton", 32);
@@ -356,7 +356,7 @@ public class Locations
         {8, MountainTown.Node5},
         {9, MountainTown.EZBakery},
         {10, MountainTown.Node59},
-        {11, MountainTown.Node60}, // Still correct
+        {11, MountainTown.Node60},
         {12, MountainTown.Bar1},
         {13, MountainTown.EasyDepot},
         {14, MountainTown.Bar2},
@@ -416,7 +416,7 @@ public class Locations
         {12, SnowyPeaks.EZBakery},
         {13, SnowyPeaks.EasyPizza},
         {14, SnowyPeaks.EasyFlowers},
-        {15, SnowyPeaks.Bar1}, // Bar 1 (Munton)
+        {15, SnowyPeaks.Bar1},
         {16, SnowyPeaks.EasyDepot},
         {17, SnowyPeaks.EZAuto},
         {18, SnowyPeaks.EZCafe},
@@ -488,7 +488,7 @@ public class Locations
         {18, FishingTown.Node12},
         {19, FishingTown.Nodedock3},
         {20, FishingTown.Nodedock1},
-        {21, FishingTown.Node14}, // house left of Depot ?
+        {21, FishingTown.Node14},
         {22, FishingTown.Nodedock21},
         {23, FishingTown.Node102},
         {24, FishingTown.Node98},
@@ -556,22 +556,23 @@ public class Locations
     public static readonly Dictionary<string, PositionData> SnowyPeaksPositions = new()
     {
         // Winton
-        {"(-586.90, 0.26, 616.57)", SnowyPeaks.BBWFlowers},
-        {"(-596.36, 0.04, 615.28)", SnowyPeaks.RBWEats},
-        {"(-446.21, 33.01, -42.56)", SnowyPeaks.VMWFuel},
-        {"(-630.71, -0.10, 595.56)", SnowyPeaks.BBWFuel},
-        {"(-629.87, -0.08, 595.92)", SnowyPeaks.RBWFuel},
+        {"(-279.34, 277.75, 233.77)", SnowyPeaks.BBWFlowers}, // (-279.34, 277.75, 233.77)
+        {"(-288.79, 277.53, 232.49)", SnowyPeaks.RBWEats}, // (-288.79, 277.53, 232.49)
+        {"(-325.92, 277.63, 209.57)", SnowyPeaks.VMWFuel}, // (-325.92, 277.63, 209.57)
+        {"(-323.14, 277.39, 212.76)", SnowyPeaks.BBWFuel}, // (-323.14, 277.39, 212.76)
+        {"(-322.31, 277.42, 213.12)", SnowyPeaks.RBWFuel}, // (-322.31, 277.42, 213.12)
         // Munton
-        {"(0.00, -0.74, 0.00)", SnowyPeaks.VMMAuto},
-        {"(-195.85, -33.65, 605.07)", SnowyPeaks.RBMPawn},
-        {"(-52.17, 53.53, 645.23)", SnowyPeaks.RBMMart},
-        {"(-51.45, 53.56, 644.61)", SnowyPeaks.BBMMart},
-        {"(152.72, 86.37, -8.95)", SnowyPeaks.VMMBar},
+        {"(120.29, 243.89, 252.13)", SnowyPeaks.VMMAuto}, // (120.29, 243.89, 252.13)
+        {"(111.71, 243.84, 222.27)", SnowyPeaks.RBMPawn}, // (111.71, 243.84, 222.27)
+        {"(256.12, 331.05, 261.82)", SnowyPeaks.BBMMart}, // (256.12, 331.05, 261.82)
+        {"(255.40, 331.02, 262.43)", SnowyPeaks.RBMMart}, // (255.40, 331.02, 262.43)
+        {"(273.01, 330.99, 243.18)", SnowyPeaks.VMMBar}, // (273.01, 330.99, 243.18)
         // Lopton
-        {"(0.00, 0.00, 0.00)", SnowyPeaks.RBLBar},
-        {"(113.55, 32.65, -692.20)", SnowyPeaks.VMLDepot},
-        {"(-79.79, -0.20, -56.63)", SnowyPeaks.RBLDepot},
-        {"(-79.34, -0.20, -55.91)", SnowyPeaks.BBLDepot},
+        {"(307.56, 277.49, -382.80)", SnowyPeaks.RBLBar}, // (307.56, 277.49, -382.80)
+        {"(233.84, 277.28, -440.07)", SnowyPeaks.VMLDepot}, // (233.84, 277.28, -440.07)
+        {"(227.77, 277.29, -439.43)", SnowyPeaks.RBLDepot}, // (227.77, 277.29, -439.43)
+        {"(228.23, 277.29, -438.71)", SnowyPeaks.BBLDepot}, // (228.23, 277.29, -438.71)
+
 
         // Signs
         {"(-156.92, 245.51, 272.73)", SnowyPeaks.SignToMT}, // Enter: Tunnel to Mountain Town Exit: Welcome to Snowy Peaks
@@ -590,25 +591,25 @@ public class Locations
     public static readonly Dictionary<string, PositionData> FishingTownPositions = new()
     {
         // Clifton
-        {"(0.34, 0.01, 1.03)", FishingTown.RBCBar},
-        {"(0.00, 0.00, 0.00)", FishingTown.BBCBar},
-        {"(278.26, 92.31, 313.60)", FishingTown.VMCMart},
-        {"(54.99, 0.25, 27.34)", FishingTown.BBCMart},
-        {"(54.07, 0.26, 27.37)", FishingTown.RBCMart},
+        {"(234.21, 92.07, 289.82)", FishingTown.RBCBar}, // (234.21, 92.07, 289.82)
+        {"(233.87, 92.06, 288.78)", FishingTown.BBCBar}, // (233.87, 92.06, 288.78)
+        {"(278.26, 92.31, 313.60)", FishingTown.VMCMart}, // No problem
+        {"(288.85, 92.32, 316.12)", FishingTown.BBCMart}, // (288.85, 92.32, 316.12)
+        {"(287.93, 92.33, 316.15)", FishingTown.RBCMart}, // (287.93, 92.33, 316.15)
         // Damton
-        {"(183.00, -17.49, -653.05)", FishingTown.RBDBar},
-        {"(183.82, -17.49, -653.01)", FishingTown.BBDBar},
-        {"(414.58, 74.61, -364.05)", FishingTown.VMDBar},
-        {"(-22.45, -55.79, -763.66)", FishingTown.RBDDepot},
-        {"(-21.64, -55.74, -763.70)", FishingTown.BBDDepot},
-        {"(207.45, 36.32, -474.97)", FishingTown.VMDDepot},
+        {"(416.86, 74.57, -364.26)", FishingTown.RBDBar}, // (416.86, 74.57, -364.26)
+        {"(417.68, 74.57, -364.23)", FishingTown.BBDBar}, // (417.68, 74.57, -364.23)
+        {"(414.58, 74.61, -364.05)", FishingTown.VMDBar}, // No problem
+        {"(211.42, 36.28, -474.88)", FishingTown.RBDDepot}, // (211.42, 36.28, -474.88)
+        {"(212.23, 36.32, -474.92)", FishingTown.BBDDepot}, // (212.23, 36.32, -474.92)
+        {"(207.45, 36.32, -474.97)", FishingTown.VMDDepot}, // No problem
         // Smalton
-        {"(-431.89, -66.74, -786.37)", FishingTown.BBSPizza},
-        {"(-432.70, -66.74, -786.38)", FishingTown.RBSPizza},
-        {"(-410.32, 76.99, -430.47)", FishingTown.VMSEatsLeft},
-        {"(-412.82, 76.99, -430.47)", FishingTown.VMSEatsRight},
-        {"(-641.40, -15.20, -719.75)", FishingTown.RBSEats},
-        {"(-642.22, -15.19, -719.72)", FishingTown.BBSEats},
+        {"(-198.02, 25.32, -497.58)", FishingTown.BBSPizza}, // (-198.02, 25.32, -497.58)
+        {"(-198.83, 25.32, -497.60)", FishingTown.RBSPizza}, // (-198.83, 25.32, -497.60)
+        {"(-410.32, 76.99, -430.47)", FishingTown.VMSEatsLeft}, // No problem
+        {"(-412.82, 76.99, -430.47)", FishingTown.VMSEatsRight}, // No problem
+        {"(-407.54, 76.87, -430.97)", FishingTown.RBSEats}, // (-407.54, 76.87, -430.97)
+        {"(-408.35, 76.87, -430.94)", FishingTown.BBSEats}, // (-408.35, 76.87, -430.94)
 
         // Signs
         {"(-426.09, 125.57, 201.99)", FishingTown.SignWelcome}, // Enter: Tunnel to Mountain Town Exit: Welcome to Fishing Town
