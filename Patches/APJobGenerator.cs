@@ -188,7 +188,7 @@ public class APJobGenerator
         }
         else
         {
-            job.distance = sPathFinder.PathLength(__instance.navigation.FindPath(__instance.navigation.currentClosestNode, job.shop.node))/1000f;
+            job.bonusDistance = sPathFinder.PathLength(__instance.navigation.FindPath(__instance.navigation.currentClosestNode, job.shop.node))/1000f;
         }
         job.price = __instance.JobPrice(job, job.bonusDistance);
 
