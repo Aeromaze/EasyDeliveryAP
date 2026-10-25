@@ -118,7 +118,6 @@ public class ArchipelagoClient
             CarPatches.trailColor = new((byte)((APData.car_trail_color>>16) & 0xFF)/255f, (byte)((APData.car_trail_color>>8) & 0xFF)/255f, (byte)((APData.car_trail_color) & 0xFF)/255f);
 
             Color trail = CarPatches.trailColor;
-            ArchipelagoConsole.LogMessage($"{APData.car_trail_color} {trail.r} {trail.g} {trail.b}");
             ArchipelagoConsole.LogMessage(outText);
         }
         else

@@ -33,7 +33,7 @@ public static class ArchipelagoConsole
         UpdateWindow();
     }
 
-    public static void LogMessage(string message)
+    public static void LogMessage(string message, bool console = true)
     {
         if (message.IsNullOrWhiteSpace()) return;
 
@@ -41,7 +41,10 @@ public static class ArchipelagoConsole
         {
             logLines.RemoveAt(0);
         }
-        logLines.Add(message);
+        if (console)
+        {
+            logLines.Add(message);
+        }
         EasyDeliveryAP.BepinLogger.LogMessage(message);
         lastUpdateTime = Time.time;
         UpdateWindow();

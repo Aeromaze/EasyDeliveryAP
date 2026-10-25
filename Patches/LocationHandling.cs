@@ -66,11 +66,13 @@ public class LocationHandling
         archipelago.SendLocations([.. locations]);
     }
 
+    /*
     [HarmonyPatch(typeof(UpgradeCheckout), "InstallUpgrade")]
     private static void Prefix(UpgradeCheckout __instance)
     {
         // ArchipelagoConsole.LogMessage($"Installing Upgrade: {__instance.item.name}");
     }
+    */
 
     // Normal goal
     [HarmonyPatch(typeof(EndingManager), "SetEnding")]
@@ -84,7 +86,9 @@ public class LocationHandling
     private static void Prefix(float __0, GenericItemCheckout __instance)
     {
         if (EasyDeliveryAP.debug)
+        {
             ArchipelagoConsole.LogMessage($"Buying {__instance.item.name} for {__0}$");
+        }
         if (Locations.BlindBags.TryGetValue($"{OtherPatches.currentScene}{__instance.item.name}", out int blindBag) && APData.blind_bags == "1")
         {
             // ArchipelagoConsole.LogMessage($"Sending Blind Bag: {blindBag}");

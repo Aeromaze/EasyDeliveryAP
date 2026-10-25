@@ -223,7 +223,7 @@ public class OtherPatches
 
             if (PositionList.TryGetValue(pos.ToString(), out PositionData posData))
             {
-                ArchipelagoConsole.LogMessage($"VendingBin: {posData.Name}");
+                ArchipelagoConsole.LogMessage($"VendingBin: {posData.Name}", false);
                 // APGUI.Notification(posData.Name);
                 if (APData.lock_towns == "0" || (APData.lock_towns == "1" && Items.NameToItem[posData.Town]?.Received > 0))
                 {
@@ -232,7 +232,7 @@ public class OtherPatches
             }
             else
             {
-                ArchipelagoConsole.LogMessage($"VendingBin: {pos}");
+                ArchipelagoConsole.LogMessage($"VendingBin: {pos}", false);
                 // APGUI.Notification(pos.ToString());
             }
         }
