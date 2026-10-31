@@ -509,6 +509,7 @@ public class Locations
     {
         // Upton
         {"(-323.89, 326.97, -278.76)", MountainTown.VMUEats}, // VMUEats
+        {"(-324.57, 328.40, -278.31)", MountainTown.VMUEats}, // buy text
         {"(-379.38, 326.80, -291.69)", MountainTown.RBUFlowers}, // RBUFlowers
         {"(-378.53, 326.80, -290.91)", MountainTown.BBUFlowers}, // BBUFlowers
         {"(-355.97, 326.82, -288.83)", MountainTown.BBUFlowersEats}, // BBUFlowersEats
@@ -523,6 +524,7 @@ public class Locations
         {"(435.85, 195.05, -84.81)", MountainTown.BBWBakeryLeft}, // BBWBakeryLeft
         {"(457.49, 195.15, -50.03)", MountainTown.RBWBarTunnel}, // RBWBarTunnel
         {"(446.47, 195.79, -43.11)", MountainTown.VMWBarTunnel}, // VMWBarTunnel
+        {"(445.89, 197.22, -42.54)", MountainTown.VMWBarTunnel}, // buy text
         {"(398.14, 195.00, -37.17)", MountainTown.BBWDepot}, // BBWDepot
         {"(279.93, 156.83, 69.52)", MountainTown.BBWBarLower}, // BBWBarLower
         {"(230.71, 156.11, 68.35)", MountainTown.RBWCafe}, // RBWCafe
@@ -531,6 +533,7 @@ public class Locations
         {"(-143.60, 146.19, 38.97)", MountainTown.RBEFuel}, // RBEFuel
         {"(-144.36, 146.22, 39.11)", MountainTown.BBEFuel}, // BBEFuel
         {"(-140.00, 146.32, 37.85)", MountainTown.VMEFuel}, // VMEFuel
+        {"(-140.48, 147.75, 38.51)", MountainTown.VMEFuel}, // buy text
         {"(-202.84, 146.27, 26.13)", MountainTown.BBEPizzaRight}, // BBEPizzaRight
         {"(-139.48, 146.15, 6.84)", MountainTown.RBEPizzaLeft}, // RBEPizzaLeft
 
@@ -559,17 +562,21 @@ public class Locations
         {"(-279.34, 277.75, 233.77)", SnowyPeaks.BBWFlowers}, // (-279.34, 277.75, 233.77)
         {"(-288.79, 277.53, 232.49)", SnowyPeaks.RBWEats}, // (-288.79, 277.53, 232.49)
         {"(-325.92, 277.63, 209.57)", SnowyPeaks.VMWFuel}, // (-325.92, 277.63, 209.57)
+        {"(233.54, 278.70, -439.31)", SnowyPeaks.VMWFuel}, // buy text
         {"(-323.14, 277.39, 212.76)", SnowyPeaks.BBWFuel}, // (-323.14, 277.39, 212.76)
         {"(-322.31, 277.42, 213.12)", SnowyPeaks.RBWFuel}, // (-322.31, 277.42, 213.12)
         // Munton
         {"(120.29, 243.89, 252.13)", SnowyPeaks.VMMAuto}, // (120.29, 243.89, 252.13)
+        {"(119.71, 245.33, 252.65)", SnowyPeaks.VMMAuto}, // buy text
         {"(111.71, 243.84, 222.27)", SnowyPeaks.RBMPawn}, // (111.71, 243.84, 222.27)
         {"(256.12, 331.05, 261.82)", SnowyPeaks.BBMMart}, // (256.12, 331.05, 261.82)
         {"(255.40, 331.02, 262.43)", SnowyPeaks.RBMMart}, // (255.40, 331.02, 262.43)
         {"(273.01, 330.99, 243.18)", SnowyPeaks.VMMBar}, // (273.01, 330.99, 243.18)
+        {"(272.82, 332.42, 243.97)", SnowyPeaks.VMMBar}, // buy text
         // Lopton
         {"(307.56, 277.49, -382.80)", SnowyPeaks.RBLBar}, // (307.56, 277.49, -382.80)
         {"(233.84, 277.28, -440.07)", SnowyPeaks.VMLDepot}, // (233.84, 277.28, -440.07)
+        {"(-326.51, 279.15, 209.77)", SnowyPeaks.VMLDepot}, // buy text
         {"(227.77, 277.29, -439.43)", SnowyPeaks.RBLDepot}, // (227.77, 277.29, -439.43)
         {"(228.23, 277.29, -438.71)", SnowyPeaks.BBLDepot}, // (228.23, 277.29, -438.71)
 
@@ -594,20 +601,25 @@ public class Locations
         {"(234.21, 92.07, 289.82)", FishingTown.RBCBar}, // (234.21, 92.07, 289.82)
         {"(233.87, 92.06, 288.78)", FishingTown.BBCBar}, // (233.87, 92.06, 288.78)
         {"(278.26, 92.31, 313.60)", FishingTown.VMCMart}, // No problem
+        {"(277.67, 93.73, 314.17)", FishingTown.VMCMart}, // buy text
         {"(288.85, 92.32, 316.12)", FishingTown.BBCMart}, // (288.85, 92.32, 316.12)
         {"(287.93, 92.33, 316.15)", FishingTown.RBCMart}, // (287.93, 92.33, 316.15)
         // Damton
         {"(416.86, 74.57, -364.26)", FishingTown.RBDBar}, // (416.86, 74.57, -364.26)
         {"(417.68, 74.57, -364.23)", FishingTown.BBDBar}, // (417.68, 74.57, -364.23)
         {"(414.58, 74.61, -364.05)", FishingTown.VMDBar}, // No problem
+        {"(413.93, 76.04, -363.56)", FishingTown.VMDBar}, // buy text
         {"(211.42, 36.28, -474.88)", FishingTown.RBDDepot}, // (211.42, 36.28, -474.88)
         {"(212.23, 36.32, -474.92)", FishingTown.BBDDepot}, // (212.23, 36.32, -474.92)
         {"(207.45, 36.32, -474.97)", FishingTown.VMDDepot}, // No problem
+        {"(206.85, 37.75, -474.41)", FishingTown.VMDDepot}, // buy text
         // Smalton
         {"(-198.02, 25.32, -497.58)", FishingTown.BBSPizza}, // (-198.02, 25.32, -497.58)
         {"(-198.83, 25.32, -497.60)", FishingTown.RBSPizza}, // (-198.83, 25.32, -497.60)
         {"(-410.32, 76.99, -430.47)", FishingTown.VMSEatsLeft}, // No problem
+        {"(-410.92, 78.42, -429.92)", FishingTown.VMSEatsLeft}, // buy text
         {"(-412.82, 76.99, -430.47)", FishingTown.VMSEatsRight}, // No problem
+        {"(-413.42, 78.42, -429.92)", FishingTown.VMSEatsRight}, // buy text
         {"(-407.54, 76.87, -430.97)", FishingTown.RBSEats}, // (-407.54, 76.87, -430.97)
         {"(-408.35, 76.87, -430.94)", FishingTown.BBSEats}, // (-408.35, 76.87, -430.94)
 

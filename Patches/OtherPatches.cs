@@ -144,6 +144,71 @@ public class OtherPatches
         APGUI.hud = __instance;
     }
 
+    private static List<string> labels = [];
+    private static bool doneLabel = false;
+
+    [HarmonyPatch(typeof(sHUD), "DrawWorldPointLabel", new Type[] {typeof(Vector3), typeof(string)})]
+    [HarmonyPatch(typeof(sHUD), "DrawWorldPointLabel", new Type[] {typeof(Vector3), typeof(string), typeof(Vector2)})]
+    private static void Prefix(Vector3 __0, ref string __1)
+    {
+        APGUI.Warning($"{__0}: {__1}");
+        string label = $"{__0}";
+        
+        if (!labels.Contains(label) && (__1 == "buy"))
+        {
+            labels.Add(label);
+            
+            foreach (var item in labels)
+            {
+                ArchipelagoConsole.LogMessage($"{{\"{item}\", }},");
+            }
+        }
+
+
+        doneLabel = false;
+        Dictionary<string, PositionData> PositionList = [];
+        Vector3 pos = __0;
+
+        if (__1 == "throw away") pos.y -= 1;
+
+        if (ScenePatches.currentScene == 1) // Mountain Town
+        {
+            PositionList = Locations.MountainTownPositions;
+        }
+        else if (ScenePatches.currentScene == 4) // Fishing Town
+        {
+            PositionList = Locations.FishingTownPositions;
+        }
+        else if (ScenePatches.currentScene == 5) // Snowy Peaks
+        {
+            PositionList = Locations.SnowyPeaksPositions;
+        }
+
+        if (ArchipelagoClient.Authenticated && PositionList.TryGetValue($"{pos}", out PositionData posData))
+        {
+            long loc = posData.LocationId;
+
+            APGUI.Warning($"{loc}");
+            if (archipelago.session.Locations.AllLocationsChecked.Contains(loc))
+            {
+                APGUI.Warning($"Done");
+                // __1 = $"*{__1}";
+                doneLabel = true;
+            }
+        }
+    }
+
+    private static readonly List<string> doneLabels = ["throw away", "buy"];
+
+    [HarmonyPatch(typeof(LocalizationDictionary), "Translate")]
+    private static void Postfix(string __0, ref string __result)
+    {
+        if (doneLabel && doneLabels.Contains(__0))
+        {
+            __result = $"*{__result}";
+        }
+    }
+
     [HarmonyPatch(typeof(InteractionPoint), "DoAction", new Type[] {})]
     [HarmonyPatch(typeof(InteractionPoint), "DoAction", new Type[] {typeof(int)})]
     private static bool Prefix(InteractionPoint __instance, ref string __state)
@@ -174,9 +239,12 @@ public class OtherPatches
             {
                 ArchipelagoConsole.LogMessage($"VendingBin: {posData.Name}", false);
                 // APGUI.Notification(posData.Name);
-                if ((APData.lock_towns == "0" || (APData.lock_towns == "1" && Items.NameToItem[posData.Town]?.Received > 0)) && !(__instance.name == "buy"))
+                if ((APData.lock_towns == "0" || (APData.lock_towns == "1" && Items.NameToItem[posData.Town]?.Received > 0)))
                 {
-                    archipelago.SendLocations([posData.LocationId]);
+                    if (!(__instance.name == "buy"))
+                    {
+                        archipelago.SendLocations([posData.LocationId]);
+                    }
                 }
                 else if (__instance.name == "throw away")
                 {
