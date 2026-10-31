@@ -146,14 +146,15 @@ public class OtherPatches
 
     private static List<string> labels = [];
     private static bool doneLabel = false;
+    private static int locLabel = -1;
 
     [HarmonyPatch(typeof(sHUD), "DrawWorldPointLabel", new Type[] {typeof(Vector3), typeof(string)})]
     [HarmonyPatch(typeof(sHUD), "DrawWorldPointLabel", new Type[] {typeof(Vector3), typeof(string), typeof(Vector2)})]
     private static void Prefix(Vector3 __0, ref string __1)
     {
+        /*
         APGUI.Warning($"{__0}: {__1}");
         string label = $"{__0}";
-        
         if (!labels.Contains(label) && (__1 == "buy"))
         {
             labels.Add(label);
@@ -163,9 +164,10 @@ public class OtherPatches
                 ArchipelagoConsole.LogMessage($"{{\"{item}\", }},");
             }
         }
-
+        */
 
         doneLabel = false;
+        locLabel = -1;
         Dictionary<string, PositionData> PositionList = [];
         Vector3 pos = __0;
 
@@ -186,10 +188,10 @@ public class OtherPatches
 
         if (ArchipelagoClient.Authenticated && PositionList.TryGetValue($"{pos}", out PositionData posData))
         {
-            long loc = posData.LocationId;
+            locLabel = posData.LocationId;
 
-            APGUI.Warning($"{loc}");
-            if (archipelago.session.Locations.AllLocationsChecked.Contains(loc))
+            APGUI.Warning($"{locLabel}");
+            if (archipelago.session.Locations.AllLocationsChecked.Contains(locLabel))
             {
                 APGUI.Warning($"Done");
                 // __1 = $"*{__1}";
@@ -207,107 +209,10 @@ public class OtherPatches
         {
             __result = $"*{__result}";
         }
-    }
-
-    [HarmonyPatch(typeof(InteractionPoint), "DoAction", new Type[] {})]
-    [HarmonyPatch(typeof(InteractionPoint), "DoAction", new Type[] {typeof(int)})]
-    private static bool Prefix(InteractionPoint __instance, ref string __state)
-    {
-        __state = __instance.name;
-        // __instance.listener.transform.GetLocalPositionAndRotation(out Vector3 pos, out Quaternion _);
-        Vector3 pos = __instance.listener.transform.position;
-
-        // Vending Machines and Bins
-        if (__instance.name == "throw away" || __instance.name == "take" || __instance.name == "buy")
+        else if (doneLabels.Contains(__0) && archipelago.session.Locations.AllLocations.Contains(locLabel))
         {
-            Dictionary<string, PositionData> PositionList = [];
-            
-            if (ScenePatches.currentScene == 1) // Mountain Town
-            {
-                PositionList = Locations.MountainTownPositions;
-            }
-            else if (ScenePatches.currentScene == 4) // Fishing Town
-            {
-                PositionList = Locations.FishingTownPositions;
-            }
-            else if (ScenePatches.currentScene == 5) // Snowy Peaks
-            {
-                PositionList = Locations.SnowyPeaksPositions;
-            }
-
-            if (PositionList.TryGetValue(pos.ToString(), out PositionData posData))
-            {
-                ArchipelagoConsole.LogMessage($"VendingBin: {posData.Name}", false);
-                // APGUI.Notification(posData.Name);
-                if ((APData.lock_towns == "0" || (APData.lock_towns == "1" && Items.NameToItem[posData.Town]?.Received > 0)))
-                {
-                    if (!(__instance.name == "buy"))
-                    {
-                        archipelago.SendLocations([posData.LocationId]);
-                    }
-                }
-                else if (__instance.name == "throw away")
-                {
-                    APGUI.Inform("Full");
-                    return false;
-                }
-                else if (__instance.name == "buy")
-                {
-                    APGUI.Inform("Out of order");
-                    return false;
-                }
-            }
-            else
-            {
-                ArchipelagoConsole.LogMessage($"VendingBin: {pos}", false);
-                // APGUI.Notification(pos.ToString());
-            }
+            __result = $"{__result} {ArchipelagoClient.scoutedItemInfo[locLabel].ItemDisplayName}";
         }
-        if (ScenePatches.currentScene == 6)
-        {
-            if (APData.require_handheld_radio == "1" && __instance.name == "enter" && !ItemHandling.radio.Contains(17))
-            {
-                APGUI.Inform("Cannot enter without a Handheld Radio");
-                return false;
-            }
-        }
-        if (__instance.name == "Snow Tires" && Items.Tires.Received == 0)
-        {
-            APGUI.Inform("Snow Tires can't\nbe bought yet");
-            return false;
-        }
-        else if (__instance.name == "Bumper Bar" && Items.Bumper.Received == 0)
-        {
-            APGUI.Inform("Bumper Bar can't\nbe bought yet");
-            return false;
-        }
-        else if (__instance.name == "Ice Chains" && Items.Chains.Received == 0)
-        {
-            APGUI.Inform("Ice Chains can't\nbe bought yet");
-            return false;
-        }
-        else if (__instance.listener.name == "Lighter" && Items.Lighter.Received == 0)
-        {
-            APGUI.Inform("Lighter can't\nbe bought yet");
-            return false;
-        }
-        else if (ScenePatches.currentScene == 4 && __instance.listener.name == "StationEntrance" && (APData.radio_towers == "1" || APData.radio_towers == "3") && Items.RadioTower.Received < 3)
-        {
-            APGUI.Inform("This door lacks radio signal");
-            return false;
-        }
-        else if (__instance.listener.name == "FishingRod" && Items.FishingRod.Received == 0)
-        {
-            //APGUI.Inform("Fishing Rod can't\nbe bought yet");
-            //return false;
-        }
-        else if (__instance.listener.name == "CookingPot" && Items.CookingPot.Received == 0)
-        {
-            //APGUI.Inform("Cooking Pot can't\nbe bought yet");
-            //return false;
-        }
-        //__instance.listener.SetActive(false);
-        return true;
     }
 
     [HarmonyPatch(typeof(sSaveSystem), "OnApplicationQuit")]

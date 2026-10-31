@@ -121,6 +121,107 @@ public class LocationHandling
 
     [HarmonyPatch(typeof(InteractionPoint), "DoAction", new Type[] {})]
     [HarmonyPatch(typeof(InteractionPoint), "DoAction", new Type[] {typeof(int)})]
+    private static bool Prefix(InteractionPoint __instance, ref string __state)
+    {
+        __state = __instance.name;
+        // __instance.listener.transform.GetLocalPositionAndRotation(out Vector3 pos, out Quaternion _);
+        Vector3 pos = __instance.listener.transform.position;
+
+        // Vending Machines and Bins
+        if (__instance.name == "throw away" || __instance.name == "take" || __instance.name == "buy")
+        {
+            Dictionary<string, PositionData> PositionList = [];
+            
+            if (ScenePatches.currentScene == 1) // Mountain Town
+            {
+                PositionList = Locations.MountainTownPositions;
+            }
+            else if (ScenePatches.currentScene == 4) // Fishing Town
+            {
+                PositionList = Locations.FishingTownPositions;
+            }
+            else if (ScenePatches.currentScene == 5) // Snowy Peaks
+            {
+                PositionList = Locations.SnowyPeaksPositions;
+            }
+
+            if (PositionList.TryGetValue(pos.ToString(), out PositionData posData))
+            {
+                ArchipelagoConsole.LogMessage($"VendingBin: {posData.Name}", false);
+                // APGUI.Notification(posData.Name);
+                if ((APData.lock_towns == "0" || (APData.lock_towns == "1" && Items.NameToItem[posData.Town]?.Received > 0)))
+                {
+                    if (!(__instance.name == "buy"))
+                    {
+                        archipelago.SendLocations([posData.LocationId]);
+                    }
+                }
+                else if (__instance.name == "throw away")
+                {
+                    APGUI.Inform("Full");
+                    return false;
+                }
+                else if (__instance.name == "buy")
+                {
+                    APGUI.Inform("Out of order");
+                    return false;
+                }
+            }
+            else
+            {
+                ArchipelagoConsole.LogMessage($"VendingBin: {pos}", false);
+                // APGUI.Notification(pos.ToString());
+            }
+        }
+        if (ScenePatches.currentScene == 6)
+        {
+            if (APData.require_handheld_radio == "1" && __instance.name == "enter" && !ItemHandling.radio.Contains(17))
+            {
+                APGUI.Inform("Cannot enter without a Handheld Radio");
+                return false;
+            }
+        }
+        if (__instance.name == "Snow Tires" && Items.Tires.Received == 0)
+        {
+            APGUI.Inform("Snow Tires can't\nbe bought yet");
+            return false;
+        }
+        else if (__instance.name == "Bumper Bar" && Items.Bumper.Received == 0)
+        {
+            APGUI.Inform("Bumper Bar can't\nbe bought yet");
+            return false;
+        }
+        else if (__instance.name == "Ice Chains" && Items.Chains.Received == 0)
+        {
+            APGUI.Inform("Ice Chains can't\nbe bought yet");
+            return false;
+        }
+        else if (__instance.listener.name == "Lighter" && Items.Lighter.Received == 0)
+        {
+            APGUI.Inform("Lighter can't\nbe bought yet");
+            return false;
+        }
+        else if (ScenePatches.currentScene == 4 && __instance.listener.name == "StationEntrance" && (APData.radio_towers == "1" || APData.radio_towers == "3") && Items.RadioTower.Received < 3)
+        {
+            APGUI.Inform("This door lacks radio signal");
+            return false;
+        }
+        else if (__instance.listener.name == "FishingRod" && Items.FishingRod.Received == 0)
+        {
+            //APGUI.Inform("Fishing Rod can't\nbe bought yet");
+            //return false;
+        }
+        else if (__instance.listener.name == "CookingPot" && Items.CookingPot.Received == 0)
+        {
+            //APGUI.Inform("Cooking Pot can't\nbe bought yet");
+            //return false;
+        }
+        //__instance.listener.SetActive(false);
+        return true;
+    }
+
+    [HarmonyPatch(typeof(InteractionPoint), "DoAction", new Type[] {})]
+    [HarmonyPatch(typeof(InteractionPoint), "DoAction", new Type[] {typeof(int)})]
     private static void Postfix(InteractionPoint __instance, string __state)
     {
         if (__state == "turn on")

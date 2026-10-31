@@ -24,7 +24,7 @@ public class ArchipelagoClient
     public static bool Authenticated;
     private bool attemptingConnection;
 
-    private static Dictionary<long, ScoutedItemInfo> scoutedItemInfo = [];
+    public static Dictionary<long, ScoutedItemInfo> scoutedItemInfo = [];
 
     public static ArchipelagoData ServerData = new();
     public DeathLinkHandler DeathLinkHandler;
