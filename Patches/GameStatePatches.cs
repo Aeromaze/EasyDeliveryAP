@@ -3,6 +3,7 @@ using HarmonyLib;
 
 namespace EasyDeliveryAP;
 
+[HarmonyPatch]
 public class GameStatePatches
 {
     private static readonly ArchipelagoClient archipelago = EasyDeliveryAP.ArchipelagoClient;

@@ -4,6 +4,7 @@ using HarmonyLib;
 
 namespace EasyDeliveryAP;
 
+[HarmonyPatch]
 public class JobPatches
 {
     private static readonly ArchipelagoClient archipelago = EasyDeliveryAP.ArchipelagoClient;
