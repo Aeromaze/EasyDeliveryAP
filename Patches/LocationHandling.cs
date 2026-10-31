@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Archipelago.MultiClient.Net;
@@ -89,7 +90,7 @@ public class LocationHandling
         {
             ArchipelagoConsole.LogMessage($"Buying {__instance.item.name} for {__0}$");
         }
-        if (Locations.BlindBags.TryGetValue($"{OtherPatches.currentScene}{__instance.item.name}", out int blindBag) && APData.blind_bags == "1")
+        if (Locations.BlindBags.TryGetValue($"{ScenePatches.currentScene}{__instance.item.name}", out int blindBag) && APData.blind_bags == "1")
         {
             // ArchipelagoConsole.LogMessage($"Sending Blind Bag: {blindBag}");
             archipelago.SendLocation(blindBag);
@@ -118,6 +119,42 @@ public class LocationHandling
         if (snowcat) archipelago.SendLocation(__result + 40);
     }
 
+    [HarmonyPatch(typeof(InteractionPoint), "DoAction", new Type[] {})]
+    [HarmonyPatch(typeof(InteractionPoint), "DoAction", new Type[] {typeof(int)})]
+    private static void Postfix(InteractionPoint __instance, string __state)
+    {
+        if (__state == "turn on")
+        {
+            if (ScenePatches.currentScene == 1)
+            {
+                if (OtherPatches.radio1.activeSelf)
+                {
+                    //radio Upton
+                    archipelago.SendLocation(60);
+                    //ArchipelagoConsole.LogMessage("Radio 1");
+                }
+                if (OtherPatches.radio2.activeSelf)
+                {
+                    //radio Easton
+                    archipelago.SendLocation(61);
+                    //ArchipelagoConsole.LogMessage("Radio 2");
+                }
+            }
+            else if (ScenePatches.currentScene == 5)
+            {
+                //radio Snowy Peaks
+                archipelago.SendLocation(62);
+                //ArchipelagoConsole.LogMessage("Radio 3");
+            }
+            else if (ScenePatches.currentScene == 4)
+            {
+                //radio Fishing Town
+                archipelago.SendLocation(63);
+                //ArchipelagoConsole.LogMessage("Radio 4");
+            }
+        }
+    }
+
     [HarmonyPatch(typeof(RoadSign), "Update")]
     private static void Postfix(RoadSign __instance)
     {
@@ -125,7 +162,7 @@ public class LocationHandling
         if (ArchipelagoClient.Authenticated && !(vector.magnitude > 30f) && !(Vector3.Dot(__instance.cam.transform.forward, vector.normalized) > 0f))
         {
             Dictionary<string, PositionData> positions = [];
-            switch (OtherPatches.currentScene)
+            switch (ScenePatches.currentScene)
             {
                 case 1:
                     positions = Locations.MountainTownPositions;

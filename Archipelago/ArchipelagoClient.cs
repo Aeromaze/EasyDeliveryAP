@@ -111,7 +111,7 @@ public class ArchipelagoClient
 
             scoutedItemInfo = session.Locations.ScoutLocationsAsync([.. session.Locations.AllLocations]).Result;
             APData.SetSlotSettings(ServerData.slotData);
-            if (ScenePatches.currentScene != "TitleScreen") APData.SaveConnectionOrConnect();
+            if (ScenePatches.thisScene != "TitleScreen") APData.SaveConnectionOrConnect();
 
             TrackerApp.TotalDeliveries();
 
@@ -148,7 +148,7 @@ public class ArchipelagoClient
 
         ServerData.Index = 0;
         ItemHandling.pendingItemIds = [];
-        TrackerApp.pages = [0, 1];
+        // TrackerApp.pages = [0, 1];
         foreach (ItemData itemData in Items.APIdToItem.Values)
         {
             itemData.Received = 0;
@@ -320,7 +320,7 @@ public class ArchipelagoClient
                 break;
             case 20:
                 APGUI.Notification($"Received {Items.APIdToItem[(int)receivedItem.ItemId].Name}", APGUI.radio);
-                if (Items.RadioTower.Received > 2 && OtherPatches.currentScene == 4)
+                if (Items.RadioTower.Received > 2 && ScenePatches.currentScene == 4)
                 {
                     OtherPatches.RemoveGate();
                 }

@@ -91,9 +91,9 @@ public class TrackerApp : MonoBehaviour
         }
         else
         {
-            if ((OtherPatches.currentScene == 5 && (!APLogic.HasSnowTires() ||
+            if ((ScenePatches.currentScene == 5 && (!APLogic.HasSnowTires() ||
                 (APData.lock_towns != "1" || !(Items.Winton.Received > 0 || Items.Munton.Received > 0))))
-                || (OtherPatches.currentScene == 4 && (!APLogic.CanReachFishingTown() ||
+                || (ScenePatches.currentScene == 4 && (!APLogic.CanReachFishingTown() ||
                 (APData.lock_towns != "1" || !(Items.Clifton.Received > 0 || Items.Damton.Received > 0 || Items.Smalton.Received > 0))))
                 )
             {

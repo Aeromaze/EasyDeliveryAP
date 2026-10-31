@@ -19,6 +19,8 @@ public class APJobGenerator
             return false;
         }
 
+        // __instance.jobCount = 1;
+
         // Find active local towns
         List<Transform> towns = [];
         for (int i = 0; i < __instance.navigation.towns.Length; i++)
@@ -113,7 +115,7 @@ public class APJobGenerator
                 {
                     break;
                 }
-                if (!(destinationMapNode == shopInfo.node) && (__instance.sameTownDeliveries || !(destinationMapNode.town == shopInfo.node.town)) && towns.Contains(destinationMapNode.town) && !(destinationMapNode.town != endTown))
+                if (!(destinationMapNode == shopInfo.node) && (true || __instance.sameTownDeliveries || !(destinationMapNode.town == shopInfo.node.town)) && towns.Contains(destinationMapNode.town) && !(destinationMapNode.town != endTown))
                 {
                     destinationIndex = num6;
                     ArchipelagoConsole.LogMessage(destinationMapNode.name);
@@ -126,8 +128,8 @@ public class APJobGenerator
             tunnelNode = __instance.tunnelNodes[UnityEngine.Random.Range(0, __instance.tunnelNodes.Length)];
             string tunnel = tunnelNode.node.name;
             if (!__instance.navigation.nodes.Contains(tunnelNode.node) || 
-                    ((tunnel == "Snowy Peaks" || ScenePatches.currentScene == "Snowy Peaks") && !APLogic.CanReachSnowyPeaks()) || 
-                    ((tunnel == "Fishing Town" || ScenePatches.currentScene == "Fishing Town") && (!APLogic.CanReachFishingTown() || !APLogic.FTGateIsOpen())))
+                    ((tunnel == "Snowy Peaks" || ScenePatches.thisScene == "Snowy Peaks") && !APLogic.CanReachSnowyPeaks()) || 
+                    ((tunnel == "Fishing Town" || ScenePatches.thisScene == "Fishing Town") && (!APLogic.CanReachFishingTown() || !APLogic.FTGateIsOpen())))
             {
                 __result = null;
                 return false;

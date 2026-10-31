@@ -15,57 +15,6 @@ public class OtherPatches
 {
     private static readonly ArchipelagoClient archipelago = EasyDeliveryAP.ArchipelagoClient;
 
-    public static int currentScene;
-
-    // Enable drinking energy drinks without GPS
-    [HarmonyPatch(typeof(EnergyDrink), "ButtonPressed")]
-    private static void Prefix(ref EnergyDrink __instance, ref bool __state)
-    {
-        if (!Items.GPS.Enabled && !__instance.upgrades.hadGPS)
-        {
-            __instance.upgrades.hasGPS = true;
-            __state = true;
-        }
-    }
-
-    [HarmonyPatch(typeof(EnergyDrink), "ButtonPressed")]
-    private static void Postfix(ref EnergyDrink __instance, ref bool __state)
-    {
-        if (__state)
-        {
-            __instance.upgrades.hasGPS = false;
-            __state = false;
-        }
-    }
-    
-    // Adding received items to inventory on a new save
-    [HarmonyPatch(typeof(SceneTransition), "LoadScene", new Type[] {typeof(int)})]
-    private static bool Prefix(int __0)
-    {
-        currentScene = __0;
-        if (__0 == 3)
-        {
-            ArchipelagoConsole.LogMessage("Starting new save");
-            ItemHandling.pendingItemIds = [];
-            foreach (ItemData item in Items.APIdToItem.Values)
-            {
-                switch (item.Id)
-                {
-                    case -1:
-                        break;
-                    case >= 0 and <= 17:
-                        for (int i = item.Received; i > 0; i--)
-                        {
-                            ItemHandling.pendingItemIds.Add(item.Id);
-                        }
-                        break;
-                }
-            }
-            return true;
-        }
-        return true;
-    }
-
     public static GameObject upgradedBasedProgression;
     public static GameObject shopInteriors;
     public static GameObject nodes;
@@ -84,7 +33,7 @@ public class OtherPatches
     [HarmonyPatch(typeof(SceneTransition), "fadeIn")]
     private static void Prefix(SceneTransition __instance)
     {
-        if (currentScene == 4 || currentScene == 5)
+        if (ScenePatches.currentScene == 4 || ScenePatches.currentScene == 5)
         {
             shopInteriors = GameObject.Find("StoreInteriors");
             storeInteriors = [];
@@ -93,7 +42,7 @@ public class OtherPatches
                 storeInteriors.TryAdd(transform.name, transform);
             }
         }
-        else if (currentScene == 1)
+        else if (ScenePatches.currentScene == 1)
         {
             shopInteriors = GameObject.Find("Store Interiors");
             storeInteriors = [];
@@ -118,7 +67,7 @@ public class OtherPatches
             }
         }
 
-        if (currentScene == 1 || currentScene == 4 || currentScene == 5)
+        if (ScenePatches.currentScene == 1 || ScenePatches.currentScene == 4 || ScenePatches.currentScene == 5)
         {
             nodes = GameObject.Find("NavigationNodes");
             Nodes = [];
@@ -134,7 +83,7 @@ public class OtherPatches
             }
             guy = GameObject.FindObjectOfType<sCharacterController>();
         }
-        else if (currentScene == 6)
+        else if (ScenePatches.currentScene == 6)
         {
             guy = GameObject.FindObjectOfType<sCharacterController>();
         }
@@ -142,7 +91,7 @@ public class OtherPatches
         // Remove Fishing Town Gate with 3 "Radio Tower" items
         RemoveGate();
 
-        if (currentScene == 1 && EasyDeliveryAP.debug)
+        if (ScenePatches.currentScene == 1 && EasyDeliveryAP.debug)
         {
             foreach (string node in MapNodes.Keys)
             {
@@ -177,7 +126,7 @@ public class OtherPatches
 
     public static void RemoveGate()
     {
-        if (currentScene == 4 && (APData.radio_towers == "1" || APData.radio_towers == "3") && Items.RadioTower.Received >= 3)
+        if (ScenePatches.currentScene == 4 && (APData.radio_towers == "1" || APData.radio_towers == "3") && Items.RadioTower.Received >= 3)
         {
             GameObject.Find("ResetContainer")?.SetActive(false);
             GameObject.Find("ResetVolumes")?.SetActive(false);
@@ -186,7 +135,7 @@ public class OtherPatches
             // GameObject.Find("Destroy Gate Check").SetActive(false);
         }
     }
-    
+
 
     // Get an instance of sHUD for ingame messages
     [HarmonyPatch(typeof(sHUD), "Start")]
@@ -204,19 +153,19 @@ public class OtherPatches
         Vector3 pos = __instance.listener.transform.position;
 
         // Vending Machines and Bins
-        if (__instance.name == "throw away" || __instance.name == "take")
+        if (__instance.name == "throw away" || __instance.name == "take" || __instance.name == "buy")
         {
             Dictionary<string, PositionData> PositionList = [];
             
-            if (currentScene == 1) // Mountain Town
+            if (ScenePatches.currentScene == 1) // Mountain Town
             {
                 PositionList = Locations.MountainTownPositions;
             }
-            else if (currentScene == 4) // Fishing Town
+            else if (ScenePatches.currentScene == 4) // Fishing Town
             {
                 PositionList = Locations.FishingTownPositions;
             }
-            else if (currentScene == 5) // Snowy Peaks
+            else if (ScenePatches.currentScene == 5) // Snowy Peaks
             {
                 PositionList = Locations.SnowyPeaksPositions;
             }
@@ -225,9 +174,19 @@ public class OtherPatches
             {
                 ArchipelagoConsole.LogMessage($"VendingBin: {posData.Name}", false);
                 // APGUI.Notification(posData.Name);
-                if (APData.lock_towns == "0" || (APData.lock_towns == "1" && Items.NameToItem[posData.Town]?.Received > 0))
+                if ((APData.lock_towns == "0" || (APData.lock_towns == "1" && Items.NameToItem[posData.Town]?.Received > 0)) && !(__instance.name == "buy"))
                 {
                     archipelago.SendLocations([posData.LocationId]);
+                }
+                else if (__instance.name == "throw away")
+                {
+                    APGUI.Inform("Full");
+                    return false;
+                }
+                else if (__instance.name == "buy")
+                {
+                    APGUI.Inform("Out of order");
+                    return false;
                 }
             }
             else
@@ -236,7 +195,7 @@ public class OtherPatches
                 // APGUI.Notification(pos.ToString());
             }
         }
-        if (currentScene == 6)
+        if (ScenePatches.currentScene == 6)
         {
             if (APData.require_handheld_radio == "1" && __instance.name == "enter" && !ItemHandling.radio.Contains(17))
             {
@@ -264,7 +223,7 @@ public class OtherPatches
             APGUI.Inform("Lighter can't\nbe bought yet");
             return false;
         }
-        else if (currentScene == 4 && __instance.listener.name == "StationEntrance" && (APData.radio_towers == "1" || APData.radio_towers == "3") && Items.RadioTower.Received < 3)
+        else if (ScenePatches.currentScene == 4 && __instance.listener.name == "StationEntrance" && (APData.radio_towers == "1" || APData.radio_towers == "3") && Items.RadioTower.Received < 3)
         {
             APGUI.Inform("This door lacks radio signal");
             return false;
@@ -283,169 +242,9 @@ public class OtherPatches
         return true;
     }
 
-    [HarmonyPatch(typeof(InteractionPoint), "DoAction", new Type[] {})]
-    [HarmonyPatch(typeof(InteractionPoint), "DoAction", new Type[] {typeof(int)})]
-    private static void Postfix(InteractionPoint __instance, string __state)
-    {
-        if (__state == "turn on")
-        {
-            if (currentScene == 1)
-            {
-                if (radio1.activeSelf)
-                {
-                    //radio Upton
-                    archipelago.SendLocation(60);
-                    //ArchipelagoConsole.LogMessage("Radio 1");
-                }
-                if (radio2.activeSelf)
-                {
-                    //radio Easton
-                    archipelago.SendLocation(61);
-                    //ArchipelagoConsole.LogMessage("Radio 2");
-                }
-            }
-            else if (currentScene == 5)
-            {
-                //radio Snowy Peaks
-                archipelago.SendLocation(62);
-                //ArchipelagoConsole.LogMessage("Radio 3");
-            }
-            else if (currentScene == 4)
-            {
-                //radio Fishing Town
-                archipelago.SendLocation(63);
-                //ArchipelagoConsole.LogMessage("Radio 4");
-            }
-        }
-    }
-
     [HarmonyPatch(typeof(sSaveSystem), "OnApplicationQuit")]
     private static void Postfix()
     {
         archipelago.Disconnect();
-    }
-
-    // Make sure Snow Tires can be bought
-    [HarmonyPatch(typeof(sTeleporter), "Teleport")]
-    private static void Prefix()
-    {
-        if (currentScene == 5)
-        {
-            try
-            {
-                storeInteriors["tableAndUpgrade"].gameObject.SetActive(true);
-            }
-            catch { }
-        }
-    }
-
-    // Show how many checks a delivery would send
-    [HarmonyPatch(typeof(jobBoard), "DrawJobList")]
-    private static void Postfix(jobBoard __instance)
-    {
-        if (!ArchipelagoClient.Authenticated) return;
-        var uncheckedLocations = archipelago.session.Locations.AllMissingLocations;
-
-        List<jobBoard.Job> jobs = __instance.jobs;
-        for (int i = jobs.Count - 1; i >=0; i--)
-        {
-            jobBoard.Job job = jobs[i];
-            int checks = 0;
-            bool hinted = false;
-
-            // Delivery locations
-            if (job.isIntercity)
-            {
-                string location;
-                if (job.to.name == "Mountain Town")
-                {
-                    Locations.MountainTownIndex.TryGetValue(job.destinationIndex, out NodeData node);
-                    location = node.Town;
-                }
-                else if (job.to.name == "Snowy Peaks")
-                {
-                    Locations.SnowyPeaksIndex.TryGetValue(job.destinationIndex, out NodeData node);
-                    location = node.Town;
-                }
-                else if (job.to.name == "Fishing Town")
-                {
-                    Locations.FishingTownIndex.TryGetValue(job.destinationIndex, out NodeData node);
-                    location = node.Town;
-                }
-                else
-                {
-                    location = "";
-                }
-
-                __instance.R.put(location, 25f, (24 + (6f + (i * 4)) * 8));
-
-                if (Locations.Deliveries.TryGetValue($"{job.from.town.name} to {location} Delivery", out int deliveryId))                
-                {
-                    if (uncheckedLocations.Contains(deliveryId) && (APData.perfect_deliveries == "0" || APData.perfect_deliveries == "1"))
-                    {
-                        checks += 1;
-                        hinted = APData.IsHinted(deliveryId, hinted);
-                    }
-                    if (uncheckedLocations.Contains(deliveryId + 10000) && (APData.perfect_deliveries == "1" || APData.perfect_deliveries == "2"))
-                    {
-                        checks += 1;
-                        hinted = APData.IsHinted(deliveryId + 10000, hinted);
-                    }
-                }
-                //else ArchipelagoConsole.LogMessage($"{job.from.town.name} to {location} Delivery");
-                
-            }
-            else
-            {
-                if (Locations.Deliveries.TryGetValue($"{job.from.town.name} to {job.to.town.name} Delivery", out int deliveryId))
-                {
-                    if (uncheckedLocations.Contains(deliveryId) && (APData.perfect_deliveries == "0" || APData.perfect_deliveries == "1"))
-                    {
-                        checks += 1;
-                        hinted = APData.IsHinted(deliveryId, hinted);
-                    }
-                    if (uncheckedLocations.Contains(deliveryId + 10000) && (APData.perfect_deliveries == "1" || APData.perfect_deliveries == "2"))
-                    {
-                        checks += 1;
-                        hinted = APData.IsHinted(deliveryId + 10000, hinted);
-                    }
-                }
-                //else ArchipelagoConsole.LogMessage($"{job.from.town.name} to {job.to.town.name} Delivery");
-
-            }
-            if (Locations.Deliveries.TryGetValue($"{job.startingCityName} to {job.destCityName} Delivery", out int deliveryIdCity))                
-            {
-                if (uncheckedLocations.Contains(deliveryIdCity) && (APData.perfect_deliveries == "0" || APData.perfect_deliveries == "1"))
-                {
-                    checks += 1;
-                    hinted = APData.IsHinted(deliveryIdCity, hinted);
-                }
-                if (uncheckedLocations.Contains(deliveryIdCity + 10000) && (APData.perfect_deliveries == "1" || APData.perfect_deliveries == "2"))
-                {
-                    checks += 1;
-                    hinted = APData.IsHinted(deliveryIdCity + 10000, hinted);
-                }
-            }
-
-            // Payload locations
-            if (Locations.PayloadDeliveries.TryGetValue(job.payloadPrefab.name, out int payload))
-            {
-                if (uncheckedLocations.Contains(payload) && APData.payload_checks == "1")
-                {
-                    checks += 1;
-                    hinted = APData.IsHinted(payload, hinted);
-                }
-            }
-            //else ArchipelagoConsole.LogMessage($"{job.payloadPrefab.name} is not registered");
-
-            if (checks != 0)
-            {
-                if (hinted)
-                {
-                    __instance.R.fput("!", 120f, (24 + (6f + (i * 4)) * 8));
-                }
-                __instance.R.fput(checks.ToString(), 128f, (24 + (6f + (i * 4)) * 8));
-            }
-        }
     }
 }

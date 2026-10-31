@@ -58,7 +58,7 @@ public class CarPatches
                 {
                     shrink = false;
                     shrinkTimer += 1800;
-                    OtherPatches.guy.transform.localScale = new(0.75f ,0.75f ,0.75f);
+                    OtherPatches.guy?.transform.localScale = new(0.75f ,0.75f ,0.75f);
                 }
             }
             else if (shrinkTimer > 0)
@@ -74,7 +74,7 @@ public class CarPatches
                 __instance.maxSpeed += 100f/150;
                 __instance.maxSpeedScale += 1f/150;
                 __instance.drivePowerScale += 1f/150;
-                OtherPatches.guy.transform.localScale = new(1.13f ,1.13f ,1.13f);
+                OtherPatches.guy?.transform.localScale = new(1.13f ,1.13f ,1.13f);
             }
         }
         if (PauseSystem.paused && debugTP && !__instance.guyActive)
@@ -85,15 +85,15 @@ public class CarPatches
         if (PauseSystem.paused && teleport && !__instance.guyActive)
         {
             // Teleports
-            if (OtherPatches.currentScene == 1)
+            if (ScenePatches.currentScene == 1)
             {
                 __instance.transform.SetPositionAndRotation(MountainTownTP, MountainTownQt);
             }
-            if (OtherPatches.currentScene == 5)
+            if (ScenePatches.currentScene == 5)
             {
                 __instance.transform.SetPositionAndRotation(SnowyPeaksTP, SnowyPeaksQt);
             }
-            else if (OtherPatches.currentScene == 4)
+            else if (ScenePatches.currentScene == 4)
             {
                 __instance.transform.SetPositionAndRotation(FishingTownTP, FishingTownQt);
             }

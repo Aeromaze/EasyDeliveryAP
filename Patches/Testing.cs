@@ -172,7 +172,7 @@ public class Testing
             ArchipelagoConsole.LogMessage($"Teleporter: {__instance.name}\nLighter: {Items.Lighter.Received}");
         }
 
-        switch (OtherPatches.currentScene)
+        switch (ScenePatches.currentScene)
         {
             case 5: // Snowy Peaks
                 if (__instance.name == "StoreShop AutoShop" && Items.Tires.Enabled)

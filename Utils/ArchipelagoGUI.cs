@@ -24,23 +24,23 @@ public class APGUI
     public static Vector2 packageReceive = new(48f, 48f);
     public static Vector2 warningTriangle = new(64f, 32f);
 
-    public static void Notification(string text)
+    public static void Notification(string text, float delay = 5)
     {
-        Notification(text, mailIcon);
+        Notification(text, mailIcon, delay);
     }
 
-    public static void Notification(string text, Vector2 icon)
+    public static void Notification(string text, Vector2 icon, float delay = 5)
     {
         if ((bool)hud)
         {
             hud.audioSource.PlayOneShot(hud.notificationSFX, 1f);
-            new sHUD.NotificationParticles(hud, text, 5, icon);
+            new sHUD.NotificationParticles(hud, text, delay, icon);
         }
     }
 
-    public static void Inform(string text)
+    public static void Inform(string text, float delay = 5)
     {
-        hud?.DisplayText(text, 5);
+        hud?.DisplayText(text, delay);
     }
 
     public static void Warning(string text)

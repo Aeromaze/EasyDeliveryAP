@@ -16,7 +16,7 @@ public class EasyDeliveryAP : BaseUnityPlugin
 {
     public const string PluginGUID = "com.aeromaze.easyDeliveryAP";
     public const string PluginName = "EasyDeliveryAP";
-    public const string PluginVersion = "0.3.0";
+    public const string PluginVersion = "0.3.1";
 
     public const string ModDisplayInfo = $"{PluginName} v{PluginVersion}";
     private const string APDisplayInfo = $"Archipelago v{ArchipelagoClient.APVersion}";
@@ -37,7 +37,7 @@ public class EasyDeliveryAP : BaseUnityPlugin
     public static Vector2 trackerPosition;
 
     // Debug vars
-    public static bool debug = false;
+    public static bool debug = true;
     string itemId = "";
     string obj = "";
     bool upton = true;
@@ -277,7 +277,7 @@ public class EasyDeliveryAP : BaseUnityPlugin
             {
                 CarPatches.accelTrap = true;
             }
-            if (GUI.Button(new Rect(16, 393, 100, 20), "Upton") && OtherPatches.currentScene == 1)
+            if (GUI.Button(new Rect(16, 393, 100, 20), "Upton") && ScenePatches.currentScene == 1)
             {
                 OtherPatches.Nodes["Upton"].gameObject.SetActive(upton);
                 upton = !upton;

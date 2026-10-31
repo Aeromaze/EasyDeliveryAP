@@ -103,6 +103,8 @@ public class APData
         }
 
 
+        TrackerApp.pages = [0, 1];
+        
         if (intercity_deliveries == "2" || intercity_deliveries == "3")
         {
             TrackerApp.pages.Add(2);
