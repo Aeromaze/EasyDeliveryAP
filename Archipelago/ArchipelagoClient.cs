@@ -418,7 +418,7 @@ public class ArchipelagoClient
                 }
             }
             
-            if (ScenePatches.thisScene != "TitleScreen" && bouncedPacket.Tags.Contains("EasyCoBounce") && EasyDeliveryAP.configShowPlayers.Value)// && bouncedPacket.Data["source"].ToString() != session.ConnectionInfo.Uuid)
+            if (ScenePatches.thisScene != "TitleScreen" && bouncedPacket.Tags.Contains("EasyCoBounce") && EasyDeliveryAP.configShowPlayers.Value && bouncedPacket.Data["source"].ToString() != session.ConnectionInfo.Uuid)
             {
                 ReceivePosition(bouncedPacket);
             }

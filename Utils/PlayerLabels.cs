@@ -13,7 +13,6 @@ public class PlayerLabels
     public static Dictionary<string, PlayerPosition> playerPositions = [];
 
     private static float lastTime;
-    private static float passedTime = 0;
     private static Vector3 lastPos;
     
     public static void RenderPlayers()
@@ -36,13 +35,12 @@ public class PlayerLabels
     {
         if (EasyDeliveryAP.configShowPlayers.Value)
         {
-            if (passedTime >= lastTime + 5 || (passedTime >= lastTime + 1 && !lastPos.Equals(position)))
+            if (Time.fixedUnscaledTime >= lastTime + 5 || (Time.fixedUnscaledTime >= lastTime + 1 && !lastPos.Equals(position)))
             {
                 archipelago.SendPosition(position, ScenePatches.currentScene);
                 lastPos = position;
-                lastTime = passedTime;
+                lastTime = Time.fixedUnscaledTime;
             }
-            passedTime += Time.deltaTime;
         }
     }
 }
