@@ -172,4 +172,26 @@ public class Items
         {"Damton", Damton},
         {"Smalton", Smalton}
     };
+
+    public static Dictionary<string, string> TrapLink = new()
+    {
+        {"Banana Peel Trap", "IceTrap"},
+        {"Chaos Control Trap", "FrozenSteeringWheelTrap"},
+        {"Controller Drift Trap", "FrozenSteeringWheelTrap"},
+        {"Fast Trap", "ForcedAccelerationTrap"},
+        {"Freeze Trap", "IceTrap"},
+        {"Frost Trap", "IceTrap"},
+        {"Frozen Trap", "IceTrap"},
+        {"Gas Trap", "ForcedAccelerationTrap"},
+        {"Ice Floor Trap", "IceTrap"},
+        {"Ice Trap", "IceTrap"},
+        // {"Instant Death Trap", "DeathTrap"}, // make sure to check if deathlink is enabled for this
+        // {"W I D E Trap", "WideTrap"},
+        {"Shrink Trap", "ShrinkTrap"},
+        {"Slip Trap", "IceTrap"},
+        {"Speed Up Trap", "ForcedAccelerationTrap"},
+        {"Tiny Trap", "ShrinkTrap"},
+        {"Forced Acceleration Trap", "ForcedAccelerationTrap"},
+        {"Frozen Steering Wheel Trap", "FrozenSteeringWheelTrap"}
+    };
 }

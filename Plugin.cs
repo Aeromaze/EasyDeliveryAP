@@ -24,12 +24,14 @@ public class EasyDeliveryAP : BaseUnityPlugin
     public static ArchipelagoClient ArchipelagoClient;
 
     public static bool deathLink = false;
+    public static bool trapLink = false;
     internal static ModdedSaveSystem<APSaveFile> save = new("Archipelago");
 
     // Configs
     public static ConfigEntry<bool> configConsole;
     public static ConfigEntry<bool> configDeathLink;
     public static ConfigEntry<bool> configAutoConnect;
+    public static ConfigEntry<bool> configTrapLink;
     public static ConfigEntry<bool> configDebug;
 
 
@@ -37,7 +39,7 @@ public class EasyDeliveryAP : BaseUnityPlugin
     public static Vector2 trackerPosition;
 
     // Debug vars
-    public static bool debug = true;
+    public static bool debug = false;
     string itemId = "";
     string obj = "";
     bool upton = true;
@@ -57,6 +59,11 @@ public class EasyDeliveryAP : BaseUnityPlugin
                                     "DeathLink",
                                     false,
                                     "Turn on DeathLink");
+        
+        configTrapLink = Config.Bind("General",
+                                    "TrapLink",
+                                    false,
+                                    "Turn on Trap Link");
 
         configConsole = Config.Bind("General",
                                     "ShowConsole",
@@ -102,9 +109,25 @@ public class EasyDeliveryAP : BaseUnityPlugin
 
     private void Update()
     {
-        if (DeathLinkHandler.deathLinkEnabled != configDeathLink.Value && ArchipelagoClient.Authenticated)
+        if (ArchipelagoClient.Authenticated)
         {
-            ArchipelagoClient.DeathLinkHandler?.ToggleDeathLink();
+            if (DeathLinkHandler.deathLinkEnabled != configDeathLink.Value)
+            {
+                ArchipelagoClient.DeathLinkHandler?.ToggleDeathLink();
+            }
+            
+            if (trapLink != configTrapLink.Value)
+            {
+                if (configTrapLink.Value)
+                {
+                    ArchipelagoClient.EnableTag("TrapLink");
+                }
+                else
+                {
+                    ArchipelagoClient.DisableTag("TrapLink");
+                }
+                trapLink = configTrapLink.Value;
+            }
         }
 
         if (!ArchipelagoClient.Authenticated)
@@ -228,6 +251,8 @@ public class EasyDeliveryAP : BaseUnityPlugin
             {
                 ArchipelagoClient.Disconnect();
             }
+
+            // Temporarily remaining for potential debugging
             Vector3 add = new(0, 100, 0);
             Vector3 MountainTownTP = new(-452.94f, 328f, -325.21f);
             Quaternion MountainTownQt = new (0.00282f, 0.45403f, -0.00174f, 0.89098f);

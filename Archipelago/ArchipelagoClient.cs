@@ -4,13 +4,16 @@ using System.Linq;
 using System.Threading;
 using Archipelago.MultiClient.Net;
 using Archipelago.MultiClient.Net.BounceFeatures.DeathLink;
+using Archipelago.MultiClient.Net.Converters;
 using Archipelago.MultiClient.Net.Enums;
+using Archipelago.MultiClient.Net.Exceptions;
 using Archipelago.MultiClient.Net.Helpers;
 using Archipelago.MultiClient.Net.MessageLog.Messages;
 using Archipelago.MultiClient.Net.Models;
 using Archipelago.MultiClient.Net.Packets;
 using EasyDeliveryAP.Utils;
 using HarmonyLib;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 using Color = UnityEngine.Color;
 
@@ -60,6 +63,7 @@ public class ArchipelagoClient
         session.Items.ItemReceived += OnItemReceived;
         session.Socket.ErrorReceived += OnSessionErrorReceived;
         session.Socket.SocketClosed += OnSessionSocketClosed;
+        session.Socket.PacketReceived += OnPacketReceived;
     }
 
     /// <summary>
@@ -69,6 +73,15 @@ public class ArchipelagoClient
     {
         try
         {
+            List<string> tags = [];
+            if (EasyDeliveryAP.configDeathLink.Value)
+            {
+                tags.Add("DeathLink");
+            }
+            if (EasyDeliveryAP.configTrapLink.Value)
+            {
+                tags.Add("TrapLink");
+            }
             // it's safe to thread this function call but unity notoriously hates threading so do not use excessively
             ThreadPool.QueueUserWorkItem(
                 _ => HandleConnectResult(
@@ -77,6 +90,7 @@ public class ArchipelagoClient
                         ServerData.SlotName,
                         ItemsHandlingFlags.AllItems,
                         new Version(APVersion),
+                        tags: tags.ToArray(),
                         password: ServerData.Password,
                         requestSlotData: ServerData.NeedSlotData
                     )));
@@ -302,18 +316,22 @@ public class ArchipelagoClient
             case 130: // Ice Trap
                 APGUI.Notification($"Received {Items.APIdToItem[(int)receivedItem.ItemId].Name}", APGUI.warningTriangle);
                 CarPatches.iceTrap = true;
+                SendTrapLink("Ice Trap");
                 break;
             case 131: // Shrink Trap
                 APGUI.Notification($"Received {Items.APIdToItem[(int)receivedItem.ItemId].Name}", APGUI.warningTriangle);
                 CarPatches.shrink = true;
+                SendTrapLink("Shrink Trap");
                 break;
             case 132: // Stuck Turning Trap
                 APGUI.Notification($"Received {Items.APIdToItem[(int)receivedItem.ItemId].Name}", APGUI.warningTriangle);
                 CarPatches.turnTrap = true;
+                SendTrapLink("Frozen Steering Wheel Trap");
                 break;
             case 133: // Forced Acceleration Trap
                 APGUI.Notification($"Received {Items.APIdToItem[(int)receivedItem.ItemId].Name}", APGUI.warningTriangle);
                 CarPatches.accelTrap = true;
+                SendTrapLink("Forced Acceleration Trap");
                 break;
             case 11 or 12 or 13 or (>= 30 and <= 38):
                 APGUI.Notification($"Received {Items.APIdToItem[(int)receivedItem.ItemId].Name}", APGUI.packageReceive);
@@ -353,4 +371,93 @@ public class ArchipelagoClient
         EasyDeliveryAP.BepinLogger.LogError($"Connection to Archipelago lost: {reason}");
         Disconnect();
     }
+
+    private void OnPacketReceived(ArchipelagoPacketBase packet)
+    {
+        if (packet.PacketType == ArchipelagoPacketType.Bounced)
+        {
+            BouncedPacket bouncedPacket = packet as BouncedPacket;
+
+            if (ScenePatches.thisScene != "TitleScreen" && bouncedPacket.Tags.Contains("TrapLink") && EasyDeliveryAP.configTrapLink.Value && bouncedPacket.Data["source"].ToString() != session.Players.ActivePlayer.Name)
+            {
+                string trap_name = bouncedPacket.Data["trap_name"].ToString();
+
+                if (Items.TrapLink.TryGetValue(trap_name, out string trap))
+                {
+                    string message = $"Received linked {trap_name} from {bouncedPacket.Data["source"]}";
+
+                    APGUI.Notification(message, APGUI.warningTriangle);
+
+                    switch (trap)
+                    {
+                        case "IceTrap":
+                            CarPatches.iceTrap = true;
+                            break;
+                        case "FrozenSteeringWheelTrap":
+                            CarPatches.turnTrap = true;
+                            break;
+                        case "ForcedAccelerationTrap":
+                            CarPatches.accelTrap = true;
+                            break;
+                        case "ShrinkTrap":
+                            CarPatches.shrink = true;
+                            break;
+                        case "DeathTrap":
+                            if (EasyDeliveryAP.configDeathLink.Value)
+                            {
+                                DeathLinkPatches.dying = true;
+                            }
+                            break;
+                        case "WideTrap":
+                            break;
+                    }
+                }
+            }
+        }
+    }
+
+    public void SendTrapLink(string trap)
+    {
+        try
+        {
+            if (!EasyDeliveryAP.configTrapLink.Value)
+            {
+                return;
+            }
+
+            BouncePacket bouncePacket = new BouncePacket
+            {
+                Tags = new List<string> {"TrapLink"},
+                Data = new Dictionary<string, JToken>
+                {
+                    { "time", DateTime.UtcNow.ToUnixTimeStamp() },
+                    { "source", session.Players.ActivePlayer.Name },
+                    { "trap_name", trap }
+                }
+            };
+
+            session.Socket.SendPacketAsync(bouncePacket);
+        }
+        catch (ArchipelagoSocketClosedException)
+        {
+            Disconnect();
+        }
+    }
+
+	public void EnableTag(string tag)
+	{
+		if (Array.IndexOf(session.ConnectionInfo.Tags, tag) == -1)
+		{
+			session.ConnectionInfo.UpdateConnectionOptions(session.ConnectionInfo.Tags.Concat(new string[1] { tag }).ToArray());
+		}
+        
+	}
+
+	public void DisableTag(string tag)
+	{
+		if (Array.IndexOf(session.ConnectionInfo.Tags, tag) != -1)
+		{
+			session.ConnectionInfo.UpdateConnectionOptions(session.ConnectionInfo.Tags.Where((string t) => t != tag).ToArray());
+		}
+	}
 }
