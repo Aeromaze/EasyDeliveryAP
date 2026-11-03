@@ -82,6 +82,10 @@ public class ArchipelagoClient
             {
                 tags.Add("TrapLink");
             }
+            if (EasyDeliveryAP.configShowPlayers.Value)
+            {
+                tags.Add("EasyCoBounce");
+            }
             // it's safe to thread this function call but unity notoriously hates threading so do not use excessively
             ThreadPool.QueueUserWorkItem(
                 _ => HandleConnectResult(
@@ -413,6 +417,11 @@ public class ArchipelagoClient
                     }
                 }
             }
+            
+            if (ScenePatches.thisScene != "TitleScreen" && bouncedPacket.Tags.Contains("EasyCoBounce") && EasyDeliveryAP.configShowPlayers.Value)// && bouncedPacket.Data["source"].ToString() != session.ConnectionInfo.Uuid)
+            {
+                ReceivePosition(bouncedPacket);
+            }
         }
     }
 
@@ -441,6 +450,91 @@ public class ArchipelagoClient
         catch (ArchipelagoSocketClosedException)
         {
             Disconnect();
+        }
+    }
+
+    public void SendPosition(Vector3 position, int scene)
+    {
+        try
+        {
+            if (!EasyDeliveryAP.configShowPlayers.Value || !ArchipelagoClient.Authenticated)
+            {
+                return;
+            }
+
+            BouncePacket bouncePacket = new BouncePacket
+            {
+                Tags = new List<string> {"EasyCoBounce"},
+                Data = new Dictionary<string, JToken>
+                {
+                    { "time", DateTime.UtcNow.ToUnixTimeStamp() },
+                    { "source", session.ConnectionInfo.Uuid },
+                    { "player", session.Players.ActivePlayer.Name },
+                    { "posx", position.x },
+                    { "posy", position.y },
+                    { "posz", position.z },
+                    { "scene", scene }
+                }
+            };
+
+            session.Socket.SendPacketAsync(bouncePacket);
+        }
+        catch (ArchipelagoSocketClosedException)
+        {
+            Disconnect();
+        }
+    }
+
+    public void ReceivePosition(BouncedPacket bouncedPacket)
+    {
+        string source;
+        if (bouncedPacket.Data["source"] != null)
+        {
+            source = bouncedPacket.Data["source"].ToString();
+        }
+        else
+        {
+            source = bouncedPacket.Data["player"].ToString();
+        }
+        string name = bouncedPacket.Data["player"].ToString();
+        float x = (float)bouncedPacket.Data["posx"];
+        float y = (float)bouncedPacket.Data["posy"];
+        float z = (float)bouncedPacket.Data["posz"];
+        int scene = (int)bouncedPacket.Data["scene"];
+        double time = (int)bouncedPacket.Data["time"];
+
+        List<string> remove = [];
+
+        Vector3 position = new(x, y, z);
+        Dictionary<string, PlayerPosition> playerPositions = PlayerLabels.playerPositions;
+
+        foreach (var item in playerPositions)
+        {
+            if (Time.fixedUnscaledTime - item.Value.LocalTime > 10)
+            {
+                remove.Add(item.Key);
+            }
+        }
+
+        foreach (string item in remove)
+        {
+            playerPositions.Remove(item);
+        }
+
+        if (!playerPositions.ContainsKey(source) && playerPositions.Count < 20)
+        {
+            APGUI.Notification("New Player");
+            playerPositions.Add(source, new(name, position, scene, time, Time.fixedUnscaledTime));
+        }
+        else if (playerPositions.ContainsKey(source))
+        {
+            playerPositions[source].Name = name;
+            playerPositions[source].PreviousPosition = playerPositions[source].TargetPosition;
+            playerPositions[source].TargetPosition = position;
+            playerPositions[source].Scene = scene;
+            playerPositions[source].LastTime = playerPositions[source].Time;
+            playerPositions[source].Time = time;
+            playerPositions[source].LocalTime = Time.fixedUnscaledTime;
         }
     }
 

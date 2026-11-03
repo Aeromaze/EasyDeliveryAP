@@ -25,6 +25,7 @@ public class EasyDeliveryAP : BaseUnityPlugin
 
     public static bool deathLink = false;
     public static bool trapLink = false;
+    public static bool showPlayers = false;
     internal static ModdedSaveSystem<APSaveFile> save = new("Archipelago");
 
     // Configs
@@ -32,6 +33,7 @@ public class EasyDeliveryAP : BaseUnityPlugin
     public static ConfigEntry<bool> configDeathLink;
     public static ConfigEntry<bool> configAutoConnect;
     public static ConfigEntry<bool> configTrapLink;
+    public static ConfigEntry<bool> configShowPlayers;
     public static ConfigEntry<bool> configDebug;
 
 
@@ -64,6 +66,11 @@ public class EasyDeliveryAP : BaseUnityPlugin
                                     "TrapLink",
                                     false,
                                     "Turn on Trap Link");
+
+        configShowPlayers = Config.Bind("General",
+                                    "ShowPlayers",
+                                    false,
+                                    "Show the position of other players");
 
         configConsole = Config.Bind("General",
                                     "ShowConsole",
@@ -127,6 +134,19 @@ public class EasyDeliveryAP : BaseUnityPlugin
                     ArchipelagoClient.DisableTag("TrapLink");
                 }
                 trapLink = configTrapLink.Value;
+            }
+            
+            if (showPlayers != configShowPlayers.Value)
+            {
+                if (configShowPlayers.Value)
+                {
+                    ArchipelagoClient.EnableTag("EasyCoBounce");
+                }
+                else
+                {
+                    ArchipelagoClient.DisableTag("EasyCoBounce");
+                }
+                showPlayers = configShowPlayers.Value;
             }
         }
 

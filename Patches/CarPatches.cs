@@ -131,7 +131,10 @@ public class CarPatches
         __instance.smokeColor = trailColor;
 
         if (ArchipelagoClient.Authenticated)
-        APGUI.hud.DrawWorldPointLabel(__instance.transform.position + Vector3.up, archipelago.session.Players.ActivePlayer.Name);
+        {
+            PlayerLabels.SendPosition(__instance.transform.position);
+            PlayerLabels.RenderPlayers();
+        }
     }
 
     [HarmonyPatch(typeof(sCarController), "GetMaterialIndex")]
