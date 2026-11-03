@@ -70,10 +70,7 @@ public class ItemHandling
     [HarmonyPatch(typeof(TruckUpgrades), "LateUpdate")]
     private static void Prefix(TruckUpgrades __instance)
     {
-        if (TestData.optionStartMap)
-        {
-            __instance.hasGPS = Items.GPS.Enabled;
-        }
+        __instance.hasGPS = Items.GPS.Enabled;
 
         if (APData.car_upgrades == "1")
         {
