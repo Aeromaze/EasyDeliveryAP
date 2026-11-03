@@ -82,10 +82,12 @@ public class OtherPatches
                 MapNodes.TryAdd(mapNode.name, mapNode);
             }
             guy = GameObject.FindObjectOfType<sCharacterController>();
+            car = GameObject.FindObjectOfType<sCarController>();
         }
         else if (ScenePatches.currentScene == 6)
         {
             guy = GameObject.FindObjectOfType<sCharacterController>();
+            car = GameObject.FindObjectOfType<sCarController>();
         }
 
         // Remove Fishing Town Gate with 3 "Radio Tower" items
@@ -190,10 +192,8 @@ public class OtherPatches
         {
             locLabel = posData.LocationId;
 
-            APGUI.Warning($"{locLabel}");
             if (archipelago.session.Locations.AllLocationsChecked.Contains(locLabel))
             {
-                APGUI.Warning($"Done");
                 // __1 = $"*{__1}";
                 doneLabel = true;
             }
@@ -211,7 +211,7 @@ public class OtherPatches
         }
         else if (doneLabels.Contains(__0) && archipelago.session.Locations.AllLocations.Contains(locLabel))
         {
-            __result = $"{__result} {ArchipelagoClient.scoutedItemInfo[locLabel].ItemDisplayName}";
+            __result = $"{__result} ({ArchipelagoClient.scoutedItemInfo[locLabel].ItemDisplayName})";
         }
     }
 

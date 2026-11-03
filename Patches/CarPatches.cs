@@ -1,5 +1,6 @@
 using System;
 using EasyDeliveryAP.Archipelago;
+using EasyDeliveryAP.Utils;
 using HarmonyLib;
 using UnityEngine;
 
@@ -25,6 +26,11 @@ public class CarPatches
     private static Vector3 FishingTownTP = new(-471.51f, 124.16f, 193.76f);
     private static Quaternion FishingTownQt = new(-0.00178f, 0.75104f, -0.00163f, -0.66025f);
 
+    private static Vector3 WestonTP = new(218.79f, 196.64f, -97.94f);
+    private static Quaternion WestonQt = new(0.01989f, -0.65327f, -0.02312f, 0.75651f);
+    private static Vector3 EastonTP = new(-129.39f, 147.29f, 67.20f);
+    private static Quaternion EastonQt = new(-0.00507f, 0.87606f, -0.00473f, 0.48215f);
+
     public static Color trailColor = new(1, 1, 1);
 
     public static bool turnTrap = false;
@@ -39,6 +45,28 @@ public class CarPatches
     [HarmonyPatch(typeof(sCarController), "Update")]
     private static void Prefix(sCarController __instance)
     {
+        if ((EasyDeliveryAP.debug || ArchipelagoClient.Authenticated) &&
+            ScenePatches.newgame && ScenePatches.currentScene == 1)
+        {
+            if (APData.lock_towns == "1")
+            {
+                if (Items.Upton.Received > 0) {}
+                else if (Items.Weston.Received > 0)
+                {
+                    __instance.transform.SetPositionAndRotation(WestonTP, WestonQt);
+                }
+                else if (Items.Easton.Received > 0)
+                {
+                    __instance.transform.SetPositionAndRotation(EastonTP, EastonQt);
+                }
+                ScenePatches.newgame = false;
+            }
+            else
+            {
+                ScenePatches.newgame = false;
+            }
+        }
+
         if (!PauseSystem.paused && !__instance.guyActive)
         {
             // Shrink Trap
@@ -49,7 +77,7 @@ public class CarPatches
                     __instance.transform.localScale -= shrinkSpeed;
                     __instance.payloadPivot.localScale -= shrinkSpeed;
 
-                    __instance.maxDrivePower -= 600f/150;
+                    __instance.maxDrivePower -= 600f/300;
                     __instance.maxSpeed -= 100f/150;
                     __instance.maxSpeedScale -= 1f/150;
                     __instance.drivePowerScale -= 1f/150;
@@ -70,7 +98,7 @@ public class CarPatches
                 __instance.transform.localScale += shrinkSpeed;
                 __instance.payloadPivot.localScale += shrinkSpeed;
 
-                __instance.maxDrivePower += 600f/150;
+                __instance.maxDrivePower += 600f/300;
                 __instance.maxSpeed += 100f/150;
                 __instance.maxSpeedScale += 1f/150;
                 __instance.drivePowerScale += 1f/150;
@@ -101,6 +129,9 @@ public class CarPatches
         }
         __instance.dirtColor = trailColor;
         __instance.smokeColor = trailColor;
+
+        if (ArchipelagoClient.Authenticated)
+        APGUI.hud.DrawWorldPointLabel(__instance.transform.position + Vector3.up, archipelago.session.Players.ActivePlayer.Name);
     }
 
     [HarmonyPatch(typeof(sCarController), "GetMaterialIndex")]
@@ -161,6 +192,7 @@ public class CarPatches
     [HarmonyPatch(typeof(sCharacterInteraction), "ExitObstructed")]
     private static void Prefix(sCharacterInteraction __instance, ref Vector3 __0)
     {
+        // Make sure it's possible to exit the car when shrunk
         if (shrinkTimer > 0)
         {
             __0.y += 0.5f;

@@ -10,6 +10,7 @@ namespace EasyDeliveryAP;
 public class ScenePatches
 {
     public static int currentScene;
+    public static bool newgame = false;
 
     public static string thisScene;
     private static string lastScene;
@@ -25,6 +26,7 @@ public class ScenePatches
             if (thisScene == "TitleScreen")
             {
                 EasyDeliveryAP.save.data.handledIndex = 0;
+                newgame = false;
             }
             if (lastScene == "TitleScreen")
             {
@@ -42,6 +44,7 @@ public class ScenePatches
         if (__0 == 3) // Opening cutscene
         {
             ArchipelagoConsole.LogMessage("Starting new save");
+            newgame = true;
             ItemHandling.pendingItemIds = [];
             foreach (ItemData item in Items.APIdToItem.Values)
             {
