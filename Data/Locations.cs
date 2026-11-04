@@ -562,7 +562,7 @@ public class Locations
         {"(-279.34, 277.75, 233.77)", SnowyPeaks.BBWFlowers}, // (-279.34, 277.75, 233.77)
         {"(-288.79, 277.53, 232.49)", SnowyPeaks.RBWEats}, // (-288.79, 277.53, 232.49)
         {"(-325.92, 277.63, 209.57)", SnowyPeaks.VMWFuel}, // (-325.92, 277.63, 209.57)
-        {"(233.54, 278.70, -439.31)", SnowyPeaks.VMWFuel}, // buy text
+        {"(-326.51, 279.15, 209.77)", SnowyPeaks.VMWFuel}, // buy text
         {"(-323.14, 277.39, 212.76)", SnowyPeaks.BBWFuel}, // (-323.14, 277.39, 212.76)
         {"(-322.31, 277.42, 213.12)", SnowyPeaks.RBWFuel}, // (-322.31, 277.42, 213.12)
         // Munton
@@ -576,7 +576,7 @@ public class Locations
         // Lopton
         {"(307.56, 277.49, -382.80)", SnowyPeaks.RBLBar}, // (307.56, 277.49, -382.80)
         {"(233.84, 277.28, -440.07)", SnowyPeaks.VMLDepot}, // (233.84, 277.28, -440.07)
-        {"(-326.51, 279.15, 209.77)", SnowyPeaks.VMLDepot}, // buy text
+        {"(233.54, 278.70, -439.31)", SnowyPeaks.VMLDepot}, // buy text
         {"(227.77, 277.29, -439.43)", SnowyPeaks.RBLDepot}, // (227.77, 277.29, -439.43)
         {"(228.23, 277.29, -438.71)", SnowyPeaks.BBLDepot}, // (228.23, 277.29, -438.71)
 
