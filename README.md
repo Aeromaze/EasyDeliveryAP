@@ -2,8 +2,12 @@
 This mod adds [Archipelago](https://archipelago.gg) support to Easy Deliver Co., allowing the game to be played as part of a multiworld randomizer.
 
 ![Tracker example](https://raw.githubusercontent.com/Aeromaze/EasyDeliveryAP/refs/heads/main/docs/img/trackerExample.jpg)
+
 ## Setup
 Setup guide: https://github.com/Aeromaze/Archipelago/blob/EasyDeliveryCo/worlds/easy_delivery_co/docs/setup_en.md
 
 ## APWorld
 https://github.com/Aeromaze/Archipelago/releases
+
+## Credits
+The icon in the Thunderstore release is a modification of the Archipelago icon. The original icon by Krista Corkos and Christopher Wilson is licensed under Attribution-NonCommercial 4.0 International.
