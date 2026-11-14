@@ -17,6 +17,13 @@ public class Testing
 {
     private static readonly ArchipelagoClient archipelago = EasyDeliveryAP.ArchipelagoClient;
 
+    // Might be helpful for controlling states of things like the SP tunnel branches
+    [HarmonyPatch(typeof(MatchActive), "Update")]
+    private static void Prefix(MatchActive __instance)
+    {
+        APGUI.Warning($"{__instance.name}: {__instance.pstate}");
+    }
+
     [HarmonyPatch(typeof(sGoals), "CompleteGoal")]
     private static void Prefix(sGoals.Goal __0, sGoals __instance)
     {
