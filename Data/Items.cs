@@ -187,6 +187,8 @@ public class Items
         {"Ice Trap", "IceTrap"},
         // {"Instant Death Trap", "DeathTrap"}, // make sure to check if deathlink is enabled for this
         // {"W I D E Trap", "WideTrap"},
+        // {"Dry Trap", "FuelTrap"},
+        // {"Energy Drain Trap", "FuelTrap"},
         {"Shrink Trap", "ShrinkTrap"},
         {"Slip Trap", "IceTrap"},
         {"Speed Up Trap", "ForcedAccelerationTrap"},
