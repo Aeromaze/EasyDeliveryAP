@@ -20,6 +20,9 @@ public class OtherPatches
     public static GameObject nodes;
     public static sCarController car;
     public static sCharacterController guy;
+    public static GameObject playerModel = null;
+    public static GameObject carModel = null;
+    public static sCosmeticAppearance cosmetics = null;
     public static Transform[] radios;
     public static GameObject radio1;
     public static GameObject radio2;
@@ -33,6 +36,9 @@ public class OtherPatches
     [HarmonyPatch(typeof(SceneTransition), "fadeIn")]
     private static void Prefix(SceneTransition __instance)
     {
+        PlayerLabels.playerPositions.Clear();
+        PlayerLabels.players.Clear();
+        PlayerLabels.cars.Clear();
         if (ScenePatches.currentScene == 4 || ScenePatches.currentScene == 5)
         {
             shopInteriors = GameObject.Find("StoreInteriors");
@@ -82,13 +88,46 @@ public class OtherPatches
                 MapNodes.TryAdd(mapNode.name, mapNode);
             }
             guy = GameObject.FindObjectOfType<sCharacterController>();
+            //playerModel = guy.GetComponentInChildren<sCosmeticAppearance>();
             car = GameObject.FindObjectOfType<sCarController>();
+            //carModel = car.GetComponentInChildren<sCosmeticAppearance>();
         }
         else if (ScenePatches.currentScene == 6)
         {
             guy = GameObject.FindObjectOfType<sCharacterController>();
+            //playerModel = guy.GetComponentInChildren<sCosmeticAppearance>();
             car = GameObject.FindObjectOfType<sCarController>();
+            //carModel = car.GetComponentInChildren<sCosmeticAppearance>();
         }
+        else if (ScenePatches.currentScene == 8)
+        {
+            guy = GameObject.FindObjectOfType<sCharacterController>();
+            //playerModel = guy.GetComponentInChildren<sCosmeticAppearance>();
+        }
+
+        if (playerModel == null)
+        {
+            GameObject guy_model = GameObject.Find("/guy/guy_model");
+            if (guy_model != null)
+            {
+                playerModel = GameObject.Instantiate(guy_model, EasyDeliveryAP.APGameObject.transform);
+                cosmetics = playerModel.GetComponent<sCosmeticAppearance>();
+            }
+        }
+        if (carModel == null)
+        {
+            GameObject car_model = GameObject.Find("/Car/Model");
+            if (car_model != null)
+            {
+                carModel = GameObject.Instantiate(car_model, EasyDeliveryAP.APGameObject.transform);
+            }
+            else if (playerModel != null)
+            {
+                carModel = playerModel;
+            }
+        }
+
+
 
         // Remove Fishing Town Gate with 3 "Radio Tower" items
         RemoveGate();
@@ -219,5 +258,15 @@ public class OtherPatches
     private static void Postfix()
     {
         archipelago.Disconnect();
+    }
+
+    [HarmonyPatch(typeof(sCharacterController), "Update")]
+    private static void Postfix(sCharacterController __instance)
+    {
+        if (ArchipelagoClient.Authenticated)
+        {
+            PlayerLabels.SendPosition(__instance.transform.position, __instance.transform.rotation, "guy", __instance.transform.localScale);
+            // APGUI.Warning($"{__instance.transform.position}");
+        }
     }
 }

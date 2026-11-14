@@ -130,10 +130,9 @@ public class CarPatches
         __instance.dirtColor = trailColor;
         __instance.smokeColor = trailColor;
 
-        if (ArchipelagoClient.Authenticated)
+        if (ArchipelagoClient.Authenticated && !__instance.guyActive && !PauseSystem.paused)
         {
-            PlayerLabels.SendPosition(__instance.transform.position);
-            PlayerLabels.RenderPlayers();
+            PlayerLabels.SendPosition(__instance.transform.position, __instance.transform.rotation, "car", __instance.transform.localScale);
         }
     }
 

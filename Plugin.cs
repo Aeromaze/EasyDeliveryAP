@@ -22,6 +22,7 @@ public class EasyDeliveryAP : BaseUnityPlugin
     private const string APDisplayInfo = $"Archipelago v{ArchipelagoClient.APVersion}";
     public static ManualLogSource BepinLogger;
     public static ArchipelagoClient ArchipelagoClient;
+    public static GameObject APGameObject = new();
 
     public static bool deathLink = false;
     public static bool trapLink = false;
@@ -102,12 +103,14 @@ public class EasyDeliveryAP : BaseUnityPlugin
         TrackerFile.icon = 3;
         TrackerFile.iconHover = 4;
         TrackerFile.data = "listener_" + TrackerFile.name;
-        trackerPosition.x = 0.35f;
-        trackerPosition.y = 3.15f;
+        trackerPosition.x = 0.5f;
+        trackerPosition.y = 3f;
         TrackerFile.position = trackerPosition;
         EasyAPI.AddListener<TrackerApp>(TrackerFile.name);
         EasyAPI.AddFile(EasyAPI.DesktopLocation.Main, TrackerFile);
         //EasyAPI.AddProgram(new TrackerDotExe());
+
+        GameObject.DontDestroyOnLoad(APGameObject);
 
         Logger.LogMessage($"{ModDisplayInfo} loaded!");
 
@@ -147,6 +150,11 @@ public class EasyDeliveryAP : BaseUnityPlugin
                     ArchipelagoClient.DisableTag("EasyCoBounce");
                 }
                 showPlayers = configShowPlayers.Value;
+            }
+
+            if (ScenePatches.thisScene != "TitleScreen")
+            {
+                PlayerLabels.RenderPlayers();
             }
         }
 

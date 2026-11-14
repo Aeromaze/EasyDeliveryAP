@@ -453,7 +453,7 @@ public class ArchipelagoClient
         }
     }
 
-    public void SendPosition(Vector3 position, int scene)
+    public void SendPosition(Vector3 position, Quaternion quaternion, int scene, string state, Vector3 scale)
     {
         try
         {
@@ -473,7 +473,18 @@ public class ArchipelagoClient
                     { "posx", position.x },
                     { "posy", position.y },
                     { "posz", position.z },
-                    { "scene", scene }
+                    { "qtx", quaternion.x },
+                    { "qty", quaternion.y },
+                    { "qtz", quaternion.z },
+                    { "qtw", quaternion.w },
+                    { "scene", scene },
+                    { "state", state },
+                    { "scalex", scale.x},
+                    { "scaley", scale.y},
+                    { "scalez", scale.z},
+                    { "head", OtherPatches.cosmetics != null ? OtherPatches.cosmetics.headIndex : 0 },
+                    { "body", OtherPatches.cosmetics != null ? OtherPatches.cosmetics.bodyIndex : 0 },
+                    { "paint", OtherPatches.cosmetics != null ? OtherPatches.cosmetics.paintIndex : 0}
                 }
             };
 
@@ -487,54 +498,79 @@ public class ArchipelagoClient
 
     public void ReceivePosition(BouncedPacket bouncedPacket)
     {
-        string source;
-        if (bouncedPacket.Data["source"] != null)
+        try
         {
-            source = bouncedPacket.Data["source"].ToString();
-        }
-        else
-        {
-            source = bouncedPacket.Data["player"].ToString();
-        }
-        string name = bouncedPacket.Data["player"].ToString();
-        float x = (float)bouncedPacket.Data["posx"];
-        float y = (float)bouncedPacket.Data["posy"];
-        float z = (float)bouncedPacket.Data["posz"];
-        int scene = (int)bouncedPacket.Data["scene"];
-        double time = (int)bouncedPacket.Data["time"];
-
-        List<string> remove = [];
-
-        Vector3 position = new(x, y, z);
-        Dictionary<string, PlayerPosition> playerPositions = PlayerLabels.playerPositions;
-
-        foreach (var item in playerPositions)
-        {
-            if (Time.fixedUnscaledTime - item.Value.LocalTime > 10)
+            string source;
+            if (bouncedPacket.Data["source"] != null)
             {
-                remove.Add(item.Key);
+                source = bouncedPacket.Data["source"].ToString();
+            }
+            else
+            {
+                source = bouncedPacket.Data["player"].ToString();
+            }
+            string name = bouncedPacket.Data["player"].ToString();
+            float posx = (float)bouncedPacket.Data["posx"];
+            float posy = (float)bouncedPacket.Data["posy"];
+            float posz = (float)bouncedPacket.Data["posz"];
+            float qx = (float)bouncedPacket.Data["qtx"];
+            float qy = (float)bouncedPacket.Data["qty"];
+            float qz = (float)bouncedPacket.Data["qtz"];
+            float qw = (float)bouncedPacket.Data["qtw"];
+            int scene = (int)bouncedPacket.Data["scene"];
+            string state = bouncedPacket.Data["state"].ToString();
+            float scalex = (float)bouncedPacket.Data["scalex"];
+            float scaley = (float)bouncedPacket.Data["scaley"];
+            float scalez = (float)bouncedPacket.Data["scalez"];
+            double time = (int)bouncedPacket.Data["time"];
+            int head = (int)bouncedPacket.Data["head"];
+            int body = (int)bouncedPacket.Data["body"];
+            int paint = (int)bouncedPacket.Data["paint"];
+
+            Vector3 position = new(posx, posy, posz);
+            Quaternion qt = new(qx, qy, qz, qw);
+            Vector3 scale = new(scalex, scaley, scalez);
+            
+            Dictionary<string, PlayerPosition> playerPositions = PlayerLabels.playerPositions;
+
+            if (!PauseSystem.paused && scene == ScenePatches.currentScene && OtherPatches.playerModel != null)
+            {
+                if (!playerPositions.ContainsKey(source) && playerPositions.Count < PlayerLabels.maxPlayers)
+                {
+                    if (EasyDeliveryAP.debug) {APGUI.Notification("New Player");}
+                    playerPositions.Add(source, new(name, position, qt, scale, scene, state, time, Time.fixedUnscaledTime, head, body, paint));
+                    PlayerLabels.players.Add(source, new());
+                    PlayerLabels.players[source] = GameObject.Instantiate(OtherPatches.playerModel, Vector3.zero, qt);
+                    PlayerLabels.cars.Add(source, new());
+                    if (OtherPatches.carModel != null)
+                    {
+                        PlayerLabels.cars[source] = GameObject.Instantiate(OtherPatches.carModel, Vector3.zero, qt);
+                    }
+                    else
+                    {
+                        PlayerLabels.cars[source] = GameObject.Instantiate(OtherPatches.playerModel, Vector3.zero, qt);
+                    }
+                    GameObject.Destroy(PlayerLabels.cars[source].GetComponent<RotationRounding>());
+                }
+                else if (playerPositions.ContainsKey(source))
+                {
+                    playerPositions[source].Name = name;
+                    playerPositions[source].PreviousPosition = playerPositions[source].TargetPosition;
+                    playerPositions[source].TargetPosition = position;
+                    playerPositions[source].PreviousQuaternion = playerPositions[source].TargetQuaternion;
+                    playerPositions[source].TargetQuaternion = qt;
+                    playerPositions[source].Scale = scale;
+                    playerPositions[source].Scene = scene;
+                    playerPositions[source].State = state;
+                    playerPositions[source].LastTime = playerPositions[source].Time;
+                    playerPositions[source].Time = time;
+                    playerPositions[source].LocalTime = Time.fixedUnscaledTime;
+                }
             }
         }
-
-        foreach (string item in remove)
+        catch (Exception e)
         {
-            playerPositions.Remove(item);
-        }
-
-        if (!playerPositions.ContainsKey(source) && playerPositions.Count < 20)
-        {
-            APGUI.Notification("New Player");
-            playerPositions.Add(source, new(name, position, scene, time, Time.fixedUnscaledTime));
-        }
-        else if (playerPositions.ContainsKey(source))
-        {
-            playerPositions[source].Name = name;
-            playerPositions[source].PreviousPosition = playerPositions[source].TargetPosition;
-            playerPositions[source].TargetPosition = position;
-            playerPositions[source].Scene = scene;
-            playerPositions[source].LastTime = playerPositions[source].Time;
-            playerPositions[source].Time = time;
-            playerPositions[source].LocalTime = Time.fixedUnscaledTime;
+            ArchipelagoConsole.LogMessage($"Error when receiving player position: {e}");
         }
     }
 
