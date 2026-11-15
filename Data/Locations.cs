@@ -560,7 +560,9 @@ public class Locations
     {
         // Winton
         {"(-279.34, 277.75, 233.77)", SnowyPeaks.BBWFlowers}, // (-279.34, 277.75, 233.77)
+        {"(-279.34, 277.74, 233.67)", SnowyPeaks.BBWFlowers}, // text position (-1 y)
         {"(-288.79, 277.53, 232.49)", SnowyPeaks.RBWEats}, // (-288.79, 277.53, 232.49)
+        {"(-288.65, 277.52, 232.43)", SnowyPeaks.RBWEats}, // text position (-1 y)
         {"(-325.92, 277.63, 209.57)", SnowyPeaks.VMWFuel}, // (-325.92, 277.63, 209.57)
         {"(-326.51, 279.15, 209.77)", SnowyPeaks.VMWFuel}, // buy text
         {"(-323.14, 277.39, 212.76)", SnowyPeaks.BBWFuel}, // (-323.14, 277.39, 212.76)
